@@ -26,10 +26,12 @@ import TableHeader from 'src/views/pages/permission/TableHeader'
 
 // ** Types Import
 import { PermissionRowType } from 'src/types/apps/permissionTypes'
+import { PermissionFormValueType, PermissionListType, ActionType } from 'src/types/pages/permission'
 
 // ** Axios
 import axios from 'src/configs/axios'
 import endpoints from 'src/configs/endpoints'
+import { convertListToFormat } from 'src/views/pages/permission/utils'
 
 // ** Types
 interface Colors {
@@ -88,7 +90,7 @@ const Permission = () => {
   // ** States
   const [value, setValue] = useState<string>('')
   const [pageSize, setPageSize] = useState<number>(10)
-  const [permissionList, setPermissionList] = useState<PermissionRowType[]>([])
+  const [permissionList, setPermissionList] = useState<PermissionFormValueType<ActionType>[]>([])
 
   // ** Redux Hook & States
   const dispatch = useDispatch<AppDispatch>()
@@ -125,7 +127,8 @@ const Permission = () => {
     ;(async () => {
       try {
         const response = await axios.get(endpoints.permission.getAll)
-        console.log({ response })
+        const { data } = response
+        setPermissionList(convertListToFormat(data))
       } catch (error) {
         console.log(error)
       }
@@ -151,7 +154,7 @@ const Permission = () => {
         </Grid>
         <Grid item xs={12}>
           <Card>
-            <TableHeader value={value} handleFilter={handleFilter} />
+            <TableHeader value={value} handleFilter={handleFilter} permissionList={permissionList} />
             <DataGrid
               autoHeight
               rows={store.data}
