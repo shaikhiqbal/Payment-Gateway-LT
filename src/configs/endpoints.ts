@@ -18,7 +18,7 @@ const endpoints = {
     getAll: '/permission/get'
   },
   rolePermission: {
-    endpoint: '/permission'
+    endpoint: '/userpermission'
   }
 }
 

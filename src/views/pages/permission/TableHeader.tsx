@@ -1,5 +1,5 @@
 // ** React Imports
-import { useEffect, useState } from 'react'
+import { Fragment, useEffect, useState } from 'react'
 
 // ** MUI Imports
 import Box from '@mui/material/Box'
@@ -14,6 +14,7 @@ import FormControlLabel from '@mui/material/FormControlLabel'
 import {
   DialogActions,
   FormControl,
+  FormHelperText,
   Table,
   TableBody,
   TableCell,
@@ -26,8 +27,14 @@ import {
 // ** React Hook Form
 import { Controller, useForm, useFieldArray } from 'react-hook-form'
 
+// ** Axios & Endpoint
+import axios from 'src/configs/axios'
+import endpoints from 'src/configs/endpoints'
+
 // ** Types Import
 import { ActionType, PermissionFormValueType } from 'src/types/pages/permission'
+
+import { extractUID } from './utils'
 
 interface TableHeaderProps {
   value: string
@@ -53,7 +60,7 @@ const TableHeader = (props: TableHeaderProps) => {
   const handleDialogToggle = () => setOpen(!open)
 
   // ** Form Controllers
-  const { control, handleSubmit, setValue, watch } = useForm<DefaultForm>({
+  const { control, handleSubmit, setValue, watch, reset } = useForm<DefaultForm>({
     defaultValues: {
       roleName: '',
       permissions: []
@@ -70,7 +77,7 @@ const TableHeader = (props: TableHeaderProps) => {
     return all ? 'all' : some ? 'some' : 'none'
   })()
 
-  const { fields: permisions, append } = useFieldArray({
+  const { fields: permisions } = useFieldArray({
     control,
     name: 'permissions'
   })
@@ -82,11 +89,34 @@ const TableHeader = (props: TableHeaderProps) => {
     }
   }, [permissionList])
 
+  // ** Handle Select All
+  const handleSelectAllCheckbox = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const checked = event.target.checked
+    const currentPermissions = watch('permissions') || []
+
+    const updatedPermissions = currentPermissions.map(module => ({
+      ...module,
+      actions: module.actions.map(action => ({
+        ...action,
+        isSelected: checked
+      }))
+    }))
+
+    setValue('permissions', updatedPermissions)
+  }
+
   // ** Handle Form Submit
   const onSubmit = async (data: DefaultForm) => {
     try {
-      console.log(data)
-    } catch (error) {}
+      const payload = {
+        roleName: data.roleName,
+        permissionIds: extractUID(data.permissions)
+      }
+      await axios.post(endpoints.rolePermission.endpoint + '/', payload)
+      reset()
+    } catch (error) {
+      console.log(error)
+    }
   }
 
   return (
@@ -127,7 +157,30 @@ const TableHeader = (props: TableHeaderProps) => {
           >
             <Box sx={{ my: 4 }}>
               <FormControl fullWidth>
-                <TextField label='Role Name' placeholder='Enter Role Name' />
+                <Controller
+                  name='roleName'
+                  control={control}
+                  rules={{
+                    required: 'Role Name is required',
+                    pattern: {
+                      value: /^[A-Za-z0-9]+$/,
+                      message: 'Role Name must not contain spaces or symbols'
+                    }
+                  }}
+                  render={({ field, fieldState }) => (
+                    <Fragment>
+                      <TextField
+                        {...field}
+                        label='Role Name'
+                        error={Boolean(fieldState.error)}
+                        placeholder='Enter Role Name'
+                      />
+                      {fieldState.error && (
+                        <FormHelperText sx={{ color: 'error.main' }}>{fieldState.error.message}</FormHelperText>
+                      )}
+                    </Fragment>
+                  )}
+                />
               </FormControl>
             </Box>
             <Typography variant='h6'>Role Permissions</Typography>
@@ -161,7 +214,7 @@ const TableHeader = (props: TableHeaderProps) => {
                         control={
                           <Checkbox
                             size='small'
-                            // onChange={handleSelectAllCheckbox}
+                            onChange={handleSelectAllCheckbox}
                             indeterminate={permissionStatus == 'some'}
                             checked={permissionStatus == 'all'}
                           />
@@ -187,16 +240,24 @@ const TableHeader = (props: TableHeaderProps) => {
                             </TableCell>
 
                             {actions.map((action, indexC) => (
-                              <TableCell>
+                              <TableCell key={indexC}>
                                 <Controller
                                   control={control}
                                   name={`permissions.${indexP}.actions.${indexC}.isSelected`}
-                                  render={({ field, fieldState }) => (
-                                    <FormControlLabel
-                                      label={action.action}
-                                      control={<Checkbox size='small' {...field} />}
-                                    />
-                                  )}
+                                  render={({ field }) => {
+                                    return (
+                                      <FormControlLabel
+                                        label={action.action}
+                                        control={
+                                          <Checkbox
+                                            size='small'
+                                            checked={action.isSelected}
+                                            onChange={e => field.onChange(e.target.checked)}
+                                          />
+                                        }
+                                      />
+                                    )
+                                  }}
                                 />
                               </TableCell>
                             ))}

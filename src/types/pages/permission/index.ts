@@ -17,3 +17,9 @@ export interface PermissionFormValueType<ActionType> {
   index?: number
   actions: ActionType[]
 }
+
+export interface PermissionTableRowType {
+  createdAt: string
+  roleName: string
+  uid: string
+}

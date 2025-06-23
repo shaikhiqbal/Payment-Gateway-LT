@@ -2,7 +2,6 @@
 import { useState } from 'react'
 
 // ** MUI Components
-import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import FormControl from '@mui/material/FormControl'
 import InputLabel from '@mui/material/InputLabel'

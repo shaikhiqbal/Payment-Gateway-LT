@@ -3,7 +3,7 @@ import { PermissionListType, ActionType, PermissionFormValueType } from 'src/typ
 const pageIndexes = {
   dashboard: 0,
   'virtual terminal': 1,
-  permission: 2,
+  permissions: 2,
   'user management': 3
 }
 
@@ -32,4 +32,12 @@ export const convertListToFormat = (obj: PermissionListType): Array<PermissionFo
   })
 
   return updatedObject.sort((a, b) => a.index - b.index)
+}
+
+export const extractUID = (actionList: PermissionFormValueType<ActionType>[]): string[] => {
+  return actionList
+    .map(({ actions }) => actions)
+    .flat()
+    .filter(({ isSelected }) => isSelected)
+    .map(({ uid }) => uid)
 }

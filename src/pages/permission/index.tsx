@@ -7,18 +7,13 @@ import Grid from '@mui/material/Grid'
 import IconButton from '@mui/material/IconButton'
 import Typography from '@mui/material/Typography'
 import { DataGrid } from '@mui/x-data-grid'
-import CustomChip from 'src/@core/components/mui/chip'
+import { Backdrop, Skeleton } from '@mui/material'
 
-// ** Redux Action & Hook
-import { useDispatch, useSelector } from 'react-redux'
-import { fetchData } from 'src/store/apps/permissions'
-import { RootState, AppDispatch } from 'src/store'
+// ** Utils
+import { formatDate } from 'src/@core/utils/format'
 
 // ** Custome Components
 import Icon from 'src/@core/components/icon'
-
-// ** Theme
-import { ThemeColor } from 'src/@core/layouts/types'
 
 // ** Components
 import PageHeader from 'src/@core/components/page-header'
@@ -26,28 +21,19 @@ import TableHeader from 'src/views/pages/permission/TableHeader'
 
 // ** Types Import
 import { PermissionRowType } from 'src/types/apps/permissionTypes'
-import { PermissionFormValueType, PermissionListType, ActionType } from 'src/types/pages/permission'
+import { PermissionFormValueType, ActionType, PermissionTableRowType } from 'src/types/pages/permission'
 
 // ** Axios
 import axios from 'src/configs/axios'
 import endpoints from 'src/configs/endpoints'
 import { convertListToFormat } from 'src/views/pages/permission/utils'
+import { BounceLoader } from 'react-spinners'
+import PermisionRoleTrashDialog from 'src/views/pages/permission/PermisionRoleTrashDialog'
 
 // ** Types
-interface Colors {
-  [key: string]: ThemeColor
-}
 
 interface CellType {
-  row: PermissionRowType
-}
-
-const colors: Colors = {
-  support: 'info',
-  users: 'success',
-  manager: 'warning',
-  administrator: 'primary',
-  'restricted-user': 'error'
+  row: PermissionTableRowType
 }
 
 const defaultColumns = [
@@ -56,33 +42,47 @@ const defaultColumns = [
     field: 'name',
     minWidth: 240,
     headerName: 'Name',
-    renderCell: ({ row }: CellType) => <Typography sx={{ color: 'text.secondary' }}>{row.name}</Typography>
+    renderCell: ({ row }: CellType) => <Typography sx={{ color: 'text.secondary' }}>{row.roleName}</Typography>
   },
-  {
-    flex: 0.35,
-    minWidth: 290,
-    field: 'assignedTo',
-    headerName: 'Assigned To',
-    renderCell: ({ row }: CellType) => {
-      return row.assignedTo.map((assignee: string, index: number) => (
-        <CustomChip
-          rounded
-          size='small'
-          key={index}
-          skin='light'
-          color={colors[assignee]}
-          label={assignee.replace('-', ' ')}
-          sx={{ '& .MuiChip-label': { textTransform: 'capitalize' }, '&:not(:last-of-type)': { mr: 3 } }}
-        />
-      ))
-    }
-  },
+
   {
     flex: 0.25,
     minWidth: 210,
     field: 'createdDate',
     headerName: 'Created Date',
-    renderCell: ({ row }: CellType) => <Typography sx={{ color: 'text.secondary' }}>{row.createdDate}</Typography>
+    renderCell: ({ row }: CellType) => (
+      <Typography sx={{ color: 'text.secondary' }}>{formatDate(row.createdAt)}</Typography>
+    )
+  }
+]
+
+const skeletonColumns = [
+  {
+    field: 'name',
+    headerName: 'Name',
+    flex: 0.25,
+    minWidth: 240,
+    renderCell: () => <Skeleton variant='text' width='80%' height={24} />
+  },
+  {
+    field: 'createdDate',
+    headerName: 'Created Date',
+    flex: 0.25,
+    minWidth: 210,
+    renderCell: () => <Skeleton variant='text' width='60%' height={24} />
+  },
+  {
+    field: 'actions',
+    headerName: 'Actions',
+    flex: 0.15,
+    minWidth: 120,
+    sortable: false,
+    renderCell: () => (
+      <>
+        <Skeleton variant='circular' width={24} height={24} sx={{ mr: 2 }} />
+        <Skeleton variant='circular' width={24} height={24} />
+      </>
+    )
   }
 ]
 
@@ -91,14 +91,49 @@ const Permission = () => {
   const [value, setValue] = useState<string>('')
   const [pageSize, setPageSize] = useState<number>(10)
   const [permissionList, setPermissionList] = useState<PermissionFormValueType<ActionType>[]>([])
+  const [rows, setRows] = useState<PermissionTableRowType[]>([])
+  const [open, setOpen] = useState<boolean>(false)
+  const [loading, setLoading] = useState<boolean>(true)
+  const [editLoader, setEditLoader] = useState<boolean>(false)
+  const [selectedRowUid, setSelectedRowUid] = useState<string>('')
 
-  // ** Redux Hook & States
-  const dispatch = useDispatch<AppDispatch>()
-  const store = useSelector((state: RootState) => state.permissions)
+  // ** Handle Dialog Trash
+  const handleTrashToggle = (id: string | undefined) => {
+    const isOpen = open
+    if (!isOpen) {
+      setOpen(true)
+      if (typeof id === 'string') {
+        setSelectedRowUid(id)
+      }
+    } else {
+      setSelectedRowUid('')
+      setOpen(false)
+    }
+  }
 
   const handleFilter = useCallback((val: string) => {
     setValue(val)
   }, [])
+
+  // ** Handle Delete
+  const handleDelete = async (id: string) => {
+    try {
+    } catch (error) {
+    } finally {
+    }
+  }
+
+  // ** Edit Permission
+  const handleEdit = async (uid: string) => {
+    try {
+      setEditLoader(true)
+      const response = await axios.get(`${endpoints.rolePermission.endpoint}/${uid}`)
+      console.log(response)
+    } catch (error) {
+    } finally {
+      setEditLoader(false)
+    }
+  }
 
   // ** Columns
   const columns = [
@@ -111,10 +146,10 @@ const Permission = () => {
       headerName: 'Actions',
       renderCell: ({ row }: CellType) => (
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          <IconButton>
+          <IconButton onClick={() => handleEdit(row.uid)}>
             <Icon icon='tabler:edit' />
           </IconButton>
-          <IconButton>
+          <IconButton onClick={() => handleTrashToggle(row.uid)}>
             <Icon icon='tabler:trash' />
           </IconButton>
         </Box>
@@ -135,8 +170,45 @@ const Permission = () => {
     })()
   }, [])
 
+  // ** Fetch Table List
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(endpoints.rolePermission.endpoint)
+        const result = response.data.content.result
+
+        const transformed: PermissionTableRowType[] = result.map((item: any, id: number) => ({
+          id,
+          uid: item.uid,
+          roleName: item.roleName,
+          createdAt: item.createdAt
+        }))
+
+        setRows(transformed)
+      } catch (error) {
+        console.log('Error fetching permission data:', error)
+      } finally {
+        setLoading(false)
+      }
+    }
+    fetchData()
+    return () => {
+      setLoading(true)
+    }
+  }, [])
+
+  // ** Sekeleton Row
+  const skeletonRows = Array.from({ length: 5 }).map((_, i) => ({
+    id: i,
+    uid: `skeleton-${i}` // only needed if you use getRowId
+  }))
+
   return (
     <>
+      {/* For Edit Backdrop */}
+      <Backdrop sx={theme => ({ color: '#fff', zIndex: theme.zIndex.drawer + 1 })} open={editLoader}>
+        <BounceLoader color='#fff' />
+      </Backdrop>
       <Grid container spacing={6}>
         <Grid item xs={12}>
           <PageHeader
@@ -155,18 +227,32 @@ const Permission = () => {
         <Grid item xs={12}>
           <Card>
             <TableHeader value={value} handleFilter={handleFilter} permissionList={permissionList} />
-            <DataGrid
-              autoHeight
-              rows={store.data}
-              columns={columns}
-              pageSize={pageSize}
-              disableSelectionOnClick
-              rowsPerPageOptions={[10, 25, 50]}
-              onPageSizeChange={newPageSize => setPageSize(newPageSize)}
-            />
+            {loading ? (
+              <DataGrid
+                autoHeight
+                rows={skeletonRows}
+                columns={skeletonColumns}
+                pageSize={pageSize}
+                disableSelectionOnClick
+                rowsPerPageOptions={[10, 25, 50]}
+                getRowId={row => row.uid}
+              />
+            ) : (
+              <DataGrid
+                autoHeight
+                rows={rows}
+                columns={columns}
+                pageSize={pageSize}
+                disableSelectionOnClick
+                rowsPerPageOptions={[10, 25, 50]}
+                onPageSizeChange={newPageSize => setPageSize(newPageSize)}
+                getRowId={row => row.uid}
+              />
+            )}
           </Card>
         </Grid>
       </Grid>
+      <PermisionRoleTrashDialog open={open} handleTrashToggle={handleTrashToggle} />
     </>
   )
 }
