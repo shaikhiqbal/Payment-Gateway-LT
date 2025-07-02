@@ -22,7 +22,7 @@ const navigation = (): VerticalNavItemsType => {
       action: 'read',
       subject: 'permission',
       icon: 'material-symbols:admin-panel-settings-outline-rounded',
-      title: 'Permissions'
+      title: 'Role & Permissions'
     },
     {
       title: 'User',

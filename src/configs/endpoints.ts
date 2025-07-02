@@ -19,6 +19,10 @@ const endpoints = {
   },
   rolePermission: {
     endpoint: '/userpermission'
+  },
+  userManagement: {
+    endpoint: '/sub_user/',
+    getAll: '/sub_user'
   }
 }
 

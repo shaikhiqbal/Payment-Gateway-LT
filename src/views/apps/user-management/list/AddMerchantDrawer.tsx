@@ -1,6 +1,4 @@
-// ** React Imports
-import { useState } from 'react'
-
+import { Fragment, useEffect } from 'react'
 // ** MUI Imports
 import Drawer from '@mui/material/Drawer'
 import Select from '@mui/material/Select'
@@ -14,43 +12,52 @@ import Typography from '@mui/material/Typography'
 import Box, { BoxProps } from '@mui/material/Box'
 import FormControl from '@mui/material/FormControl'
 import FormHelperText from '@mui/material/FormHelperText'
-import { FormControlLabel, Checkbox } from '@mui/material'
 
 // ** Third Party Imports
 import * as yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useForm, Controller } from 'react-hook-form'
 
+// ** Axios
+import axios from 'src/configs/axios'
+import endpoints from 'src/configs/endpoints'
+
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
 
-// ** Store Imports
-import { useDispatch } from 'react-redux'
+// ** Types Import
+import { PermissionTableRowType } from 'src/types/pages/permission'
 
-// ** Actions Imports
-import { addUser } from 'src/store/apps/user'
+// ** Custom Components
+import CountryField from 'src/pages/components/form-element/location/CountryField'
 
-// ** Types Imports
-import { AppDispatch } from 'src/store'
+// ** Data
+import { countries } from 'src/@fake-db/autocomplete'
+
+// ** Third Party Loader
+import { BeatLoader } from 'react-spinners'
+import { MerchantType } from 'src/types/apps/merchantTypes'
+import { Alert } from '@mui/material'
 
 interface SidebarAddUserType {
   open: boolean
   toggle: () => void
+  roleList: PermissionTableRowType[]
+  editRow: MerchantType | null
+  setEditRow: (row: MerchantType | null) => void
+  fetchUsers: () => void
 }
 
-interface UserData {
-  firstName: string
-  lastName: string
-  email: string
-  countryCode: string
-  phone: string
-  username: string
-  password: string
-  isAdminAccess: boolean
-  manageTransaction: boolean
-  report: boolean
-  technicale: boolean
-}
+// interface UserData {
+//   firstName: string
+//   lastName: string
+//   emailId: string
+//   countryCode: string
+//   mobileNum: string
+//   username: string
+//   password: string
+//   roleName: string
+// }
 
 const showErrors = (field: string, valueLen: number, min: number) => {
   if (valueLen === 0) {
@@ -70,14 +77,11 @@ const Header = styled(Box)<BoxProps>(({ theme }) => ({
 }))
 
 const schema = yup.object().shape({
-  company: yup.string().required(),
-  billing: yup.string().required(),
-  country: yup.string().required(),
-  email: yup
+  emailId: yup
     .string()
     .matches(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/, 'Enter a valid email address')
     .required(),
-  contact: yup
+  mobileNum: yup
     .number()
     .typeError('Contact Number field is required')
     .min(10, obj => showErrors('Contact Number', obj.value.length, obj.min))
@@ -86,70 +90,83 @@ const schema = yup.object().shape({
     .string()
     .min(3, obj => showErrors('First Name', obj.value.length, obj.min))
     .required(),
-  username: yup
-    .string()
-    .min(3, obj => showErrors('Username', obj.value.length, obj.min))
-    .required(),
   lastName: yup.string().required(),
   countryCode: yup.string().required(),
-  phone: yup.string().required(),
-  password: yup.string().required(),
-  // Boolean fields are not required
-  isAdminAccess: yup.boolean(),
-  manageTransaction: yup.boolean(),
-  report: yup.boolean(),
-  technicale: yup.boolean()
+  password: yup.string().when(['uid'], {
+    is: (uid: string | undefined) => !uid,
+    then: schema => schema.required(),
+    otherwise: schema => schema.notRequired()
+  }),
+  userRoles: yup.object({
+    uid: yup.string().required()
+  }),
+  uid: yup.string().notRequired() // add uid to schema for .when to work
 })
 
-const defaultValues: UserData = {
+const defaultValues: MerchantType = {
   firstName: '',
   lastName: '',
-  email: '',
+  emailId: '',
   countryCode: '',
-  phone: '',
-  username: '',
+  mobileNum: '',
   password: '',
-  isAdminAccess: false,
-  manageTransaction: false,
-  report: false,
-  technicale: false
+  userRoles: {
+    uid: ''
+  }
 }
 
 const AddMerchantDrawer = (props: SidebarAddUserType) => {
   // ** Props
-  const { open, toggle } = props
-
-  // ** State
-  const [plan, setPlan] = useState<string>('basic')
-  const [role, setRole] = useState<string>('subscriber')
+  const { open, toggle, roleList, editRow, setEditRow, fetchUsers } = props
 
   // ** Hooks
-  const dispatch = useDispatch<AppDispatch>()
   const {
     reset,
     control,
     setValue,
     handleSubmit,
-    formState: { errors }
+    watch,
+    formState: { errors, isSubmitting },
+    setError
   } = useForm({
     defaultValues,
     mode: 'onChange',
     resolver: yupResolver(schema)
   })
 
-  const onSubmit = (data: UserData) => {
-    // dispatch(addUser({ ...data, role, currentPlan: plan }))
-    toggle()
-    reset()
+  const onSubmit = async (data: MerchantType) => {
+    try {
+      data.countryCode = data.countryCode.includes('+') ? data.countryCode : `+${data.countryCode}`
+      if (data.uid) {
+        await axios.put(endpoints.userManagement.endpoint + data.uid, data)
+        setEditRow(null)
+      } else {
+        await axios.post(endpoints.userManagement.endpoint, data)
+      }
+      reset()
+      toggle()
+      fetchUsers()
+    } catch (error: any) {
+      if (error?.response?.status == 400) {
+        setError('serverError', { type: 'serverError', message: error?.response?.data?.content })
+      }
+      console.error('Error:', error)
+    }
   }
 
   const handleClose = () => {
-    setPlan('basic')
-    setRole('subscriber')
     // setValue('contact', Number(''))
     toggle()
     reset()
   }
+
+  useEffect(() => {
+    if (editRow) {
+      const data = { ...editRow }
+      data.countryCode = data.countryCode.replace('+', '')
+      reset(data)
+    }
+  }, [editRow, reset])
 
   return (
     <Drawer
@@ -161,7 +178,7 @@ const AddMerchantDrawer = (props: SidebarAddUserType) => {
       sx={{ '& .MuiDrawer-paper': { width: { xs: 300, sm: 400 } } }}
     >
       <Header>
-        <Typography variant='h6'>Add User</Typography>
+        <Typography variant='h6'>{editRow ? 'Edit' : 'Add'} User</Typography>
         <IconButton
           size='small'
           onClick={handleClose}
@@ -171,6 +188,11 @@ const AddMerchantDrawer = (props: SidebarAddUserType) => {
         </IconButton>
       </Header>
       <Box sx={{ p: theme => theme.spacing(0, 6, 6) }}>
+        {errors?.serverError ? (
+          <Alert severity='error' sx={{ mb: 4 }}>
+            {errors?.serverError?.message}
+          </Alert>
+        ) : null}
         <form onSubmit={handleSubmit(onSubmit)}>
           <FormControl fullWidth sx={{ mb: 4 }}>
             <Controller
@@ -196,7 +218,7 @@ const AddMerchantDrawer = (props: SidebarAddUserType) => {
           </FormControl>
           <FormControl fullWidth sx={{ mb: 4 }}>
             <Controller
-              name='email'
+              name='emailId'
               control={control}
               render={({ field }) => (
                 <TextField
@@ -204,43 +226,55 @@ const AddMerchantDrawer = (props: SidebarAddUserType) => {
                   type='email'
                   label='Email'
                   placeholder='johndoe@email.com'
-                  error={Boolean(errors.email)}
+                  error={Boolean(errors.emailId)}
                 />
               )}
             />
-            {errors.email && <FormHelperText sx={{ color: 'error.main' }}>{errors.email.message}</FormHelperText>}
+            {errors.emailId && <FormHelperText sx={{ color: 'error.main' }}>{errors.emailId.message}</FormHelperText>}
           </FormControl>
+
           <FormControl fullWidth sx={{ mb: 4 }}>
             <Controller
               name='countryCode'
               control={control}
-              render={({ field }) => (
-                <TextField {...field} label='Country Code' placeholder='+1' error={Boolean(errors.countryCode)} />
-              )}
+              rules={{ required: 'Contact Number is required' }}
+              render={({ field }) => {
+                const selectedCountry = countries.find(c => c.phone === field.value) || null
+
+                return (
+                  <Fragment>
+                    <CountryField
+                      {...field}
+                      value={selectedCountry}
+                      onChange={(event, newValue) => {
+                        field.onChange(newValue?.phone || null)
+                      }}
+                      valueType='phone'
+                      label='Country Code *'
+                      error={!!errors.countryCode}
+                      helperText={errors.countryCode?.message}
+                      fullWidth
+                      ref={field.ref}
+                    />
+                  </Fragment>
+                )
+              }}
             />
-            {errors.countryCode && (
+            {/* {errors.countryCode && (
               <FormHelperText sx={{ color: 'error.main' }}>{errors.countryCode.message}</FormHelperText>
+            )} */}
+          </FormControl>
+          <FormControl fullWidth sx={{ mb: 4 }}>
+            <Controller
+              name='mobileNum'
+              control={control}
+              render={({ field }) => (
+                <TextField {...field} label='Phone' placeholder='1234567890' error={Boolean(errors.mobileNum)} />
+              )}
+            />
+            {errors.mobileNum && (
+              <FormHelperText sx={{ color: 'error.main' }}>{errors.mobileNum.message}</FormHelperText>
             )}
-          </FormControl>
-          <FormControl fullWidth sx={{ mb: 4 }}>
-            <Controller
-              name='phone'
-              control={control}
-              render={({ field }) => (
-                <TextField {...field} label='Phone' placeholder='1234567890' error={Boolean(errors.phone)} />
-              )}
-            />
-            {errors.phone && <FormHelperText sx={{ color: 'error.main' }}>{errors.phone.message}</FormHelperText>}
-          </FormControl>
-          <FormControl fullWidth sx={{ mb: 4 }}>
-            <Controller
-              name='username'
-              control={control}
-              render={({ field }) => (
-                <TextField {...field} label='Username' placeholder='johndoe' error={Boolean(errors.username)} />
-              )}
-            />
-            {errors.username && <FormHelperText sx={{ color: 'error.main' }}>{errors.username.message}</FormHelperText>}
           </FormControl>
           <FormControl fullWidth sx={{ mb: 4 }}>
             <Controller
@@ -259,69 +293,35 @@ const AddMerchantDrawer = (props: SidebarAddUserType) => {
             {errors.password && <FormHelperText sx={{ color: 'error.main' }}>{errors.password.message}</FormHelperText>}
           </FormControl>
 
-          <FormControl fullWidth sx={{ mb: 2 }}>
+          <FormControl fullWidth sx={{ mb: 4 }} error={Boolean(errors.userRoles)}>
+            <InputLabel id='userRoles-label'>Select Role Name</InputLabel>
             <Controller
-              name='isAdminAccess'
               control={control}
+              name='userRoles.uid'
+              rules={{
+                required: 'Role Name is required!'
+              }}
               render={({ field }) => (
-                <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                  <Checkbox checked={field.value} onChange={e => field.onChange(e.target.checked)} id='isAdminAccess' />
-                  <label htmlFor='isAdminAccess' style={{ marginLeft: 8 }}>
-                    Admin Access
-                  </label>
-                </Box>
+                <Select labelId='userRoles-label' label='Select Role Name' {...field} error={Boolean(errors.userRoles)}>
+                  <MenuItem value=''>
+                    <em>None</em>
+                  </MenuItem>
+                  {roleList?.map(role => (
+                    <MenuItem value={role.uid} key={role.uid}>
+                      {role.roleName as string}
+                    </MenuItem>
+                  ))}
+                </Select>
               )}
             />
+            {errors.userRoles?.uid && (
+              <FormHelperText sx={{ color: 'error.main' }}>{errors.userRoles?.uid.message as string}</FormHelperText>
+            )}
           </FormControl>
-          <FormControl fullWidth sx={{ mb: 2 }}>
-            <Controller
-              name='manageTransaction'
-              control={control}
-              render={({ field }) => (
-                <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                  <Checkbox
-                    checked={field.value}
-                    onChange={e => field.onChange(e.target.checked)}
-                    id='manageTransaction'
-                  />
-                  <label htmlFor='manageTransaction' style={{ marginLeft: 8 }}>
-                    Manage Transaction
-                  </label>
-                </Box>
-              )}
-            />
-          </FormControl>
-          <FormControl fullWidth sx={{ mb: 2 }}>
-            <Controller
-              name='report'
-              control={control}
-              render={({ field }) => (
-                <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                  <Checkbox checked={field.value} onChange={e => field.onChange(e.target.checked)} id='report' />
-                  <label htmlFor='report' style={{ marginLeft: 8 }}>
-                    Report
-                  </label>
-                </Box>
-              )}
-            />
-          </FormControl>
-          <FormControl fullWidth sx={{ mb: 4 }}>
-            <Controller
-              name='technicale'
-              control={control}
-              render={({ field }) => (
-                <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                  <Checkbox checked={field.value} onChange={e => field.onChange(e.target.checked)} id='technicale' />
-                  <label htmlFor='technicale' style={{ marginLeft: 8 }}>
-                    Technical
-                  </label>
-                </Box>
-              )}
-            />
-          </FormControl>
+
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <Button type='submit' variant='contained' sx={{ mr: 3 }}>
-              Submit
+              {isSubmitting ? <BeatLoader size={15} color='#ffffff' /> : 'Submit'}
             </Button>
             <Button variant='outlined' color='secondary' onClick={handleClose}>
               Cancel

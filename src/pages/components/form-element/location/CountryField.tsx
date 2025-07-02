@@ -5,6 +5,7 @@ import Autocomplete, { AutocompleteProps, createFilterOptions } from '@mui/mater
 
 // ** Data
 import { countries } from 'src/@fake-db/autocomplete'
+import { co } from '@fullcalendar/core/internal-common'
 
 export interface CountryType {
   code: string
@@ -31,10 +32,11 @@ const CountryField = forwardRef<HTMLDivElement, Props>(({ error, helperText, lab
       autoHighlight
       id='autocomplete-country-select'
       options={countries as CountryType[]}
-      getOptionLabel={option => {
-        if (typeof option === 'string') return option
-        return valueType == 'phone' ? `+${option[valueType]}` : option[valueType] || ''
-      }}
+      // getOptionLabel={option => {
+      //   if (typeof option === 'string') return option
+      //   return valueType == 'phone' ? `+${option[valueType]}` : option[valueType] || ''
+      // }}
+      getOptionLabel={option => (typeof option === 'string' ? option : `${option.label} (+${option.phone})`)}
       filterOptions={filterOptions}
       renderOption={(optionProps, option) => (
         <Box component='li' sx={{ '& > img': { mr: 4, flexShrink: 0 } }} {...optionProps}>

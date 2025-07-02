@@ -17,10 +17,14 @@ import { useForm, Controller } from 'react-hook-form'
 import * as yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
 
-// ** Next & Axios
+// ** Next Routes
 import { useRouter } from 'next/router'
+
+// ** Next & Axios
 import axios from 'src/configs/axios'
 import endpoints from 'src/configs/endpoints'
+
+// ** Third party Loader
 import { BeatLoader } from 'react-spinners'
 
 interface FormData {

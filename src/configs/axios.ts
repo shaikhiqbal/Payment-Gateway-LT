@@ -61,7 +61,20 @@ instance.interceptors.request.use(
 // Response Interceptor
 instance.interceptors.response.use(
   response => response,
-  error => Promise.reject(error)
+  error => {
+    debugger
+    if (error.message === 'Network Error') {
+      // alert('Backend server is not reachable. Please try again later.')
+      console.error('Server is down.')
+
+      // return Promise.reject(error)
+    } else if (error.response) {
+      // alert(`Error ${error.response.status}: ${error.response.statusText}`)
+    } else {
+      // alert('Something went wrong.')
+    }
+    return Promise.reject(error)
+  }
 )
 
 export default instance

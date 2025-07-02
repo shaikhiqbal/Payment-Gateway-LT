@@ -23,3 +23,11 @@ export interface PermissionTableRowType {
   roleName: string
   uid: string
 }
+
+export type UserType = {
+  uid: string
+  firstName: string
+  lastName: string
+  mobileNum: string
+  email: string
+}

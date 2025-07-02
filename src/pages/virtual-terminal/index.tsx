@@ -35,12 +35,6 @@ import CardDetails from './CardDetails'
 import BankAccountDetails from './BankAccountDetails'
 import VoiceUploader from './VoiceUploader'
 
-// ** Third Party Imports
-import Payment from 'payment'
-
-// ** Utils
-import { formatCVC, formatExpirationDate, formatCreditCardNumber } from 'src/@core/utils/format'
-
 // ** Spinners
 import { BeatLoader } from 'react-spinners'
 

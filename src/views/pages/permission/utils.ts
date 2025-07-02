@@ -41,3 +41,18 @@ export const extractUID = (actionList: PermissionFormValueType<ActionType>[]): s
     .filter(({ isSelected }) => isSelected)
     .map(({ uid }) => uid)
 }
+
+export const formEditPermisions = (
+  actionList: PermissionFormValueType<ActionType>[],
+  fetchedPermisions: { roleName: string; permissionIds: string[] }
+): PermissionFormValueType<ActionType>[] => {
+  const { permissionIds } = fetchedPermisions
+  const hash = new Map(permissionIds.map((id: string) => [id, 1]))
+  return actionList.map(({ actions, ...rest }) => ({
+    ...rest,
+    actions: actions.map(action => ({
+      ...action,
+      isSelected: hash.has(action.uid)
+    }))
+  }))
+}

@@ -9,8 +9,8 @@ import Typography from '@mui/material/Typography'
 import { DataGrid } from '@mui/x-data-grid'
 import { Backdrop, Skeleton } from '@mui/material'
 
-// ** Utils
-import { formatDate } from 'src/@core/utils/format'
+// ** Coloumn & Skeleton
+import { skeletonRows, skeletonColumns, defaultColumns, CellType } from 'src/views/pages/permission/column'
 
 // ** Custome Components
 import Icon from 'src/@core/components/icon'
@@ -20,71 +20,28 @@ import PageHeader from 'src/@core/components/page-header'
 import TableHeader from 'src/views/pages/permission/TableHeader'
 
 // ** Types Import
-import { PermissionRowType } from 'src/types/apps/permissionTypes'
 import { PermissionFormValueType, ActionType, PermissionTableRowType } from 'src/types/pages/permission'
 
 // ** Axios
 import axios from 'src/configs/axios'
 import endpoints from 'src/configs/endpoints'
-import { convertListToFormat } from 'src/views/pages/permission/utils'
+
+// ** Third Party Imports
 import { BounceLoader } from 'react-spinners'
+
+// ** Dialog Imports
 import PermisionRoleTrashDialog from 'src/views/pages/permission/PermisionRoleTrashDialog'
 
-// ** Types
+// ** Utils
+import { convertListToFormat, formEditPermisions } from 'src/views/pages/permission/utils'
 
-interface CellType {
-  row: PermissionTableRowType
+type Mode = 'add' | 'edit' | 'cancle'
+
+interface EditFormValueType {
+  roleName: string
+  permissions: PermissionFormValueType<ActionType>[]
+  uid: string
 }
-
-const defaultColumns = [
-  {
-    flex: 0.25,
-    field: 'name',
-    minWidth: 240,
-    headerName: 'Name',
-    renderCell: ({ row }: CellType) => <Typography sx={{ color: 'text.secondary' }}>{row.roleName}</Typography>
-  },
-
-  {
-    flex: 0.25,
-    minWidth: 210,
-    field: 'createdDate',
-    headerName: 'Created Date',
-    renderCell: ({ row }: CellType) => (
-      <Typography sx={{ color: 'text.secondary' }}>{formatDate(row.createdAt)}</Typography>
-    )
-  }
-]
-
-const skeletonColumns = [
-  {
-    field: 'name',
-    headerName: 'Name',
-    flex: 0.25,
-    minWidth: 240,
-    renderCell: () => <Skeleton variant='text' width='80%' height={24} />
-  },
-  {
-    field: 'createdDate',
-    headerName: 'Created Date',
-    flex: 0.25,
-    minWidth: 210,
-    renderCell: () => <Skeleton variant='text' width='60%' height={24} />
-  },
-  {
-    field: 'actions',
-    headerName: 'Actions',
-    flex: 0.15,
-    minWidth: 120,
-    sortable: false,
-    renderCell: () => (
-      <>
-        <Skeleton variant='circular' width={24} height={24} sx={{ mr: 2 }} />
-        <Skeleton variant='circular' width={24} height={24} />
-      </>
-    )
-  }
-]
 
 const Permission = () => {
   // ** States
@@ -95,19 +52,38 @@ const Permission = () => {
   const [open, setOpen] = useState<boolean>(false)
   const [loading, setLoading] = useState<boolean>(true)
   const [editLoader, setEditLoader] = useState<boolean>(false)
-  const [selectedRowUid, setSelectedRowUid] = useState<string>('')
+  const [selectedRow, setSelectedRow] = useState<PermissionTableRowType | null>(null)
+  const [editRowData, setEditRowData] = useState<EditFormValueType>({
+    roleName: '',
+    permissions: [],
+    uid: ''
+  })
 
   // ** Handle Dialog Trash
-  const handleTrashToggle = (id: string | undefined) => {
+  const handleTrashToggle = (row: PermissionTableRowType | null, resetTable?: boolean | undefined) => {
     const isOpen = open
     if (!isOpen) {
       setOpen(true)
-      if (typeof id === 'string') {
-        setSelectedRowUid(id)
+      if (typeof row === 'object') {
+        setSelectedRow(row)
       }
     } else {
-      setSelectedRowUid('')
+      setSelectedRow(null)
       setOpen(false)
+    }
+    if (resetTable) {
+      fetchData()
+    }
+  }
+
+  const handleEditToggle = (submitType: Mode) => {
+    if (submitType === 'edit') {
+      setEditRowData({ roleName: '', permissions: [], uid: '' })
+      fetchData()
+    } else if (submitType == 'add') {
+      fetchData()
+    } else if (submitType == 'cancle' && Object.values(editRowData).every(v => v.length)) {
+      setEditRowData({ roleName: '', permissions: [], uid: '' })
     }
   }
 
@@ -115,20 +91,16 @@ const Permission = () => {
     setValue(val)
   }, [])
 
-  // ** Handle Delete
-  const handleDelete = async (id: string) => {
-    try {
-    } catch (error) {
-    } finally {
-    }
-  }
-
   // ** Edit Permission
   const handleEdit = async (uid: string) => {
     try {
       setEditLoader(true)
       const response = await axios.get(`${endpoints.rolePermission.endpoint}/${uid}`)
-      console.log(response)
+      setEditRowData({
+        roleName: response.data.content.roleName,
+        permissions: formEditPermisions([...permissionList], response.data.content),
+        uid: response.data.content.uid
+      })
     } catch (error) {
     } finally {
       setEditLoader(false)
@@ -149,7 +121,7 @@ const Permission = () => {
           <IconButton onClick={() => handleEdit(row.uid)}>
             <Icon icon='tabler:edit' />
           </IconButton>
-          <IconButton onClick={() => handleTrashToggle(row.uid)}>
+          <IconButton onClick={() => handleTrashToggle(row)}>
             <Icon icon='tabler:trash' />
           </IconButton>
         </Box>
@@ -170,38 +142,34 @@ const Permission = () => {
     })()
   }, [])
 
+  async function fetchData() {
+    setLoading(true)
+    try {
+      const response = await axios.get(endpoints.rolePermission.endpoint)
+      const result = response.data.content.result
+
+      const transformed: PermissionTableRowType[] = result.map((item: any, id: number) => ({
+        id,
+        uid: item.uid,
+        roleName: item.roleName,
+        createdAt: item.createdAt
+      }))
+
+      setRows(transformed)
+    } catch (error) {
+      console.log('Error fetching permission data:', error)
+    } finally {
+      setLoading(false)
+    }
+  }
+
   // ** Fetch Table List
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get(endpoints.rolePermission.endpoint)
-        const result = response.data.content.result
-
-        const transformed: PermissionTableRowType[] = result.map((item: any, id: number) => ({
-          id,
-          uid: item.uid,
-          roleName: item.roleName,
-          createdAt: item.createdAt
-        }))
-
-        setRows(transformed)
-      } catch (error) {
-        console.log('Error fetching permission data:', error)
-      } finally {
-        setLoading(false)
-      }
-    }
     fetchData()
     return () => {
-      setLoading(true)
+      setRows([])
     }
   }, [])
-
-  // ** Sekeleton Row
-  const skeletonRows = Array.from({ length: 5 }).map((_, i) => ({
-    id: i,
-    uid: `skeleton-${i}` // only needed if you use getRowId
-  }))
 
   return (
     <>
@@ -214,7 +182,7 @@ const Permission = () => {
           <PageHeader
             title={
               <Typography variant='h5' sx={{ mb: 6 }}>
-                Permissions List
+                Roles List
               </Typography>
             }
             subtitle={
@@ -226,7 +194,13 @@ const Permission = () => {
         </Grid>
         <Grid item xs={12}>
           <Card>
-            <TableHeader value={value} handleFilter={handleFilter} permissionList={permissionList} />
+            <TableHeader
+              value={value}
+              handleFilter={handleFilter}
+              permissionList={permissionList}
+              editRowFormDetails={{ ...editRowData }}
+              handleEditToggle={handleEditToggle}
+            />
             {loading ? (
               <DataGrid
                 autoHeight
@@ -252,7 +226,7 @@ const Permission = () => {
           </Card>
         </Grid>
       </Grid>
-      <PermisionRoleTrashDialog open={open} handleTrashToggle={handleTrashToggle} />
+      <PermisionRoleTrashDialog open={open} handleTrashToggle={handleTrashToggle} selectedRow={selectedRow} />
     </>
   )
 }

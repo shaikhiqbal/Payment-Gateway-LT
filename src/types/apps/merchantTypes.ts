@@ -1,15 +1,20 @@
-export type MerchantType = {
-  id: number
+export interface MerchantType {
+  id?: string | null
+  isActive?: boolean
+  createdAt?: string
+  updatedAt?: string | null
   firstName: string
   lastName: string
-  email: string
+  emailId: string
+  mobileNum: string
   countryCode: string
-  phone: string
-  username: string
-  password: string
-  isAdminAccess: boolean
-  manageTransaction: boolean
-  report: boolean
-  technicale: boolean
-  avatarColor?: string
+  password?: string
+  uid?: string
+  userRoles: {
+    uid: string
+    roleName?: string
+  }
+
+  active?: boolean
+  serverError?: string
 }

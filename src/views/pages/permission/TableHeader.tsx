@@ -1,5 +1,5 @@
 // ** React Imports
-import { Fragment, useEffect, useState } from 'react'
+import { Fragment, useEffect, useMemo, useState } from 'react'
 
 // ** MUI Imports
 import Box from '@mui/material/Box'
@@ -34,128 +34,176 @@ import endpoints from 'src/configs/endpoints'
 // ** Types Import
 import { ActionType, PermissionFormValueType } from 'src/types/pages/permission'
 
+// ** Utils Import
 import { extractUID } from './utils'
+
+// ** Third Party Imports
+import { BeatLoader } from 'react-spinners'
+// ** Types
+interface DefaultForm {
+  roleName: string
+  permissions: PermissionFormValueType<ActionType>[]
+  uid?: string
+  serverError?: string
+}
 
 interface TableHeaderProps {
   value: string
   handleFilter: (val: string) => void
   permissionList: PermissionFormValueType<ActionType>[]
+  editRowFormDetails: DefaultForm
+  handleEditToggle: (mode: 'add' | 'edit' | 'cancle') => void
 }
 
-// ** Icon Imports
+// ** Imports
 import Icon from 'src/@core/components/icon'
 
-interface DefaultForm {
-  roleName: string
-  permissions: PermissionFormValueType<ActionType>[]
-}
-const TableHeader = (props: TableHeaderProps) => {
-  // ** Props
-  const { value, handleFilter, permissionList } = props
+// ** Third Party Imports
+import * as yup from 'yup'
+import { yupResolver } from '@hookform/resolvers/yup'
 
-  // ** State
-  const [open, setOpen] = useState<boolean>(false)
+// ** Validation
+import { requiredNoSpecialCharsWithLabel } from 'src/validators'
 
-  // ** Toggle Dialog
-  const handleDialogToggle = () => setOpen(!open)
+// ** Validate
 
-  // ** Form Controllers
-  const { control, handleSubmit, setValue, watch, reset } = useForm<DefaultForm>({
+const schema = yup.object().shape({
+  roleName: requiredNoSpecialCharsWithLabel('Role Name')
+})
+
+// ** Component
+const TableHeader = ({
+  value,
+  handleFilter,
+  permissionList,
+  editRowFormDetails,
+  handleEditToggle
+}: TableHeaderProps) => {
+  const [open, setOpen] = useState(false)
+
+  const {
+    control,
+    handleSubmit,
+    setValue,
+    watch,
+    reset,
+    formState: { isSubmitting }
+  } = useForm<DefaultForm>({
+    resolver: yupResolver(schema),
+
     defaultValues: {
       roleName: '',
       permissions: []
     }
   })
 
-  // ** Watch Permissions
-  const permissionStatus = (() => {
-    const perms = watch('permissions') || []
-    const actions = perms.flatMap(m => m.actions)
-    if (!actions.length) return 'none'
-    const all = actions.every(a => a.isSelected)
-    const some = actions.some(a => a.isSelected)
-    return all ? 'all' : some ? 'some' : 'none'
-  })()
-
-  const { fields: permisions } = useFieldArray({
+  const { fields: permissionsFields } = useFieldArray({
     control,
     name: 'permissions'
   })
 
-  // ** Set Permission List
+  // ** Determine permission status
+  const permissionStatus = useMemo(() => {
+    const actions = (watch('permissions') || []).flatMap(m => m.actions)
+    if (!actions.length) return 'none'
+    const all = actions.every(a => a.isSelected)
+    const some = actions.some(a => a.isSelected)
+    return all ? 'all' : some ? 'some' : 'none'
+  }, [watch('permissions')])
+
+  // ** Populate form data on edit
   useEffect(() => {
-    if (permissionList) {
+    const hasEditData = Object.values(editRowFormDetails).every(v => (typeof v === 'string' ? v.length : v.length > 0))
+
+    if (hasEditData) {
+      reset(editRowFormDetails)
+      setOpen(true)
+    } else {
       setValue('permissions', permissionList)
     }
-  }, [permissionList])
+  }, [permissionList, editRowFormDetails])
 
-  // ** Handle Select All
-  const handleSelectAllCheckbox = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const checked = event.target.checked
-    const currentPermissions = watch('permissions') || []
+  // ** Toggle  dialog
+  const handleDialogToggle = () => setOpen(prev => !prev)
 
-    const updatedPermissions = currentPermissions.map(module => ({
+  const handleCloseDialog = () => {
+    setOpen(false)
+    handleEditToggle('cancle')
+    setValue('roleName', '')
+  }
+
+  // ** Handle select all checkbox
+  const handleSelectAllCheckbox = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const checked = e.target.checked
+    const updated = (watch('permissions') || []).map(module => ({
       ...module,
       actions: module.actions.map(action => ({
         ...action,
         isSelected: checked
       }))
     }))
-
-    setValue('permissions', updatedPermissions)
+    setValue('permissions', updated)
   }
 
-  // ** Handle Form Submit
+  // ** Submit form
   const onSubmit = async (data: DefaultForm) => {
     try {
       const payload = {
         roleName: data.roleName,
         permissionIds: extractUID(data.permissions)
       }
-      await axios.post(endpoints.rolePermission.endpoint + '/', payload)
+      // await axios.post(endpoints.rolePermission.endpoint, payload)
+      if (data?.uid) {
+        await axios.put(`${endpoints.rolePermission.endpoint}/${data.uid}`, payload)
+      } else {
+        await axios.post(endpoints.rolePermission.endpoint, payload)
+      }
+
+      handleEditToggle(data?.uid ? 'edit' : 'add')
+      handleDialogToggle()
       reset()
     } catch (error) {
-      console.log(error)
+      // debugger
+      console.error(error)
     }
   }
 
   return (
     <>
       <Box
-        sx={{ p: 5, pb: 3, display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between' }}
+        sx={{
+          p: 5,
+          pb: 3,
+          display: 'flex',
+          flexWrap: 'wrap',
+          alignItems: 'center',
+          justifyContent: 'space-between'
+        }}
       >
         <TextField
           size='small'
           value={value}
-          sx={{ mr: 4, mb: 2 }}
           placeholder='Search Permission'
           onChange={e => handleFilter(e.target.value)}
+          sx={{ mr: 4, mb: 2 }}
         />
-        <Button sx={{ mb: 2 }} variant='contained' onClick={handleDialogToggle}>
+        <Button variant='contained' onClick={handleDialogToggle} sx={{ mb: 2 }}>
           Add Permission
         </Button>
       </Box>
-      <Dialog fullWidth maxWidth='md' scroll='body' onClose={handleDialogToggle} open={open}>
+
+      <Dialog fullWidth maxWidth='md' scroll='body' open={open} onClose={handleDialogToggle}>
         <form onSubmit={handleSubmit(onSubmit)}>
-          <DialogTitle
-            sx={{
-              textAlign: 'center',
-              px: theme => [`${theme.spacing(5)} !important`, `${theme.spacing(15)} !important`],
-              pt: theme => [`${theme.spacing(8)} !important`, `${theme.spacing(12.5)} !important`]
-            }}
-          >
-            <Typography variant='h5' component='span'>
-              {/* {`${dialogTitle} Role`} */}
-            </Typography>
+          {/* Dialog Header */}
+          <DialogTitle sx={{ textAlign: 'center', pt: 10, px: 10 }}>
+            <Typography variant='h5'>Role Permissions</Typography>
             <Typography variant='body2'>Set Role Permissions</Typography>
           </DialogTitle>
-          <DialogContent
-            sx={{
-              pb: theme => `${theme.spacing(5)} !important`,
-              px: theme => [`${theme.spacing(5)} !important`, `${theme.spacing(15)} !important`]
-            }}
-          >
-            <Box sx={{ my: 4 }}>
+
+          {/* Dialog Content */}
+          <DialogContent sx={{ px: 10, pb: 5 }}>
+            {/* Role Name Field */}
+            <Box my={4}>
               <FormControl fullWidth>
                 <Controller
                   name='roleName'
@@ -168,55 +216,45 @@ const TableHeader = (props: TableHeaderProps) => {
                     }
                   }}
                   render={({ field, fieldState }) => (
-                    <Fragment>
+                    <>
                       <TextField
                         {...field}
                         label='Role Name'
-                        error={Boolean(fieldState.error)}
                         placeholder='Enter Role Name'
+                        error={Boolean(fieldState.error)}
                       />
                       {fieldState.error && (
                         <FormHelperText sx={{ color: 'error.main' }}>{fieldState.error.message}</FormHelperText>
                       )}
-                    </Fragment>
+                    </>
                   )}
                 />
               </FormControl>
             </Box>
+
+            {/* Permission Table */}
             <Typography variant='h6'>Role Permissions</Typography>
             <TableContainer>
               <Table size='small'>
                 <TableHead>
                   <TableRow>
-                    <TableCell sx={{ pl: '0 !important' }}>
-                      <Box
-                        sx={{
-                          display: 'flex',
-                          fontSize: '0.875rem',
-                          whiteSpace: 'nowrap',
-                          alignItems: 'center',
-                          textTransform: 'capitalize',
-                          '& svg': { ml: 1, cursor: 'pointer' }
-                        }}
-                      >
+                    <TableCell>
+                      <Box sx={{ display: 'flex', alignItems: 'center', fontSize: '0.875rem' }}>
                         Administrator Access
-                        <Tooltip placement='top' title='Allows a full access to the system'>
-                          <Box sx={{ display: 'flex' }}>
-                            <Icon icon='tabler:info-circle' fontSize='1.25rem' />
-                          </Box>
+                        <Tooltip title='Allows full access to the system'>
+                          <Icon icon='tabler:info-circle' fontSize='1.25rem' style={{ marginLeft: 6 }} />
                         </Tooltip>
                       </Box>
                     </TableCell>
                     <TableCell colSpan={3}>
                       <FormControlLabel
                         label='Select All'
-                        sx={{ '& .MuiTypography-root': { textTransform: 'capitalize' } }}
                         control={
                           <Checkbox
                             size='small'
                             onChange={handleSelectAllCheckbox}
-                            indeterminate={permissionStatus == 'some'}
-                            checked={permissionStatus == 'all'}
+                            indeterminate={permissionStatus === 'some'}
+                            checked={permissionStatus === 'all'}
                           />
                         }
                       />
@@ -224,64 +262,44 @@ const TableHeader = (props: TableHeaderProps) => {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {permisions?.length
-                    ? permisions.map((module, indexP) => {
-                        const { title, actions } = module
-                        return (
-                          <TableRow key={indexP} sx={{ '& .MuiTableCell-root:first-of-type': { pl: '0 !important' } }}>
-                            <TableCell
-                              sx={{
-                                fontWeight: 600,
-                                whiteSpace: 'nowrap',
-                                color: theme => `${theme.palette.text.primary} !important`
-                              }}
-                            >
-                              {title}
-                            </TableCell>
-
-                            {actions.map((action, indexC) => (
-                              <TableCell key={indexC}>
-                                <Controller
-                                  control={control}
-                                  name={`permissions.${indexP}.actions.${indexC}.isSelected`}
-                                  render={({ field }) => {
-                                    return (
-                                      <FormControlLabel
-                                        label={action.action}
-                                        control={
-                                          <Checkbox
-                                            size='small'
-                                            checked={action.isSelected}
-                                            onChange={e => field.onChange(e.target.checked)}
-                                          />
-                                        }
-                                      />
-                                    )
-                                  }}
+                  {permissionsFields.length > 0 &&
+                    permissionsFields.map((module, indexP) => (
+                      <TableRow key={indexP}>
+                        <TableCell sx={{ fontWeight: 600 }}>{module.title}</TableCell>
+                        {module.actions.map((action, indexC) => (
+                          <TableCell key={indexC}>
+                            <Controller
+                              control={control}
+                              name={`permissions.${indexP}.actions.${indexC}.isSelected`}
+                              render={({ field }) => (
+                                <FormControlLabel
+                                  label={action.action}
+                                  control={
+                                    <Checkbox
+                                      size='small'
+                                      checked={action.isSelected}
+                                      onChange={e => field.onChange(e.target.checked)}
+                                    />
+                                  }
                                 />
-                              </TableCell>
-                            ))}
-                          </TableRow>
-                        )
-                      })
-                    : null}
+                              )}
+                            />
+                          </TableCell>
+                        ))}
+                      </TableRow>
+                    ))}
                 </TableBody>
               </Table>
             </TableContainer>
           </DialogContent>
-          <DialogActions
-            sx={{
-              display: 'flex',
-              justifyContent: 'center',
-              px: theme => [`${theme.spacing(5)} !important`, `${theme.spacing(15)} !important`],
-              pb: theme => [`${theme.spacing(8)} !important`, `${theme.spacing(12.5)} !important`]
-            }}
-          >
+
+          {/* Dialog Actions */}
+          <DialogActions sx={{ justifyContent: 'center', pb: 10 }}>
             <Box className='demo-space-x'>
               <Button type='submit' variant='contained'>
-                Submit
+                {isSubmitting ? <BeatLoader size={15} color='#ffffff' /> : 'Submit'}
               </Button>
-              <Button color='secondary' variant='outlined' onClick={handleDialogToggle}>
+              <Button color='secondary' variant='outlined' onClick={handleCloseDialog}>
                 Cancel
               </Button>
             </Box>

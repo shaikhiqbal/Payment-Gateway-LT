@@ -1,4 +1,4 @@
-import React, { useState, useCallback, MouseEvent } from 'react'
+import React, { useState, useCallback, MouseEvent, useEffect } from 'react'
 
 // ** Next Imports
 import Link from 'next/link'
@@ -20,6 +20,10 @@ import IconButton from '@mui/material/IconButton'
 import Typography from '@mui/material/Typography'
 import Select, { SelectChangeEvent } from '@mui/material/Select'
 
+// ** Axios
+import axios from 'src/configs/axios'
+import endpoints from 'src/configs/endpoints'
+
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
 
@@ -30,21 +34,19 @@ import AddMerchantDrawer from 'src/views/apps/user-management/list/AddMerchantDr
 // ** Custom Components Imports
 import CustomChip from 'src/@core/components/mui/chip'
 import CustomAvatar from 'src/@core/components/mui/avatar'
-import CardStatsHorizontalWithDetails from 'src/@core/components/card-statistics/card-stats-horizontal-with-details'
 
 // ** Types Imports
-import { RootState, AppDispatch } from 'src/store'
-import { CardStatsType } from 'src/@fake-db/types'
 import { ThemeColor } from 'src/@core/layouts/types'
 import { MerchantType } from 'src/types/apps/merchantTypes'
-import { CardStatsHorizontalWithDetailsProps } from 'src/@core/components/card-statistics/types'
+import { PermissionTableRowType } from 'src/types/pages/permission'
 
 // ** Utils Import
 import { getInitials } from 'src/@core/utils/get-initials'
 
 // ** Actions Imports
-import { fetchData, deleteUser } from 'src/store/apps/user'
 import { TextField } from '@mui/material'
+
+// ** Types Imports
 
 // ** Types
 interface UserRoleType {
@@ -57,12 +59,6 @@ interface UserStatusType {
 
 interface CellType {
   row: MerchantType
-}
-
-const userStatusObj: UserStatusType = {
-  active: 'success',
-  pending: 'warning',
-  inactive: 'secondary'
 }
 
 // ** renders client column
@@ -78,154 +74,6 @@ const renderClient = ({ firstName }: MerchantType) => {
     </CustomAvatar>
   )
 }
-// ** renders client column
-const userRoleObj: UserRoleType = {
-  admin: { icon: 'tabler:device-laptop', color: 'secondary' },
-  author: { icon: 'tabler:circle-check', color: 'success' },
-  editor: { icon: 'tabler:edit', color: 'info' },
-  maintainer: { icon: 'tabler:chart-pie-2', color: 'primary' },
-  subscriber: { icon: 'tabler:user', color: 'warning' }
-}
-
-const RowOptions = ({ id }: { id: number | string }) => {
-  // ** Store & Actions
-  const dispatch = (action: any) => {}
-
-  // ** State
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
-
-  const rowOptionsOpen = Boolean(anchorEl)
-
-  const handleRowOptionsClick = (event: MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget)
-  }
-  const handleRowOptionsClose = () => {
-    setAnchorEl(null)
-  }
-
-  const handleDelete = () => {
-    dispatch(deleteUser(id))
-    handleRowOptionsClose()
-  }
-
-  return (
-    <>
-      <IconButton size='small' onClick={handleRowOptionsClick}>
-        <Icon icon='tabler:dots-vertical' />
-      </IconButton>
-      <Menu
-        keepMounted
-        anchorEl={anchorEl}
-        open={rowOptionsOpen}
-        onClose={handleRowOptionsClose}
-        anchorOrigin={{
-          vertical: 'bottom',
-          horizontal: 'right'
-        }}
-        transformOrigin={{
-          vertical: 'top',
-          horizontal: 'right'
-        }}
-        PaperProps={{ style: { minWidth: '8rem' } }}
-      >
-        <MenuItem onClick={handleRowOptionsClose} sx={{ '& svg': { mr: 2 } }}>
-          <Icon icon='tabler:edit' fontSize={20} />
-          Edit
-        </MenuItem>
-        <MenuItem
-          component={Link}
-          sx={{ '& svg': { mr: 2 } }}
-          href='/apps/user/view/account'
-          onClick={handleRowOptionsClose}
-        >
-          <Icon icon='material-symbols:block' fontSize={20} />
-          Block
-        </MenuItem>
-        <MenuItem onClick={handleDelete} sx={{ '& svg': { mr: 2 } }}>
-          <Icon icon='tabler:trash' fontSize={20} />
-          Delete
-        </MenuItem>
-      </Menu>
-    </>
-  )
-}
-const fakeRows: MerchantType[] = [
-  {
-    id: 1,
-    firstName: 'John',
-    lastName: 'Doe',
-    email: 'john.doe@email.com',
-    countryCode: '+1',
-    phone: '1234567890',
-    username: 'johndoe',
-    password: 'password123',
-    isAdminAccess: true,
-    manageTransaction: true,
-    report: false,
-    technicale: true,
-    avatarColor: 'primary'
-  },
-  {
-    id: 2,
-    firstName: 'Jane',
-    lastName: 'Smith',
-    email: 'jane.smith@email.com',
-    countryCode: '+44',
-    phone: '9876543210',
-    username: 'janesmith',
-    password: 'password456',
-    isAdminAccess: false,
-    manageTransaction: true,
-    report: true,
-    technicale: false,
-    avatarColor: 'success'
-  },
-  {
-    id: 3,
-    firstName: 'Michael',
-    lastName: 'Johnson',
-    email: 'michael.j@email.com',
-    countryCode: '+91',
-    phone: '5551234567',
-    username: 'michaelj',
-    password: 'password789',
-    isAdminAccess: false,
-    manageTransaction: false,
-    report: true,
-    technicale: true,
-    avatarColor: 'warning'
-  },
-  {
-    id: 4,
-    firstName: 'Emily',
-    lastName: 'Davis',
-    email: 'emily.davis@email.com',
-    countryCode: '+61',
-    phone: '4445556666',
-    username: 'emilydavis',
-    password: 'password321',
-    isAdminAccess: true,
-    manageTransaction: false,
-    report: false,
-    technicale: false,
-    avatarColor: 'info'
-  },
-  {
-    id: 5,
-    firstName: 'William',
-    lastName: 'Brown',
-    email: 'william.brown@email.com',
-    countryCode: '+81',
-    phone: '3332221111',
-    username: 'williambrown',
-    password: 'password654',
-    isAdminAccess: false,
-    manageTransaction: true,
-    report: false,
-    technicale: true,
-    avatarColor: 'secondary'
-  }
-]
 
 const columns = [
   {
@@ -234,7 +82,7 @@ const columns = [
     field: 'firstName',
     headerName: 'Full Name',
     renderCell: ({ row }: CellType) => {
-      const { firstName, lastName, email } = row
+      const { firstName, lastName, emailId } = row
       return (
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
           {renderClient(row)}
@@ -253,7 +101,7 @@ const columns = [
               {firstName} {lastName}
             </Typography>
             <Typography noWrap variant='body2' sx={{ color: 'text.disabled' }}>
-              {email}
+              {emailId}
             </Typography>
           </Box>
         </Box>
@@ -268,21 +116,21 @@ const columns = [
     headerName: 'Phone',
     renderCell: ({ row }: CellType) => (
       <Typography noWrap sx={{ color: 'text.secondary' }}>
-        {row.countryCode} {row.phone}
+        {row.mobileNum}
       </Typography>
     )
   },
-  {
-    flex: 0.15,
-    minWidth: 150,
-    field: 'username',
-    headerName: 'Username',
-    renderCell: ({ row }: CellType) => (
-      <Typography noWrap sx={{ color: 'text.secondary' }}>
-        {row.username}
-      </Typography>
-    )
-  },
+  // {
+  //   flex: 0.15,
+  //   minWidth: 150,
+  //   field: 'username',
+  //   headerName: 'Username',
+  //   renderCell: ({ row }: CellType) => (
+  //     <Typography noWrap sx={{ color: 'text.secondary' }}>
+  //       {row.username}
+  //     </Typography>
+  //   )
+  // },
 
   {
     flex: 0.1,
@@ -305,59 +153,131 @@ const columns = [
         <Icon icon='material-symbols:manage-accounts-outline' />
       </IconButton>
     )
-  },
-  {
-    flex: 0.1,
-    minWidth: 100,
-    sortable: false,
-    field: 'actions',
-    headerName: 'Actions',
-    renderCell: ({ row }: CellType) => <RowOptions id={row.id} />
   }
 ]
 
 const UserList = () => {
   // ** State
-  const [role, setRole] = useState<string>('')
-  const [plan, setPlan] = useState<string>('')
+
   const [value, setValue] = useState<string>('')
-  const [status, setStatus] = useState<string>('')
   const [pageSize, setPageSize] = useState<number>(10)
   const [addUserOpen, setAddUserOpen] = useState<boolean>(false)
+  const [roleList, setRoleList] = useState<PermissionTableRowType[]>([])
+  const [rows, setRows] = useState<MerchantType[]>([])
+  const [editRow, setEditRow] = useState<MerchantType | null>(null)
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
+
+  const rowOptionsOpen = Boolean(anchorEl)
+
+  const handleRowOptionsClick = (event: MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget)
+  }
+  const handleRowOptionsClose = () => {
+    setAnchorEl(null)
+  }
 
   const handleFilter = useCallback((val: string) => {
     setValue(val)
   }, [])
 
-  const handleRoleChange = useCallback((e: SelectChangeEvent) => {
-    setRole(e.target.value)
-  }, [])
-
-  const handlePlanChange = useCallback((e: SelectChangeEvent) => {
-    setPlan(e.target.value)
-  }, [])
-
-  const handleStatusChange = useCallback((e: SelectChangeEvent) => {
-    setStatus(e.target.value)
-  }, [])
-
   const toggleAddUserDrawer = () => setAddUserOpen(!addUserOpen)
+
+  const columnmWithAction = [
+    ...columns,
+    {
+      flex: 0.1,
+      minWidth: 100,
+      sortable: false,
+      field: 'actions',
+      headerName: 'Actions',
+      renderCell: ({ row }: CellType) => (
+        <>
+          <IconButton size='small' onClick={handleRowOptionsClick}>
+            <Icon icon='tabler:dots-vertical' />
+          </IconButton>
+          <Menu
+            keepMounted
+            anchorEl={anchorEl}
+            open={rowOptionsOpen}
+            onClose={handleRowOptionsClose}
+            anchorOrigin={{
+              vertical: 'bottom',
+              horizontal: 'right'
+            }}
+            transformOrigin={{
+              vertical: 'top',
+              horizontal: 'right'
+            }}
+            PaperProps={{ style: { minWidth: '8rem' } }}
+          >
+            <MenuItem
+              onClick={() => {
+                toggleAddUserDrawer()
+                handleRowOptionsClose()
+                setEditRow(row)
+              }}
+              sx={{ '& svg': { mr: 2 } }}
+            >
+              <Icon icon='tabler:edit' fontSize={20} />
+              Edit
+            </MenuItem>
+            <MenuItem
+              component={Link}
+              sx={{ '& svg': { mr: 2 } }}
+              href='/apps/user/view/account'
+              onClick={handleRowOptionsClose}
+            >
+              <Icon icon='material-symbols:block' fontSize={20} />
+              Block
+            </MenuItem>
+            <MenuItem sx={{ '& svg': { mr: 2 } }}>
+              <Icon icon='tabler:trash' fontSize={20} />
+              Delete
+            </MenuItem>
+          </Menu>
+        </>
+      )
+    }
+  ]
+
+  // ** Fetch Role Names & Permission
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(endpoints.rolePermission.endpoint)
+        const result = response.data.content.result
+
+        const transformed: PermissionTableRowType[] = result.map((item: any, id: number) => ({
+          id,
+          uid: item.uid,
+          roleName: item.roleName,
+          createdAt: item.createdAt
+        }))
+        setRoleList(transformed)
+      } catch (error) {
+        console.log('Error fetching permission data:', error)
+      } finally {
+      }
+    }
+    fetchData()
+    return () => {}
+  }, [])
+
+  // ** fetch user data
+  function fetchUsers() {
+    axios.get(endpoints.userManagement.getAll).then(response => {
+      const result = response.data.content.result.map((obj: MerchantType, id: number) => ({ ...obj, id }))
+      setRows(result)
+    })
+  }
+
+  // ** Fetch User Data
+  useEffect(() => {
+    fetchUsers()
+  }, [])
 
   return (
     <Grid container spacing={6.5}>
-      <Grid item xs={12}>
-        {/* {apiData && (
-          <Grid container spacing={6}>
-            {apiData.statsHorizontalWithDetails.map((item: CardStatsHorizontalWithDetailsProps, index: number) => {
-              return (
-                <Grid item xs={12} md={3} sm={6} key={index}>
-                  <CardStatsHorizontalWithDetails {...item} />
-                </Grid>
-              )
-            })}
-          </Grid>
-        )} */}
-      </Grid>
       <Grid item xs={12}>
         <Card>
           <CardHeader title='Search Filters' />
@@ -393,8 +313,8 @@ const UserList = () => {
           <DataGrid
             autoHeight
             rowHeight={62}
-            rows={fakeRows}
-            columns={columns}
+            rows={rows}
+            columns={columnmWithAction}
             pageSize={pageSize}
             disableSelectionOnClick
             rowsPerPageOptions={[10, 25, 50]}
@@ -403,7 +323,14 @@ const UserList = () => {
         </Card>
       </Grid>
 
-      <AddMerchantDrawer open={addUserOpen} toggle={toggleAddUserDrawer} />
+      <AddMerchantDrawer
+        open={addUserOpen}
+        toggle={toggleAddUserDrawer}
+        roleList={roleList}
+        editRow={editRow}
+        setEditRow={setEditRow}
+        fetchUsers={fetchUsers}
+      />
     </Grid>
   )
 }
