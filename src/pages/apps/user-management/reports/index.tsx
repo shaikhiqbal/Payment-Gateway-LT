@@ -7,6 +7,7 @@ import { GrapDataType } from 'src/types/apps/graphTypes'
 
 //** Components Imports */
 import ReportGraph from 'src/views/apps/user-management/reports/ReportGraph'
+import Table from 'src/views/apps/user-management/reports/table'
 
 const Reports = () => {
   const data1: GrapDataType[] = [
@@ -38,6 +39,9 @@ const Reports = () => {
         </Grid>
         <Grid item sm={4} xs={12} md={6}>
           <ReportGraph title='Statistics According to the status by count' data={data2} />
+        </Grid>
+        <Grid item xs={12}>
+          <Table />
         </Grid>
       </Grid>
     </Box>

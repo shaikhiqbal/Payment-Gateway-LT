@@ -62,7 +62,6 @@ instance.interceptors.request.use(
 instance.interceptors.response.use(
   response => response,
   error => {
-    debugger
     if (error.message === 'Network Error') {
       // alert('Backend server is not reachable. Please try again later.')
       console.error('Server is down.')

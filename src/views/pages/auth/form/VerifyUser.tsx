@@ -146,7 +146,6 @@ const VerifyUser = ({ token, mobile, otp }: { token: string; mobile: string; otp
   }
 
   const onSubmit = (data: ValuesObject) => {
-    console.log(data)
     auth.verifyUser({ token, otp: Object.values(data).join('') }, handleError)
   }
 

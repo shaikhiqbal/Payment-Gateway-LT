@@ -105,7 +105,6 @@ export const cardType = (value: string | undefined, Payment: PaymentTypes) => {
 
   const issuer = Payment.fns.cardType(value)
 
-  console.log('cardType', issuer)
   switch (issuer) {
     case 'visa':
       return 'Visa'

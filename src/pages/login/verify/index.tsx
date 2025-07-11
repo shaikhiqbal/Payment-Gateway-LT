@@ -167,8 +167,8 @@ const TwoStepsV1 = () => {
     }
   }, [])
   useEffect(() => {
-    console.clear()
-    console.log(userDetails)
+    // console.clear()
+    // console.log(userDetails)
   }, [userDetails])
 
   return (

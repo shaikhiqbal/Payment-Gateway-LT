@@ -163,7 +163,7 @@ const TableHeader = ({
       handleDialogToggle()
       reset()
     } catch (error) {
-      // debugger
+      //
       console.error(error)
     }
   }

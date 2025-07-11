@@ -57,7 +57,6 @@ const PermisionRoleTrashDialog = (props: PermisionRoleTrashDialogTypes) => {
         handleTrashToggle(null, true)
       }
     } catch (error) {
-      debugger
       const err = error as any
       if (err?.response?.status === 400) {
         if (err.response.data?.content?.users) {
