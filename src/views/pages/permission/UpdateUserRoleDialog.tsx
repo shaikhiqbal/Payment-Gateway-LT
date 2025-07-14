@@ -1,18 +1,18 @@
 import React, { useEffect, useState } from 'react'
 
 // ** MUI Imports
+import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import Dialog from '@mui/material/Dialog'
 import DialogTitle from '@mui/material/DialogTitle'
 import DialogContent from '@mui/material/DialogContent'
 import DialogActions from '@mui/material/DialogActions'
-import DialogContentText from '@mui/material/DialogContentText'
 import Select from '@mui/material/Select'
 import MenuItem from '@mui/material/MenuItem'
-import Box from '@mui/material/Box'
 import { GridColDef } from '@mui/x-data-grid'
 import { DataGrid } from '@mui/x-data-grid'
 import Alert from '@mui/material/Alert'
+import { FormControl, InputLabel, FormHelperText } from '@mui/material'
 
 // ** Icon Import
 import Icon from 'src/@core/components/icon'
@@ -28,6 +28,19 @@ import { BeatLoader } from 'react-spinners'
 import { PermissionTableRowType } from 'src/types/pages/permission'
 import { UserListAndDetailShap } from './PermisionRoleTrashDialog'
 
+// ** React Hook Form Imports
+import { Controller, useForm, useFieldArray } from 'react-hook-form'
+
+// ** Types Imports
+import { UserType } from 'src/types/pages/permission'
+
+// ** Types
+interface FormValues {
+  users: UserType[]
+  userRole: string
+}
+
+// ** Custom Components Imports
 const userColumns: GridColDef[] = [
   {
     flex: 0.25,
@@ -65,11 +78,33 @@ const userColumns: GridColDef[] = [
 
 const UpdateUserRoleDialog = (props: UserListAndDetailShap) => {
   //** Props */
-  const { users, message, selectedRow, handleCloseUsers } = props
+  const { users, message, selectedRow, handleCloseUsers, handleDelete } = props
 
   // ** States
   const [open, setOpen] = useState<boolean>(false)
   const [roles, setRoles] = useState<PermissionTableRowType[]>([])
+  const [isDeleting, setIsDeleting] = useState<boolean>(false)
+
+  // ** React Hook Form
+  const {
+    control,
+    formState: { errors },
+    handleSubmit,
+    reset,
+    setError,
+    watch,
+    getValues
+  } = useForm<FormValues>({
+    defaultValues: {
+      users: [],
+      userRole: ''
+    }
+  })
+
+  const { fields: userList } = useFieldArray({
+    control,
+    name: 'users'
+  })
 
   const fetchData = async function () {
     try {
@@ -89,38 +124,96 @@ const UpdateUserRoleDialog = (props: UserListAndDetailShap) => {
     }
   }
 
-  const column = [
+  const column: GridColDef[] = [
     ...userColumns,
     {
       flex: 0.2,
       minWidth: 160,
       field: 'userRoles',
       headerName: 'Role Assigned',
-      renderCell: ({ row }: { row: PermissionTableRowType }) => (
-        <Box>
-          <Select labelId='userRoles-label' size='small' label='Select Role Name' id='userRoles' defaultValue=''>
-            <MenuItem value=''>
-              <em>None</em>
-            </MenuItem>
-            {fetchData?.map((role: PermissionTableRowType) => (
-              <MenuItem value={role.uid} key={role.uid}>
-                {role.roleName as string}
-              </MenuItem>
-            ))}
-          </Select>
-        </Box>
-      )
+      renderCell: params => {
+        const index = userList.findIndex(u => u.uid === params.row.uid)
+        return (
+          <Box>
+            <Controller
+              control={control}
+              name={`users.${index}.roleName` as const}
+              render={({ field }) => (
+                <Select
+                  {...field}
+                  labelId='userRoles-label'
+                  size='small'
+                  label='Select Role Name'
+                  id='userRoles'
+                  defaultValue=''
+                >
+                  <MenuItem value=''>
+                    <em>None</em>
+                  </MenuItem>
+                  {roles.map((role: PermissionTableRowType) => (
+                    <MenuItem value={role.uid} key={role.uid}>
+                      {role.roleName}
+                    </MenuItem>
+                  ))}
+                </Select>
+              )}
+            />
+          </Box>
+        )
+      }
     }
   ]
 
   // ** Dialog handler
+  const handleTrashToggle = () => {
+    setOpen(false)
+    handleCloseUsers()
+  }
+
+  // ** Dialog handler
   useEffect(() => {
     if (users?.length) {
+      reset({
+        users: users.map(u => ({ ...u, roleName: selectedRow?.uid })),
+        userRole: selectedRow ? selectedRow?.uid : ''
+      })
       setOpen(true)
     }
     return () => setOpen(false)
   }, [users])
 
+  // ** Form submit handler
+  const onSubmit = async (data: FormValues) => {
+    try {
+      setIsDeleting(true)
+      if (data.userRole === selectedRow?.uid) {
+        setError('userRole', {
+          type: 'manual',
+          message: 'Please select a different role to delete this user.'
+        })
+        return
+      }
+
+      const results = await Promise.all(
+        data.users.map((user: UserType) =>
+          axios.put(endpoints.userManagement.endpoint + user.uid, {
+            emailId: user.email,
+            ...user,
+            userRoles: { uid: data.userRole }
+          })
+        )
+      )
+      if (handleDelete) await handleDelete()
+      reset()
+      setOpen(false)
+    } catch (error) {
+      console.error('Error submitting form:', error)
+    } finally {
+      setIsDeleting(false)
+    }
+  }
+
+  // ** Fetch roles and permissions
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -141,14 +234,34 @@ const UpdateUserRoleDialog = (props: UserListAndDetailShap) => {
 
     if (!roles.length) fetchData()
   }, [])
+
+  useEffect(() => {
+    if (watch('userRole') === selectedRow?.uid) {
+      setError('userRole', {
+        type: 'manual',
+        message: 'Please select a different role to delete this permission'
+      })
+    }
+
+    if (watch('userRole')) {
+      const users = getValues('users')
+      const updatedUsers = users.map((user: UserType) => ({
+        ...user,
+        roleName: watch('userRole') // Update the roleName with the selected userRole
+      }))
+      reset({ users: updatedUsers, userRole: watch('userRole') })
+    }
+  }, [watch('userRole')])
+
   return (
     <Dialog
       open={open}
-      //   onClose={() => handleTrashToggle(undefined)}
+      onClose={handleTrashToggle}
       maxWidth={'lg'}
       fullWidth={true}
       aria-labelledby='alert-dialog-title'
       aria-describedby='alert-dialog-description'
+      disableEscapeKeyDown
     >
       <DialogTitle id='alert-dialog-title'>
         <Alert severity='warning'>
@@ -156,41 +269,75 @@ const UpdateUserRoleDialog = (props: UserListAndDetailShap) => {
           Please Update the user role then it will be deleted
         </Alert>
       </DialogTitle>
-      <DialogContent>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <DialogContent>
+          <FormControl
+            fullWidth
+            sx={{ mb: 4 }}
+            //  error={Boolean(errors.userRoles)}
+          >
+            <InputLabel id='userRoles-label'>Select Role Name</InputLabel>
+            <Controller
+              control={control}
+              name='userRole'
+              rules={{
+                required: 'Role Name is required!'
+              }}
+              render={({ field }) => (
+                <Select labelId='userRoles-label' label='Select Role Name' {...field} error={Boolean(errors.userRole)}>
+                  <MenuItem value=''>
+                    <em>None</em>
+                  </MenuItem>
+                  {roles?.map(role => (
+                    <MenuItem value={role.uid} key={role.uid}>
+                      {role.roleName as string}
+                    </MenuItem>
+                  ))}
+                </Select>
+              )}
+            />
+            {errors?.userRole && (
+              <FormHelperText sx={{ color: 'error.main' }}>{errors.userRole?.message as string}</FormHelperText>
+            )}
+          </FormControl>
+        </DialogContent>
         <DialogContent>
           <DataGrid
             autoHeight
             rowHeight={62}
-            rows={users.map((u, i) => ({ id: i, ...u }))}
-            columns={userColumns}
+            rows={userList.map((u, i) => ({ ...u, id: u.id ?? i }))}
+            columns={column}
             pageSize={5}
             disableSelectionOnClick
             rowsPerPageOptions={[5, 10, 25]}
           />
         </DialogContent>
-      </DialogContent>
-      <DialogActions
-        sx={{
-          display: 'flex',
-          justifyContent: 'flex-end',
-          px: theme => [`${theme.spacing(5)} !important`, `${theme.spacing(15)} !important`],
-          pb: theme => [`${theme.spacing(8)} !important`, `${theme.spacing(12.5)} !important`]
-        }}
-      >
-        <Box sx={{ display: 'flex', gap: 2, justifyContent: 'flex-end' }}>
-          <Button color='secondary' variant='outlined'>
-            Cancel
-          </Button>
-          <Button
-            variant='contained'
-            color='error'
-            startIcon={<Icon icon='tabler:trash' />}
-            // onClick={() => handleDelete(selectedRowUid)}
-          >
-            {/* {isDeleting ? <BeatLoader size={15} color='#ffffff' /> : 'Delete'} */}
-          </Button>
-        </Box>
-      </DialogActions>
+
+        <DialogActions
+          sx={{
+            display: 'flex',
+            justifyContent: 'flex-end',
+            px: theme => [`${theme.spacing(5)} !important`, `${theme.spacing(15)} !important`],
+            pb: theme => [`${theme.spacing(8)} !important`, `${theme.spacing(12.5)} !important`]
+          }}
+        >
+          <Box sx={{ display: 'flex', gap: 2, justifyContent: 'flex-end' }}>
+            <Button color='secondary' variant='outlined' onClick={() => handleTrashToggle()}>
+              Cancel
+            </Button>
+            <Button
+              variant='contained'
+              color='error'
+              type='submit'
+              startIcon={<Icon icon='tabler:trash' />}
+              // onClick={() => handleDelete(selectedRowUid)}
+            >
+              {/* BeatLoader     Update & Delete */}
+              {isDeleting ? <BeatLoader size={15} color='#ffffff' /> : 'Delete'}
+            </Button>
+          </Box>
+        </DialogActions>
+      </form>
     </Dialog>
   )
 }

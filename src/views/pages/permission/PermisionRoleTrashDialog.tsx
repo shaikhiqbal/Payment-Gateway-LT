@@ -28,6 +28,7 @@ export interface UserListAndDetailShap {
   selectedRow: PermissionTableRowType | null
   users: UserType[]
   handleCloseUsers: () => void
+  handleDelete?: () => Promise<void>
 }
 interface PermisionRoleTrashDialogTypes {
   open: boolean
@@ -64,7 +65,8 @@ const PermisionRoleTrashDialog = (props: PermisionRoleTrashDialogTypes) => {
             message: err.response.data.content.message,
             selectedRow: selectedRow,
             users: err.response.data.content.users,
-            handleCloseUsers
+            handleCloseUsers,
+            handleDelete
           })
         }
       }
@@ -78,7 +80,8 @@ const PermisionRoleTrashDialog = (props: PermisionRoleTrashDialogTypes) => {
       message: '',
       selectedRow: null,
       users: [],
-      handleCloseUsers
+      handleCloseUsers,
+      handleDelete
     })
     handleTrashToggle(null)
   }
@@ -120,7 +123,7 @@ const PermisionRoleTrashDialog = (props: PermisionRoleTrashDialogTypes) => {
           </Box>
         </DialogActions>
       </Dialog>
-      <UpdateUserRoleDialog {...userListAndDetails} />
+      <UpdateUserRoleDialog {...userListAndDetails} handleDelete={handleDelete} />
     </Fragment>
   )
 }

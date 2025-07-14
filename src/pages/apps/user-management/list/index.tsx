@@ -119,40 +119,6 @@ const columns = [
         {row.mobileNum}
       </Typography>
     )
-  },
-  // {
-  //   flex: 0.15,
-  //   minWidth: 150,
-  //   field: 'username',
-  //   headerName: 'Username',
-  //   renderCell: ({ row }: CellType) => (
-  //     <Typography noWrap sx={{ color: 'text.secondary' }}>
-  //       {row.username}
-  //     </Typography>
-  //   )
-  // },
-
-  {
-    flex: 0.1,
-    minWidth: 120,
-    field: 'report',
-    headerName: 'Report',
-    renderCell: ({ row }: CellType) => (
-      <IconButton aria-label='capture screenshot' color='secondary'>
-        <Icon icon='material-symbols:bar-chart-4-bars' />
-      </IconButton>
-    )
-  },
-  {
-    flex: 0.1,
-    minWidth: 120,
-    field: 'manage',
-    headerName: 'Manage',
-    renderCell: ({ row }: CellType) => (
-      <IconButton aria-label='capture screenshot' color='secondary'>
-        <Icon icon='material-symbols:manage-accounts-outline' />
-      </IconButton>
-    )
   }
 ]
 
@@ -184,6 +150,30 @@ const UserList = () => {
 
   const columnmWithAction = [
     ...columns,
+    {
+      flex: 0.1,
+      minWidth: 120,
+      field: 'report',
+      headerName: 'Report',
+      renderCell: ({ row }: CellType) => (
+        <Link href={`/apps/user-management/reports/${row.id}`}>
+          <IconButton aria-label='capture screenshot' color='secondary'>
+            <Icon icon='material-symbols:bar-chart-4-bars' />
+          </IconButton>
+        </Link>
+      )
+    },
+    {
+      flex: 0.1,
+      minWidth: 120,
+      field: 'manage',
+      headerName: 'Manage',
+      renderCell: ({ row }: CellType) => (
+        <IconButton aria-label='capture screenshot' color='secondary'>
+          <Icon icon='material-symbols:manage-accounts-outline' />
+        </IconButton>
+      )
+    },
     {
       flex: 0.1,
       minWidth: 100,
@@ -341,3 +331,7 @@ UserList.acl = {
 }
 
 export default UserList
+
+/*
+/apps/user-management/list/
+ */

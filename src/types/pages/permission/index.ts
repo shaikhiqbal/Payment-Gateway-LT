@@ -30,4 +30,6 @@ export type UserType = {
   lastName: string
   mobileNum: string
   email: string
+  id?: number
+  roleName?: string
 }

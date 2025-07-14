@@ -38,6 +38,7 @@ const getUserIp = async (): Promise<string> => {
 //**  Request Interceptor
 instance.interceptors.request.use(
   async config => {
+    // debugger
     const token = localStorage.getItem('accessToken')
     config.headers = config.headers || {}
 

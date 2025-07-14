@@ -156,7 +156,7 @@ const TableHeader = ({
       if (data?.uid) {
         await axios.put(`${endpoints.rolePermission.endpoint}/${data.uid}`, payload)
       } else {
-        await axios.post(endpoints.rolePermission.endpoint, payload)
+        await axios.post(endpoints.rolePermission.endpoint + '/', payload)
       }
 
       handleEditToggle(data?.uid ? 'edit' : 'add')
