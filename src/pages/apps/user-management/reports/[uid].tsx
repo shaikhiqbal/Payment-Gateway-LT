@@ -1,4 +1,8 @@
 import React from 'react'
+
+// ** Next Imports */
+import { useRouter } from 'next/router'
+
 // ** MUI Imports */
 import { Box, Grid } from '@mui/material'
 
@@ -10,6 +14,11 @@ import ReportGraph from 'src/views/apps/user-management/reports/ReportGraph'
 import Table from 'src/views/apps/user-management/reports/table'
 
 const index = () => {
+  // ** Hook
+  const router = useRouter()
+  const { uid } = router.query
+
+  // ** Graph Data */
   const data1: GrapDataType[] = [
     { label: 'Approved', value: 54, color: '#4CAF50' }, // Cool green
     { label: 'Declined', value: 20, color: '#F44336' }, // Strong red
@@ -34,11 +43,19 @@ const index = () => {
   return (
     <Box>
       <Grid container spacing={6}>
-        <Grid item sm={4} xs={12} md={6}>
-          <ReportGraph title='Statistics According to the status by volume' data={data1} />
+        <Grid item sm={12} xs={12} md={6}>
+          <ReportGraph
+            title='Statistics and sort by volume'
+            subtitle={'Statistics According to the status by volume'}
+            data={data1}
+          />
         </Grid>
-        <Grid item sm={4} xs={12} md={6}>
-          <ReportGraph title='Statistics According to the status by count' data={data2} />
+        <Grid item sm={12} xs={12} md={6}>
+          <ReportGraph
+            title='Statistics and sort by count'
+            subtitle={'Statistics According to the status by count'}
+            data={data2}
+          />
         </Grid>
         <Grid item xs={12}>
           <Table />

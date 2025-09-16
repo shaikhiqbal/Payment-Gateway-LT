@@ -1,3 +1,6 @@
+// ** React Imports
+import { useEffect, useState } from 'react'
+
 // ** MUI Imports
 import Card from '@mui/material/Card'
 import { useTheme } from '@mui/material/styles'
@@ -9,7 +12,7 @@ import { ApexOptions } from 'apexcharts'
 
 // ** Component Import
 import ReactApexcharts from 'src/@core/components/react-apexcharts'
-import React from 'react'
+import ChartLoader from 'src/views/components/skeleton-loader/ChartLoader'
 
 // ** Types Imports
 import { GrapDataType } from 'src/types/apps/graphTypes'
@@ -17,12 +20,16 @@ import { GrapDataType } from 'src/types/apps/graphTypes'
 // ** Types
 interface GraphProps {
   title: string
+  subtitle: string
   data: GrapDataType[]
 }
 
 const ReportGraph: React.FC<GraphProps> = props => {
   // ** Props
-  const { title, data } = props
+  const { title, data, subtitle } = props
+
+  // ** States
+  const [isDataLoaded, setIsDataLoaded] = useState(false)
 
   // ** Hook
   const theme = useTheme()
@@ -109,11 +116,18 @@ const ReportGraph: React.FC<GraphProps> = props => {
     ]
   }
 
+  useEffect(() => {
+    setTimeout(() => {
+      setIsDataLoaded(false)
+    }, 2000)
+    return () => setIsDataLoaded(true)
+  }, [])
+  if (isDataLoaded) return <ChartLoader />
   return (
     <Card>
       <CardHeader
         title={title}
-        subheader='Spending on various categories'
+        subheader={subtitle}
         subheaderTypographyProps={{ sx: { color: theme => `${theme.palette.text.disabled} !important` } }}
       />
       <CardContent>

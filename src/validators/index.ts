@@ -8,7 +8,7 @@ export const noSpecialChars = Yup.string().matches(/^[a-zA-Z0-9 ]*$/, 'No specia
 export const requiredNoSpecialChars = noSpecialChars.required('This field is required')
 
 //**  Example for email, optional field
-export const optionalEmail = Yup.string().email('Invalid email format').nullable().notRequired()
+export const emailValidator = Yup.string().email('Invalid email format').required('Email is required')
 
 // **  Example for password, required field
 export const alphaOnly = Yup.string().matches(/^[a-zA-Z ]*$/, 'Only letters allowed')

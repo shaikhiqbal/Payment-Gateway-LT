@@ -238,6 +238,8 @@ const LoginPage = () => {
                   </Alert>
 
                   <LoginForm onVerify={handleGetToken} />
+
+                  {/* /forgot-password/ */}
                 </Box>
               </motion.div>
             ) : (

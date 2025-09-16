@@ -1,5 +1,5 @@
 // ** React Imports
-import { ReactNode } from 'react'
+import { ReactNode, useState } from 'react'
 
 // ** Next Import
 import Link from 'next/link'
@@ -20,6 +20,20 @@ import BlankLayout from 'src/@core/layouts/BlankLayout'
 
 // ** Demo Imports
 import FooterIllustrationsV2 from 'src/views/pages/auth/FooterIllustrationsV2'
+
+// ** React Hook Form
+import { useForm, Controller } from 'react-hook-form'
+
+// ** Yup Resolver
+import { yupResolver } from '@hookform/resolvers/yup'
+import * as yup from 'yup'
+
+// ** Validators
+import { emailValidator } from 'src/validators'
+
+const schema = yup.object().shape({
+  email: emailValidator
+})
 
 // Styled Components
 const ForgotPasswordIllustration = styled('img')(({ theme }) => ({
@@ -57,12 +71,30 @@ const LinkStyled = styled(Link)(({ theme }) => ({
   color: theme.palette.primary.main
 }))
 
+interface ForgotPasswordForm {
+  email: string
+}
+
 const ForgotPassword = () => {
+  // ** React Hook Form
+  const { control, handleSubmit } = useForm<ForgotPasswordForm>({
+    defaultValues: {
+      email: ''
+    },
+    mode: 'onBlur',
+    resolver: yupResolver(schema)
+  })
+
   // ** Hooks
   const theme = useTheme()
 
   // ** Vars
   const hidden = useMediaQuery(theme.breakpoints.down('md'))
+
+  // ** Submit Handler
+  const onSubmit = (data: ForgotPasswordForm) => {
+    console.log(data)
+  }
 
   return (
     <Box className='content-right' sx={{ backgroundColor: 'background.paper' }}>
@@ -133,8 +165,15 @@ const ForgotPassword = () => {
                 Enter your email and we&prime;ll send you instructions to reset your password
               </Typography>
             </Box>
-            <form noValidate autoComplete='off' onSubmit={e => e.preventDefault()}>
-              <TextField autoFocus type='email' label='Email' sx={{ display: 'flex', mb: 4 }} />
+            <form noValidate autoComplete='off' onSubmit={handleSubmit(onSubmit)}>
+              <Controller
+                control={control}
+                name='email'
+                render={({ field }) => (
+                  <TextField autoFocus type='email' label='Email' sx={{ display: 'flex', mb: 4 }} {...field} />
+                )}
+              />
+
               <Button fullWidth size='large' type='submit' variant='contained' sx={{ mb: 4 }}>
                 Send reset link
               </Button>

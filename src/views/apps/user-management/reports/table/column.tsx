@@ -36,7 +36,6 @@ const column: any[] = [
     headerName: 'Contact',
     renderCell: ({ row }: any) => <Typography>{row.contact}</Typography>
   },
-
   {
     field: 'status',
     headerName: 'Status',
@@ -77,15 +76,20 @@ const column: any[] = [
   }
 ]
 
-const columnSkeleton = []
+// Fake array according to column length, should be 10
+export const fakeRows = Array.from({ length: 10 }, (_, i) => ({
+  id: i + 1,
+  createdAt: '2024-06-01',
+  customerName: `Customer ${i + 1}`,
+  product: `Product ${i + 1}`,
+  amount: `$${(100 + i * 10).toFixed(2)}`,
+  contact: `contact${i + 1}@email.com`,
+  status: ['Approved', 'Declined', 'Pending', 'Processing'][i % 4],
+  remark: `Remark ${i + 1}`,
+  action: ''
+}))
 
-export const SkeletonLoader = () => (
-  <Box sx={{ width: '100%', height: 400, p: 2 }}>
-    {[...Array(10)].map((_, i) => (
-      <Skeleton key={i} height={50} sx={{ mb: 1 }} />
-    ))}
-  </Box>
-)
+const columnSkeleton = []
 
 export { columnSkeleton }
 export default column

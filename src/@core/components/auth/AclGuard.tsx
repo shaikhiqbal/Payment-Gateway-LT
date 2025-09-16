@@ -50,7 +50,8 @@ const AclGuard = (props: AclGuardProps) => {
           { moduleName: 'dashboard', action: 'read' },
           { moduleName: 'virtual-terminal', action: 'read' },
           { moduleName: 'user-management', action: 'read' },
-          { moduleName: 'permission', action: 'read' }
+          { moduleName: 'permission', action: 'read' },
+          { moduleName: 'pos', action: 'read' }
         ]
       ])
     )

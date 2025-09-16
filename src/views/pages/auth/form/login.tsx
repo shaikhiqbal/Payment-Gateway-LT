@@ -1,6 +1,9 @@
 // ** React Imports
 import { useState } from 'react'
 
+// ** Next Import
+import Link from 'next/link'
+
 // ** MUI Components
 import Button from '@mui/material/Button'
 import FormControl from '@mui/material/FormControl'
@@ -11,6 +14,8 @@ import TextField from '@mui/material/TextField'
 import Radio from '@mui/material/Radio'
 import RadioGroup from '@mui/material/RadioGroup'
 import FormControlLabel from '@mui/material/FormControlLabel'
+import Checkbox from '@mui/material/Checkbox'
+import { styled, useTheme } from '@mui/material/styles'
 
 // ** Third Party Imports
 import { useForm, Controller } from 'react-hook-form'
@@ -26,6 +31,13 @@ import endpoints from 'src/configs/endpoints'
 
 // ** Third party Loader
 import { BeatLoader } from 'react-spinners'
+import { Box } from '@mui/material'
+
+const LinkStyled = styled(Link)(({ theme }) => ({
+  fontSize: '0.875rem',
+  textDecoration: 'none',
+  color: theme.palette.primary.main
+}))
 
 interface FormData {
   email: string
@@ -40,7 +52,7 @@ const schema = yup.object().shape({
 const defaultValues = {
   super: { email: 'admin@vuexy.com', password: 'admin' },
   local: { email: 'kardileomkar7262@gmail.com', password: 'niraj123' },
-  live: { email: 'sneha@logicluminary.com', password: 'sneha@123' }
+  live: { email: 'iqbal@logicluminary.com', password: 'Iq2222222222' }
 }
 
 interface LoginFormProps {
@@ -132,6 +144,18 @@ const LoginForm: React.FC<LoginFormProps> = ({ onVerify }) => {
           />
           {errors.password && <FormHelperText sx={{ color: 'error.main' }}>{errors.password.message}</FormHelperText>}
         </FormControl>
+        <Box
+          sx={{
+            mb: 1.75,
+            display: 'flex',
+            flexWrap: 'wrap',
+            alignItems: 'center',
+            justifyContent: 'space-between'
+          }}
+        >
+          <FormControlLabel control={<Checkbox />} label='Remember Me' />
+          <LinkStyled href='/forgot-password'>Forgot Password?</LinkStyled>
+        </Box>
         <Button fullWidth size='large' variant='contained' type='submit'>
           {isSubmiting ? <BeatLoader size={15} color='#ffffff' /> : 'Login'}
         </Button>

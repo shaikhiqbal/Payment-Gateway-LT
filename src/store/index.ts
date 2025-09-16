@@ -9,6 +9,9 @@ import invoice from 'src/store/apps/invoice'
 import calendar from 'src/store/apps/calendar'
 import permissions from 'src/store/apps/permissions'
 
+// ** Pages Reducers
+import pos from 'src/store/pages/pos'
+
 export const store = configureStore({
   reducer: {
     user,
@@ -16,7 +19,8 @@ export const store = configureStore({
     email,
     invoice,
     calendar,
-    permissions
+    permissions,
+    pos
   },
   middleware: getDefaultMiddleware =>
     getDefaultMiddleware({

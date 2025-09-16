@@ -27,6 +27,7 @@ import 'cleave.js/dist/addons/cleave-phone.us'
 
 // ** Auth
 import { useAuth } from 'src/hooks/useAuth'
+import { encryptData } from 'src/@core/utils/cryptoHelper'
 
 export type ErrCallbackType = (err: { [key: string]: string }) => void
 
@@ -146,7 +147,7 @@ const VerifyUser = ({ token, mobile, otp }: { token: string; mobile: string; otp
   }
 
   const onSubmit = (data: ValuesObject) => {
-    auth.verifyUser({ token, otp: Object.values(data).join('') }, handleError)
+    auth.verifyUser({ token, otp: encryptData(Object.values(data).join('')) }, handleError)
   }
 
   useEffect(() => {

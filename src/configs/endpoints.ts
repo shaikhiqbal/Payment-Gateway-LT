@@ -5,7 +5,9 @@ const endpoints = {
     verifyUser: '/auth/verify_account/',
     register: '/auth/user/create',
     refresh: '/auth/refresh_token',
-    resetPassword: '/auth/user/reset_password'
+    resetPassword: '/auth/user/reset_password',
+    generateNewPassword: '/auth/user/create_password/',
+    generateOTP: '/auth/user/send_otp/'
   },
   virtualTerminal: {
     create: '/api/transaction',

@@ -38,6 +38,7 @@ import MuiTypography from './typography'
 import MuiBreadcrumb from './breadcrumbs'
 import MuiAutocomplete from './autocomplete'
 import MuiToggleButton from './toggleButton'
+import MuiNumberInput from './numberInput'
 
 const Overrides = (theme: Theme, settings: Settings) => {
   const { skin } = settings
@@ -54,6 +55,7 @@ const Overrides = (theme: Theme, settings: Settings) => {
   const slider = MuiSlider(theme)
   const avatars = MuiAvatar(theme)
   const divider = MuiDivider(theme)
+  const numberInput = MuiNumberInput(theme)
   const menu = MuiMenu(theme, skin)
   const tooltip = MuiTooltip(theme)
   const cards = MuiCard(theme, skin)
@@ -87,6 +89,7 @@ const Overrides = (theme: Theme, settings: Settings) => {
     tables,
     avatars,
     divider,
+    numberInput,
     MuiLink,
     popover,
     tooltip,
