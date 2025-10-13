@@ -23,7 +23,10 @@ const TopBar = () => {
         justifyContent: 'space-between',
         alignItems: 'flex-end',
         gap: 3,
-        flexWrap: 'wrap' // ✅ ensures it won't break on small screens
+        flexWrap: 'wrap',
+        pb: 2,
+        mb: 2,
+        borderBottom: theme => `1px solid ${theme.palette.divider}`
       }}
     >
       {/* Left Side */}
@@ -46,8 +49,10 @@ const TopBar = () => {
       >
         {/* Search Field with Icon */}
         <Box sx={{ display: 'flex', alignItems: 'flex-end', gap: 1 }}>
-          <Icon icon='oui:token-search-type' style={{ color: 'gray' }} />
-          <TextField variant='standard' id='input-with-icon-grid' label='Search Product...' />
+          {/* <Icon icon='oui:token-search-type' style={{ color: 'gray' }} />
+
+          <TextField variant='standard' id='input-with-icon-grid' label='Search Product...' /> */}
+          <TextField label='Search Product...' id='size-small' size='small' />
         </Box>
 
         {/* Buttons */}

@@ -7,25 +7,15 @@ import Button from '@mui/material/Button'
 import Typography from '@mui/material/Typography'
 import CardHeader from '@mui/material/CardHeader'
 import CardContent from '@mui/material/CardContent'
-import CardActions from '@mui/material/CardActions'
 import Chip from '@mui/material/Chip'
-import TextField from '@mui/material/TextField'
-import Autocomplete from '@mui/material/Autocomplete'
-import Fab from '@mui/material/Fab'
-
-// ** Thirdparty Imports
-import InputNumber from 'rc-input-number'
 
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
 
-// ** Data
-import { top100Films } from 'src/@fake-db/autocomplete'
-import { IconButton, InputAdornment } from '@mui/material'
-
 // ** Components
 import OrderListTable from './OrderListTable'
 import PaymentSummary from './PaymentSummary'
+import ChooseCustomer from './ChooseCustomer'
 
 const CartCheckout = () => {
   return (
@@ -40,57 +30,11 @@ const CartCheckout = () => {
       />
 
       <CardContent>
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-          <Autocomplete
-            freeSolo
-            id='autocomplete-free-solo'
-            sx={{ flexGrow: 1 }}
-            options={top100Films.map(option => option.title)}
-            renderInput={params => <TextField {...params} label='Select Customer' size='small' />}
-          />
-          <Fab color='error' aria-label='add' size='small'>
-            <Icon icon='tabler:plus' />
-          </Fab>
-          <Fab color='warning' aria-label='add' size='small'>
-            <Icon icon='material-symbols-light:qr-code-scanner-rounded' />
-          </Fab>
-        </Box>
+        {/* Choose Customer */}
+        <ChooseCustomer />
 
-        <Box
-          sx={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            border: theme => `1px solid ${theme.palette.error.main}`,
-            borderRadius: 1,
-            p: 3,
-            mt: 4,
-            // bgcolor: theme => theme.palette.primary.main,
-            bgcolor: '#ffeee9',
-            pr: 2
-          }}
-        >
-          <Box sx={{ flex: 1 }}>
-            <Typography variant='subtitle1' fontWeight='bold'>
-              Coupon Available
-            </Typography>
-            <Typography variant='body2'>
-              Use code <b>DISCOUNT10</b> to save 10%
-            </Typography>
-          </Box>
+        {/* Select Product */}
 
-          <Button variant='contained' size='small' color='error'>
-            Apply
-          </Button>
-        </Box>
-        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-          <Typography variant='h6' sx={{ mt: 4, mb: 2 }}>
-            Order Details
-          </Typography>
-          <Button variant='outlined' size='small' color='error'>
-            Clear All
-          </Button>
-        </Box>
         <OrderListTable />
 
         <Box
@@ -102,7 +46,7 @@ const CartCheckout = () => {
             borderRadius: 1,
             p: 3,
             mt: 4,
-            // bgcolor: theme => theme.palette.primary.main,
+
             bgcolor: '#c7eef3ff',
             pr: 2
           }}

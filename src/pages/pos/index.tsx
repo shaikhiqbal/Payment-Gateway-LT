@@ -1,6 +1,6 @@
-import React, { Fragment, useEffect } from 'react'
+import React, { Fragment, ReactNode, useEffect } from 'react'
 // ** MUI Imports
-import { Box, Button, Grid } from '@mui/material'
+import { Box, Button, Grid, Paper } from '@mui/material'
 
 // ** Components
 import TopBar from 'src/views/pages/pos/TopBar'
@@ -20,6 +20,11 @@ import PaymentMethodsGrid from 'src/views/pages/pos/PaymentMode'
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
 
+// ** Layout Import
+import PosLayout from 'src/@core/layouts/PosLayout'
+
+import PerfectScrollbar from 'react-perfect-scrollbar'
+
 const POS = () => {
   // ** Hook
 
@@ -32,68 +37,38 @@ const POS = () => {
       .catch(err => console.log(err))
   }, [dispatch])
   return (
-    <Fragment>
-      <Box p={2}>
-        <TopBar />
-      </Box>
-      <Box
-        sx={{
-          display: 'flex',
-          flexDirection: { xs: 'column', md: 'row' } // ✅ stack on small, row on md+
-        }}
-      >
-        {/* Right Side - TopBar + Product Area */}
-        <Box flex={1} display='flex' flexDirection='column'>
-          {/* Top Bar */}
-
-          {/* Product Area */}
-          <Box flex={1} overflow='auto' p={2}>
+    <Grid
+      container
+      spacing={4}
+      sx={{
+        pb: '60px',
+        height: theme => `calc(100vh - ${theme.spacing((theme.mixins.toolbar.minHeight as number) / 4)})`,
+        mt: 1
+      }}
+    >
+      {/* Product Area */}
+      <Grid item xs={12} md={7} lg={8} sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+        <Paper sx={{ flex: 1, minHeight: 0 }}>
+          <PerfectScrollbar style={{ padding: '1rem' }}>
+            <TopBar />
             <ProductArea />
-          </Box>
-        </Box>
+          </PerfectScrollbar>
+        </Paper>
+      </Grid>
 
-        {/* Left Side - Checkout */}
-        <Box
-          sx={{
-            width: { xs: '100%', md: 550 }, // ✅ full width on xs, 400px fixed on md+
-            borderLeft: { xs: 'none' },
-            p: 4,
-            display: 'flex',
-            flexDirection: 'column',
-            bgcolor: theme => (theme.palette.mode === 'light' ? '#E6EAED' : '#2C2F33'),
-            borderRadius: 2
-          }}
-        >
+      {/* Cart + Checkout */}
+      <Grid item xs={12} md={5} lg={4} sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+        <PerfectScrollbar>
           <CartCheckout />
           <PaymentMethodsGrid />
-          <Grid container spacing={2} sx={{ mt: 4 }}>
-            <Grid item xs={6} sm={4} md={6}>
-              <Button
-                variant='contained'
-                color='secondary'
-                startIcon={<Icon icon='ic:baseline-local-printshop' />}
-                sx={{ width: '100%' }}
-              >
-                Print
-              </Button>
-            </Grid>
-            <Grid item xs={6} sm={4} md={6}>
-              <Button
-                variant='contained'
-                color='warning'
-                startIcon={<Icon icon='ic:outline-local-grocery-store' />}
-                sx={{ width: '100%' }}
-              >
-                Place Order
-              </Button>
-            </Grid>
-          </Grid>
-        </Box>
-      </Box>
-    </Fragment>
+        </PerfectScrollbar>
+      </Grid>
+    </Grid>
   )
 }
 
 POS.acl = { subject: 'pos', action: 'read' }
+
+POS.getLayout = (page: ReactNode) => <PosLayout>{page}</PosLayout>
 
 export default POS

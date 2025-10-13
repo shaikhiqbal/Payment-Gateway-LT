@@ -10,7 +10,8 @@ import {
   TextField,
   Box,
   Paper,
-  Typography
+  Typography,
+  Button
 } from '@mui/material'
 
 // ** Icon Imports
@@ -55,46 +56,66 @@ const OrderListTable = () => {
   }
 
   return (
-    <TableContainer component={Paper}>
-      <Table size='small'>
-        <TableHead>
-          <TableRow>
-            <TableCell sx={{ fontWeight: 'bold', bgcolor: 'grey.100' }}>Item</TableCell>
-            <TableCell sx={{ fontWeight: 'bold', bgcolor: 'grey.100' }}>QTY</TableCell>
-            <TableCell sx={{ fontWeight: 'bold', bgcolor: 'grey.100', textAlign: 'right' }}>Cost</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {products.map(product => (
-            <TableRow key={product.id} sx={{ padding: 2 }}>
-              <TableCell>
-                <Box display='flex' alignItems='center' gap={1}>
-                  {/* <IconButton onClick={() => removeProduct(product.id)}>
+    <Box>
+      <Box
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+
+          borderRadius: 1,
+          mt: 4
+        }}
+      >
+        <Typography variant='h6' sx={{ mt: 4, mb: 2 }}>
+          Order Details
+        </Typography>
+        <Button variant='outlined' size='small' color='error'>
+          Clear All
+        </Button>
+      </Box>
+      <TableContainer component={Paper}>
+        <Table size='small'>
+          <TableHead>
+            <TableRow>
+              <TableCell sx={{ fontWeight: 'bold', bgcolor: 'grey.100' }}>Item</TableCell>
+              <TableCell sx={{ fontWeight: 'bold', bgcolor: 'grey.100' }}>QTY</TableCell>
+              <TableCell sx={{ fontWeight: 'bold', bgcolor: 'grey.100', textAlign: 'right' }}>Cost</TableCell>
+            </TableRow>
+          </TableHead>
+
+          <TableBody sx={{ maxHeight: '300px', position: 'relative' }}>
+            {products.map(product => (
+              <TableRow key={product.id} sx={{ padding: 2 }}>
+                <TableCell>
+                  <Box display='flex' alignItems='center' gap={1}>
+                    {/* <IconButton onClick={() => removeProduct(product.id)}>
                     <DeleteIcon fontSize='small' />
                   </IconButton> */}
-                  <IconButton aria-label='capture screenshot' color='error' size='small'>
-                    <Icon icon='tabler:trash' fontSize='inherit' />
-                  </IconButton>
-                  <Typography variant='body2'>{product.name}</Typography>
-                </Box>
-              </TableCell>
-              <TableCell>
-                <Box display='flex' alignItems='center'>
-                  <TextField
-                    size='small'
-                    type='number'
-                    value={product.qty}
-                    onChange={e => handleQtyChange(product.id, Number(e.target.value))}
-                    inputProps={{ style: { textAlign: 'center', width: 40 } }}
-                  />
-                </Box>
-              </TableCell>
-              <TableCell sx={{ textAlign: 'right', fontWeight: 600 }}>${product.cost}</TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
+                    <IconButton aria-label='capture screenshot' color='error' size='small'>
+                      <Icon icon='tabler:trash' fontSize='inherit' />
+                    </IconButton>
+                    <Typography variant='body2'>{product.name}</Typography>
+                  </Box>
+                </TableCell>
+                <TableCell>
+                  <Box display='flex' alignItems='center'>
+                    <TextField
+                      size='small'
+                      type='number'
+                      value={product.qty}
+                      onChange={e => handleQtyChange(product.id, Number(e.target.value))}
+                      inputProps={{ style: { textAlign: 'center', width: 40 } }}
+                    />
+                  </Box>
+                </TableCell>
+                <TableCell sx={{ textAlign: 'right', fontWeight: 600 }}>${product.cost}</TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </Box>
   )
 }
 

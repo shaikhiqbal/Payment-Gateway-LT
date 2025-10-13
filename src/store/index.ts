@@ -11,6 +11,8 @@ import permissions from 'src/store/apps/permissions'
 
 // ** Pages Reducers
 import pos from 'src/store/pages/pos'
+import payment from 'src/store/pages/pos/paymentSlice'
+import cartSlice from 'src/store/pages/pos/cartSlice'
 
 export const store = configureStore({
   reducer: {
@@ -20,7 +22,9 @@ export const store = configureStore({
     invoice,
     calendar,
     permissions,
-    pos
+    pos,
+    cartSlice,
+    payment
   },
   middleware: getDefaultMiddleware =>
     getDefaultMiddleware({

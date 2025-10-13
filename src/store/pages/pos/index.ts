@@ -1,5 +1,4 @@
-import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit'
-import axios from 'axios'
+import { createSlice, createAsyncThunk, createEntityAdapter, PayloadAction } from '@reduxjs/toolkit'
 
 //**   Product type
 interface Product {
@@ -17,6 +16,8 @@ interface ProductsState {
   catLoading: boolean
   error: string | null
   searchTerm: string
+  isCustomerSelected: boolean
+  warningCountSelectCutomer: number
 }
 
 //** Initial state
@@ -26,7 +27,9 @@ const initialState: ProductsState = {
   loading: false,
   catLoading: false,
   error: null,
-  searchTerm: ''
+  searchTerm: '',
+  isCustomerSelected: false,
+  warningCountSelectCutomer: 0
 }
 
 //** Async thunk to fetch products
@@ -60,6 +63,7 @@ export const fetchCategories = createAsyncThunk<string[]>('products/fetchCategor
 
   return data // array of strings
 })
+
 //**  Slice
 const productsSlice = createSlice({
   name: 'products',
@@ -67,6 +71,12 @@ const productsSlice = createSlice({
   reducers: {
     setSearchTerm: (state, action: PayloadAction<string>) => {
       state.searchTerm = action.payload
+    },
+    selectCustomer: (state, action: PayloadAction<boolean>) => {
+      state.isCustomerSelected = action.payload
+    },
+    handleAlertSelectCustomer: (state, action: PayloadAction<number>) => {
+      state.warningCountSelectCutomer = state.warningCountSelectCutomer + action.payload
     }
   },
   extraReducers: builder => {
@@ -102,5 +112,5 @@ const productsSlice = createSlice({
   }
 })
 
-export const { setSearchTerm } = productsSlice.actions
+export const { setSearchTerm, selectCustomer, handleAlertSelectCustomer } = productsSlice.actions
 export default productsSlice.reducer

@@ -1,16 +1,26 @@
-import React from 'react'
+import React, { useState } from 'react'
 
 // ** MUI Imports
-import Skeleton from '@mui/material/Skeleton'
+import Box from '@mui/material/Box'
+import Grid from '@mui/material/Grid'
 import Card from '@mui/material/Card'
 import Button from '@mui/material/Button'
-import CardMedia from '@mui/material/CardMedia'
+import Skeleton from '@mui/material/Skeleton'
 import Typography from '@mui/material/Typography'
 import CardContent from '@mui/material/CardContent'
-import { Box, Grid } from '@mui/material'
 
 // ** Animation
 import { AnimatePresence, motion } from 'motion/react'
+
+// ** Hooks
+import { useTheme } from '@emotion/react'
+import { useSelector } from 'react-redux'
+import { RootState } from 'src/store'
+import { useDispatch } from 'react-redux'
+
+// ** Action
+import { handleAlertSelectCustomer } from 'src/store/pages/pos'
+import toast from 'react-hot-toast'
 
 const MotionImg = motion.img
 
@@ -31,17 +41,34 @@ interface ProductCardProps {
   price: number
   image: string
 }
+// ** Product Card Component
+export const ProductCard: React.FC<ProductCardProps> = ({ name = 'Goldy Brare', price = 23, image = 'url' }) => {
+  // ** States
+  const [added, setAdded] = useState(false)
 
-const ProductCard: React.FC<ProductCardProps> = ({ name = 'Goldy Brare', price = 23, image = 'url' }) => {
+  // ** Hooks
+  const dispatch = useDispatch()
+  const isCustomerSelected = useSelector((state: RootState) => state.pos.isCustomerSelected)
+
+  // ** Handle Add To Cart
+  const handleAddToCart = () => {
+    if (!isCustomerSelected) {
+      dispatch(handleAlertSelectCustomer(1))
+      toast.error('Please select a customer before adding products to the cart.')
+      return
+    }
+    setAdded(true)
+  }
+
   return (
     <Card
       sx={{
-        maxWidth: 250,
         width: '100%',
         height: '100%',
         display: 'flex',
         flexDirection: 'column',
-        cursor: 'pointer'
+        cursor: 'pointer',
+        border: theme => `1px solid ${theme.palette.divider}`
       }}
     >
       {/* Image Box */}
@@ -83,34 +110,86 @@ const ProductCard: React.FC<ProductCardProps> = ({ name = 'Goldy Brare', price =
           gap: 1
         }}
       >
-        <Typography variant='subtitle1' fontWeight='bold'>
+        <Typography variant='body1' fontWeight={900}>
           {name}
         </Typography>
 
-        <Typography variant='body2' color='text.secondary' sx={{ borderTop: '1px dashed gray', pt: 1 }}>
+        <Typography variant='body2' color='text.secondary' sx={{ borderTop: '1px dashed gray', pt: 2 }}>
           ${price}
         </Typography>
       </CardContent>
+      <Button
+        variant='contained'
+        color={added ? 'success' : 'primary'}
+        onClick={() => handleAddToCart()}
+        sx={{ py: 2.5, width: '100%', borderTopLeftRadius: 0, borderTopRightRadius: 0 }}
+      >
+        {added ? 'Added To Cart' : 'Add To Cart'}
+      </Button>
     </Card>
   )
 }
 
-const ProductRender = (props: ProductRenderProps) => {
-  const { list, loading } = props
-
-  const renderProduct = list.map((item: Product) => (
-    <ProductCard key={item.id} name={item.name} price={item.price} image={item.image} />
-  ))
-
+// ** Product Render Component
+const ProductCardSkeleton: React.FC = () => {
   return (
-    <Grid container spacing={4}>
-      {list.map((item: Product) => (
-        <Grid item xs={12} sm={6} md={4} lg={4} key={item.id}>
-          <ProductCard name={item.name} price={item.price} image={item.image} />
-        </Grid>
-      ))}
-    </Grid>
+    <Card
+      sx={{
+        width: '100%',
+        height: '100%',
+        display: 'flex',
+        flexDirection: 'column',
+        cursor: 'pointer',
+        border: theme => `1px solid ${theme.palette.divider}`
+      }}
+    >
+      {/* Image Skeleton */}
+      <Box
+        sx={{
+          margin: 4,
+          aspectRatio: '1 / 1',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          borderRadius: 2,
+          overflow: 'hidden',
+          bgcolor: theme => (theme.palette.mode === 'light' ? '#F9FAFB' : 'grey.300')
+        }}
+      >
+        <Skeleton variant='rectangular' width='100%' height='100%' />
+      </Box>
+
+      {/* Content Skeleton */}
+      <CardContent
+        sx={{
+          flex: 1,
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'space-between',
+          p: theme => `${theme.spacing(0, 5.25, 4)} !important`,
+          gap: 1
+        }}
+      >
+        <Skeleton variant='text' width='80%' height={30} />
+        <Skeleton variant='text' width='40%' height={20} sx={{ mt: 2 }} />
+      </CardContent>
+
+      {/* Button Skeleton */}
+      <Box sx={{ width: '100%', py: 2.5 }}>
+        <Skeleton variant='rectangular' width='100%' height={40} />
+      </Box>
+    </Card>
   )
 }
 
-export default ProductRender
+export const ProductLoader: React.FC = () => {
+  return (
+    <>
+      {Array.from({ length: 8 }).map((_, index) => (
+        <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
+          <ProductCardSkeleton />
+        </Grid>
+      ))}
+    </>
+  )
+}
