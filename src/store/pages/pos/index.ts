@@ -6,6 +6,7 @@ interface Product {
   name: string
   image: string
   price: number
+  quantity: number
 }
 
 //**  State type
@@ -47,7 +48,8 @@ export const fetchProducts = createAsyncThunk<Product[]>('products/fetchProducts
     id: String(p.id),
     name: p.title,
     price: p.price,
-    image: p.images[0]
+    image: p.images[0],
+    quantity: 0
   }))
 })
 

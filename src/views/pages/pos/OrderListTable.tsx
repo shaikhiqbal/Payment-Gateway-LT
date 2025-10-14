@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { Fragment, useState } from 'react'
 import {
   Table,
   TableBody,
@@ -11,111 +11,178 @@ import {
   Box,
   Paper,
   Typography,
-  Button
+  Button,
+  Skeleton
 } from '@mui/material'
 
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
-// import DeleteIcon from '@mui/icons-material/Delete'
-// import AddIcon from '@mui/icons-material/Add'
-// import RemoveIcon from '@mui/icons-material/Remove'
 
-interface Product {
-  id: number
+// ** Hooks
+import { useSelector } from 'react-redux'
+import { RootState } from 'src/store'
+
+// ** Forms Modal
+import EditCart from './forms/EditCart'
+
+// ** Action
+import { removeFromCart } from 'src/store/pages/pos/cartSlice'
+
+// ** Dispatch
+import { useDispatch } from 'react-redux'
+
+import { motion, AnimatePresence } from 'framer-motion'
+
+// ** Types
+interface CartItem {
+  id: string
   name: string
-  qty: number
-  cost: number
+  price: number
+  quantity: number
+  image: string
 }
 
-const initialProducts: Product[] = [
-  { id: 1, name: 'iPhone 14 64GB', qty: 1, cost: 15800 },
-  { id: 2, name: 'Red Nike Angelo', qty: 0, cost: 398 },
-  { id: 3, name: 'Tablet 1.02 inch', qty: 0, cost: 3000 },
-  { id: 4, name: 'IdeaPad Slim 3i', qty: 0, cost: 3000 }
-]
+const MotionTableRow = motion.create(TableRow)
 
 const OrderListTable = () => {
-  const [products, setProducts] = useState<Product[]>(initialProducts)
+  // ** State
+  const [openEditModal, setOpenEditModal] = useState<boolean>(false)
+  const [selectedProduct, setSelectedProduct] = useState<CartItem | null>(null)
+  const [deleteLoader, setDeleteLoader] = useState<string | null>(null)
 
-  const handleQtyChange = (id: number, value: number) => {
-    setProducts(prev => prev.map(p => (p.id === id ? { ...p, qty: value < 0 ? 0 : value } : p)))
+  // ** Hooks
+  const cartList = useSelector((state: RootState) => state.cartSlice)
+  const { entities } = cartList
+
+  // ** Product List
+  const products = Object.values(entities) as CartItem[]
+
+  // ** Dispatch
+  const dispatch = useDispatch()
+
+  // ** Toggle
+  const handleToggleEditModal = (product: CartItem | null) => {
+    setSelectedProduct(product)
+    setOpenEditModal(!openEditModal)
   }
 
-  const increment = (id: number) => {
-    const product = products.find(p => p.id === id)
-    if (product) handleQtyChange(id, product.qty + 1)
-  }
-
-  const decrement = (id: number) => {
-    const product = products.find(p => p.id === id)
-    if (product) handleQtyChange(id, product.qty - 1)
-  }
-
-  const removeProduct = (id: number) => {
-    setProducts(prev => prev.filter(p => p.id !== id))
+  const handleRemove = (id: string) => {
+    setDeleteLoader(id)
+    setTimeout(() => {
+      dispatch(removeFromCart(id))
+      setDeleteLoader(null)
+    }, 800)
   }
 
   return (
-    <Box>
-      <Box
-        sx={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
+    <Fragment>
+      {products.length ? (
+        <Box>
+          <Box
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
 
-          borderRadius: 1,
-          mt: 4
-        }}
-      >
-        <Typography variant='h6' sx={{ mt: 4, mb: 2 }}>
-          Order Details
+              borderRadius: 1,
+              mt: 4
+            }}
+          >
+            <Typography variant='h6' sx={{ mt: 4, mb: 2 }}>
+              Order Details
+            </Typography>
+            <Button variant='outlined' size='small' color='error'>
+              Clear All
+            </Button>
+          </Box>
+          <TableContainer component={Paper}>
+            <Table size='small'>
+              <TableHead>
+                <TableRow>
+                  <TableCell sx={{ fontWeight: 'bold', bgcolor: 'grey.100' }}>Item</TableCell>
+                  <TableCell sx={{ fontWeight: 'bold', bgcolor: 'grey.100' }}>QTY</TableCell>
+                  <TableCell sx={{ fontWeight: 'bold', bgcolor: 'grey.100', textAlign: 'right' }}>Cost</TableCell>
+                  <TableCell sx={{ fontWeight: 'bold', bgcolor: 'grey.100', textAlign: 'right' }}>Edit</TableCell>
+                </TableRow>
+              </TableHead>
+
+              <TableBody sx={{ maxHeight: '300px', position: 'relative' }}>
+                <AnimatePresence>
+                  {products.map((product: any) => (
+                    <MotionTableRow
+                      key={product.id}
+                      layout
+                      initial={{ opacity: 0, y: -10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{
+                        opacity: 0,
+                        x: -100,
+                        scale: 0.95,
+                        transition: { duration: 0.3 }
+                      }}
+                      sx={{
+                        backgroundColor: deleteLoader === product.id ? 'rgba(255,0,0,0.04)' : 'transparent',
+                        transition: 'background-color 0.3s ease'
+                      }}
+                    >
+                      <TableCell>
+                        <Box display='flex' alignItems='center' gap={1}>
+                          <motion.div
+                            whileTap={{ scale: 0.8, rotate: -10 }}
+                            whileHover={{ rotate: -10 }}
+                            transition={{ type: 'spring', stiffness: 200 }}
+                          >
+                            <IconButton
+                              aria-label='delete'
+                              color='error'
+                              size='small'
+                              onClick={() => handleRemove(product.id)}
+                            >
+                              <Icon icon='tabler:trash' fontSize='inherit' />
+                            </IconButton>
+                          </motion.div>
+                          <Typography variant='body2'>{product.name}</Typography>
+                        </Box>
+                      </TableCell>
+
+                      <TableCell>
+                        <TextField
+                          size='small'
+                          type='number'
+                          value={product.quantity}
+                          inputProps={{ style: { textAlign: 'center', width: 40 } }}
+                          disabled
+                        />
+                      </TableCell>
+
+                      <TableCell sx={{ textAlign: 'right', fontWeight: 600 }}>${product.price}</TableCell>
+
+                      <TableCell sx={{ textAlign: 'right' }}>
+                        <IconButton
+                          aria-label='edit'
+                          color='secondary'
+                          size='small'
+                          onClick={() => handleToggleEditModal(product)}
+                          sx={{ bgcolor: 'grey.100' }}
+                        >
+                          <Icon icon='tabler:edit' fontSize='inherit' />
+                        </IconButton>
+                      </TableCell>
+                    </MotionTableRow>
+                  ))}
+                </AnimatePresence>
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </Box>
+      ) : (
+        <Typography variant='body2' sx={{ mb: 2, textAlign: 'center', mt: 4 }}>
+          {products.length} items in cart
         </Typography>
-        <Button variant='outlined' size='small' color='error'>
-          Clear All
-        </Button>
-      </Box>
-      <TableContainer component={Paper}>
-        <Table size='small'>
-          <TableHead>
-            <TableRow>
-              <TableCell sx={{ fontWeight: 'bold', bgcolor: 'grey.100' }}>Item</TableCell>
-              <TableCell sx={{ fontWeight: 'bold', bgcolor: 'grey.100' }}>QTY</TableCell>
-              <TableCell sx={{ fontWeight: 'bold', bgcolor: 'grey.100', textAlign: 'right' }}>Cost</TableCell>
-            </TableRow>
-          </TableHead>
-
-          <TableBody sx={{ maxHeight: '300px', position: 'relative' }}>
-            {products.map(product => (
-              <TableRow key={product.id} sx={{ padding: 2 }}>
-                <TableCell>
-                  <Box display='flex' alignItems='center' gap={1}>
-                    {/* <IconButton onClick={() => removeProduct(product.id)}>
-                    <DeleteIcon fontSize='small' />
-                  </IconButton> */}
-                    <IconButton aria-label='capture screenshot' color='error' size='small'>
-                      <Icon icon='tabler:trash' fontSize='inherit' />
-                    </IconButton>
-                    <Typography variant='body2'>{product.name}</Typography>
-                  </Box>
-                </TableCell>
-                <TableCell>
-                  <Box display='flex' alignItems='center'>
-                    <TextField
-                      size='small'
-                      type='number'
-                      value={product.qty}
-                      onChange={e => handleQtyChange(product.id, Number(e.target.value))}
-                      inputProps={{ style: { textAlign: 'center', width: 40 } }}
-                    />
-                  </Box>
-                </TableCell>
-                <TableCell sx={{ textAlign: 'right', fontWeight: 600 }}>${product.cost}</TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
-    </Box>
+      )}
+      {/* <OrderListSkeleton /> */}
+      <EditCart open={openEditModal} onClose={() => handleToggleEditModal(null)} product={selectedProduct} />
+    </Fragment>
   )
 }
 

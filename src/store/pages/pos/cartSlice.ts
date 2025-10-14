@@ -6,14 +6,22 @@ interface CartItem {
   name: string
   price: number
   quantity: number
+  image: string
 }
 
 const cartAdapter = createEntityAdapter<CartItem>({
-  selectId: item => item.id // default is id
+  selectId: item => item.id
 })
 
 const initialState = cartAdapter.getInitialState({
-  total: 0 // keep total separately
+  payment: {
+    total: 0,
+    shipping: 0,
+    discount: 0,
+    paid: 0,
+    due: 0,
+    method: 'cash'
+  }
 })
 
 const cartSlice = createSlice({
@@ -27,23 +35,31 @@ const cartSlice = createSlice({
       } else {
         cartAdapter.addOne(state, action.payload)
       }
-      state.total += action.payload.price * action.payload.quantity
+      state.payment.total += action.payload.price * action.payload.quantity
+    },
+    updateQuantity: (state, action: PayloadAction<{ id: string; quantity: number }>) => {
+      const item = state.entities[action.payload.id]
+      if (item) {
+        state.payment.total -= item.price * item.quantity
+        item.quantity = action.payload.quantity
+        state.payment.total += item.price * item.quantity
+      }
     },
     removeFromCart: (state, action: PayloadAction<string>) => {
       const item = state.entities[action.payload]
       if (item) {
-        state.total -= item.price * item.quantity
+        state.payment.total -= item.price * item.quantity
         cartAdapter.removeOne(state, action.payload)
       }
     },
     clearCart: state => {
       cartAdapter.removeAll(state)
-      state.total = 0
+      state.payment.total = 0
     }
   }
 })
 
-export const { addToCart, removeFromCart, clearCart } = cartSlice.actions
+export const { addToCart, removeFromCart, updateQuantity, clearCart } = cartSlice.actions
 export default cartSlice.reducer
 
 // 5️⃣ Export selectors

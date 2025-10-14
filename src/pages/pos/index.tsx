@@ -33,9 +33,8 @@ const POS = () => {
   useEffect(() => {
     dispatch(fetchCategories())
     dispatch(fetchProducts())
-      .then(res => console.log(res))
-      .catch(err => console.log(err))
   }, [dispatch])
+
   return (
     <Grid
       container

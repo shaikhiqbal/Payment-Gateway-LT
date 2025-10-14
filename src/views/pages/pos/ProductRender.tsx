@@ -10,16 +10,18 @@ import Typography from '@mui/material/Typography'
 import CardContent from '@mui/material/CardContent'
 
 // ** Animation
-import { AnimatePresence, motion } from 'motion/react'
+import { motion } from 'motion/react'
 
 // ** Hooks
-import { useTheme } from '@emotion/react'
 import { useSelector } from 'react-redux'
 import { RootState } from 'src/store'
 import { useDispatch } from 'react-redux'
 
 // ** Action
 import { handleAlertSelectCustomer } from 'src/store/pages/pos'
+import { addToCart } from 'src/store/pages/pos/cartSlice'
+
+// ** Toast
 import toast from 'react-hot-toast'
 
 const MotionImg = motion.img
@@ -31,18 +33,22 @@ interface Product {
   price: number
 }
 
-interface ProductRenderProps {
-  list: Product[]
-  loading: boolean
-}
-
 interface ProductCardProps {
   name: string
   price: number
   image: string
+  items: Product
 }
+
 // ** Product Card Component
-export const ProductCard: React.FC<ProductCardProps> = ({ name = 'Goldy Brare', price = 23, image = 'url' }) => {
+export const ProductCard: React.FC<ProductCardProps> = ({
+  name = 'Goldy Brare',
+  price = 23,
+  image = 'url',
+  ...props
+}) => {
+  // ** Props
+  const { items } = props
   // ** States
   const [added, setAdded] = useState(false)
 
@@ -54,9 +60,11 @@ export const ProductCard: React.FC<ProductCardProps> = ({ name = 'Goldy Brare', 
   const handleAddToCart = () => {
     if (!isCustomerSelected) {
       dispatch(handleAlertSelectCustomer(1))
+
       toast.error('Please select a customer before adding products to the cart.')
       return
     }
+    dispatch(addToCart({ ...items, quantity: 1 }))
     setAdded(true)
   }
 
@@ -76,7 +84,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ name = 'Goldy Brare', 
         sx={{
           margin: 4,
           aspectRatio: '1 / 1',
-          overflow: 'hidden', // important: clip the scaling image
+          overflow: 'hidden',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',

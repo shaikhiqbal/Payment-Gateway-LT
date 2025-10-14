@@ -17,6 +17,7 @@ interface Product {
   name: string
   image: string
   price: number
+  quantity: number
 }
 
 const ProductArea = () => {
@@ -25,7 +26,7 @@ const ProductArea = () => {
   // ** Render Product
   const renderProduct = list.map((item: Product) => (
     <Grid item xs={12} sm={6} md={4} lg={3} key={item.id}>
-      <ProductCard name={item.name} price={item.price} image={item.image} />
+      <ProductCard name={item.name} price={item.price} image={item.image} items={item} />
     </Grid>
   ))
 
@@ -37,35 +38,3 @@ const ProductArea = () => {
 }
 
 export default ProductArea
-
-// import React from 'react'
-
-// // ** MUI Imports
-// import { Box } from '@mui/material'
-
-// // ** Redux Hook
-// import { useSelector } from 'react-redux'
-
-// // ** Types
-// import { RootState } from 'src/store'
-
-// // ** Components
-// import ProductRender from './ProductRender'
-// import Typography from 'src/@core/theme/typography'
-
-// const ProductArea = () => {
-//   const store = useSelector((state: RootState) => state.pos)
-//   const allStore = useSelector((state: RootState) => state)
-
-//   console.log(allStore)
-
-//   const { list, categories, loading, catLoading, error, searchTerm } = store
-
-//   return (
-//     <Box sx={{ flexGrow: 1, mt: 2 }}>
-//       <ProductRender list={list} loading={loading} />
-//     </Box>
-//   )
-// }
-
-// export default ProductArea
