@@ -51,7 +51,12 @@ const OrderListTable = () => {
   const [deleteLoader, setDeleteLoader] = useState<string | null>(null)
 
   // ** Hooks
-  const cartList = useSelector((state: RootState) => state.cartSlice)
+  const cartList = useSelector(
+    (state: RootState) =>
+      state.cartSlice as {
+        entities: { [key: string]: CartItem }
+      }
+  )
   const { entities } = cartList
 
   // ** Product List

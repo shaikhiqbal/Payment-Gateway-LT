@@ -1,5 +1,6 @@
-import { Card, CardContent, CardHeader, Skeleton } from '@mui/material'
 import React from 'react'
+// ** MUI Imports
+import { Card, CardContent, CardHeader, Skeleton } from '@mui/material'
 
 const BarChartLoader = () => {
   return (

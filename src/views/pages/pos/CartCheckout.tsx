@@ -46,7 +46,6 @@ const CartCheckout = () => {
             borderRadius: 1,
             p: 3,
             mt: 4,
-
             bgcolor: '#c7eef3ff',
             pr: 2
           }}

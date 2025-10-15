@@ -1,9 +1,5 @@
 // ** MUI Imports
 import Box from '@mui/material/Box'
-import IconButton from '@mui/material/IconButton'
-
-// ** Icon Imports
-import Icon from 'src/@core/components/icon'
 
 // ** Type Import
 import { Settings } from 'src/@core/context/settingsContext'
@@ -17,13 +13,15 @@ import NotificationDropdown, {
   NotificationsType
 } from 'src/@core/layouts/components/shared-components/NotificationDropdown'
 import ShortcutsDropdown, { ShortcutsType } from 'src/@core/layouts/components/shared-components/ShortcutsDropdown'
+import { Button, Fab } from '@mui/material'
+
+// ** Icon Imports
+import Icon from 'src/@core/components/icon'
 import Link from 'next/link'
-import { Button } from '@mui/material'
 
 interface Props {
   hidden: boolean
   settings: Settings
-  toggleNavVisibility: () => void
   saveSettings: (values: Settings) => void
 }
 
@@ -74,7 +72,7 @@ const notifications: NotificationsType[] = [
 
 const shortcuts: ShortcutsType[] = [
   {
-    title: 'Calendar',
+    title: 'Create Product',
     url: '/apps/calendar',
     icon: 'tabler:calendar',
     subtitle: 'Appointments'
@@ -125,41 +123,32 @@ const shortcuts: ShortcutsType[] = [
 
 const AppBarContent = (props: Props) => {
   // ** Props
-  const { hidden, settings, saveSettings, toggleNavVisibility } = props
+  const { hidden, settings, saveSettings } = props
 
   return (
-    <Box sx={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-      <Box className='actions-left' sx={{ mr: 2, display: 'flex', alignItems: 'center' }}>
-        {hidden && !settings.navHidden ? (
-          <IconButton color='inherit' sx={{ ml: -2.75 }} onClick={toggleNavVisibility}>
-            <Icon fontSize='1.5rem' icon='tabler:menu-2' />
-          </IconButton>
-        ) : null}
-        <Autocomplete hidden={hidden} settings={settings} />
-      </Box>
-      <Box className='actions-right' sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-        <Link href='/pos' passHref legacyBehavior>
-          <Button
-            variant='contained'
-            size='small'
-            sx={{
-              backgroundColor: '#7367f0', // custom color
-              color: '#fff', // text color
-              '&:hover': {
-                backgroundColor: '#7367f0' // hover color
-              }
-            }}
-          >
-            <Icon icon='mdi:printer-point-of-sale-outline' fontSize={'inherit'} />{' '}
-            <span style={{ marginLeft: 3 }}>POS</span>
-          </Button>
-        </Link>
-        <LanguageDropdown settings={settings} saveSettings={saveSettings} />
-        <ModeToggler settings={settings} saveSettings={saveSettings} />
-        <ShortcutsDropdown settings={settings} shortcuts={shortcuts} />
-        <NotificationDropdown settings={settings} notifications={notifications} />
-        <UserDropdown settings={settings} />
-      </Box>
+    <Box sx={{ display: 'flex', alignItems: 'center', gap: 3 }}>
+      <Link href='/dashboards/merchant' passHref legacyBehavior>
+        <Button
+          variant='contained'
+          size='small'
+          sx={{
+            backgroundColor: '#7367f0',
+            color: '#fff',
+            '&:hover': {
+              backgroundColor: '#7367f0'
+            }
+          }}
+        >
+          <Icon icon='mage:dashboard' fontSize='inherit' /> <span style={{ marginLeft: 3 }}>Dashboard</span>
+        </Button>
+      </Link>
+
+      {/* <Autocomplete hidden={hidden} settings={settings} /> */}
+      <LanguageDropdown settings={settings} saveSettings={saveSettings} />
+      <ModeToggler settings={settings} saveSettings={saveSettings} />
+      <ShortcutsDropdown settings={settings} shortcuts={shortcuts} />
+      <NotificationDropdown settings={settings} notifications={notifications} />
+      <UserDropdown settings={settings} />
     </Box>
   )
 }

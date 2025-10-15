@@ -3,6 +3,11 @@ import React from 'react'
 // ** MUI Imports
 import { Grid, Box, Typography, Paper, Card, CardContent, CardHeader } from '@mui/material'
 
+import CashModal from './payment/modal/CashModal'
+import CardModal from './payment/modal/CardModal'
+
+import { AnimatePresence } from 'framer-motion'
+
 interface PaymentMethod {
   id: number
   name: string
@@ -24,54 +29,61 @@ const paymentMethods: PaymentMethod[] = [
 ]
 
 const PaymentMethodsGrid = () => {
+  const [selected, setSelected] = React.useState<string | null>(null)
   return (
-    <Card sx={{ mt: 4 }}>
-      <CardHeader title={<Typography variant='h6'>Order List</Typography>} />
-      <CardContent>
-        {' '}
-        <Grid container spacing={2}>
-          {paymentMethods.map(method => (
-            <Grid item xs={6} sm={4} md={4} key={method.id}>
-              <Paper
-                elevation={0}
-                sx={{
-                  p: 2,
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  gap: 1,
-                  cursor: 'pointer',
-                  border: '1px dashed #ccc',
-                  borderRadius: 1,
-                  minHeight: 60
-                }}
-                onClick={method.onClick}
-              >
-                {/* Image or placeholder box */}
-                <Box
+    <>
+      <Card sx={{ mt: 4 }}>
+        <CardHeader title={<Typography variant='h6'>Order List</Typography>} />
+        <CardContent>
+          {' '}
+          <Grid container spacing={2}>
+            {paymentMethods.map(method => (
+              <Grid item xs={6} sm={4} md={4} key={method.id}>
+                <Paper
+                  elevation={0}
                   sx={{
-                    width: 24,
-                    height: 24,
-                    bgcolor: method.imgSrc ? 'transparent' : 'grey.300',
+                    p: 2,
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    borderRadius: 0.5
+                    gap: 1,
+                    cursor: 'pointer',
+                    border: '1px dashed #ccc',
+                    borderRadius: 1,
+                    minHeight: 60
                   }}
+                  onClick={() => setSelected(method.name)}
                 >
-                  {method.imgSrc && <img src={method.imgSrc} alt={method.name} width={24} height={24} />}
-                </Box>
+                  {/* Image or placeholder box */}
+                  <Box
+                    sx={{
+                      width: 24,
+                      height: 24,
+                      bgcolor: method.imgSrc ? 'transparent' : 'grey.300',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      borderRadius: 0.5
+                    }}
+                  >
+                    {method.imgSrc && <img src={method.imgSrc} alt={method.name} width={24} height={24} />}
+                  </Box>
 
-                {/* Name */}
-                <Typography variant='body2' sx={{ fontWeight: 500 }}>
-                  {method.name}
-                </Typography>
-              </Paper>
-            </Grid>
-          ))}
-        </Grid>
-      </CardContent>
-    </Card>
+                  {/* Name */}
+                  <Typography variant='body2' sx={{ fontWeight: 500 }}>
+                    {method.name}
+                  </Typography>
+                </Paper>
+              </Grid>
+            ))}
+          </Grid>
+        </CardContent>
+      </Card>
+      <AnimatePresence>
+        {selected === 'Cash' && <CashModal open onClose={() => setSelected(null)} />}
+        {selected === 'Card' && <CardModal open onClose={() => setSelected(null)} />}
+      </AnimatePresence>
+    </>
   )
 }
 
