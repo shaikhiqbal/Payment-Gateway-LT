@@ -11,7 +11,7 @@ import CardStatsTrasnsaction from 'src/@core/components/card-statistics/card-sta
 import CardStatsTransactionLoader from 'src/@core/components/card-statistics/card-loader/CardStatsTransactionLoader'
 
 // ** Fake-DB
-import { transactionStatus } from 'src/pages/dashboards/merchant/fak-db'
+import { transactionStatus } from 'src/@fake-db/merchant/transaction-db'
 
 const TransactionStatus = () => {
   // ** States
