@@ -1,12 +1,6 @@
 // ** Next Import
 import { GetStaticPaths, GetStaticProps, GetStaticPropsContext, InferGetStaticPropsType } from 'next/types'
 
-// ** Third Party Imports
-import axios from 'axios'
-
-// ** Types
-import { InvoiceType } from 'src/types/apps/invoiceTypes'
-
 // ** Demo Components Imports
 import Edit from 'src/views/apps/invoice/edit/Edit'
 
@@ -22,15 +16,15 @@ const InvoiceEdit = ({ id }: InferGetStaticPropsType<typeof getStaticProps>) => 
 }
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const res = await axios.get('/apps/invoice/invoices')
-  const data: InvoiceType[] = await res.data.allData
+  // const res = await axios.get('/apps/invoice/invoices')
+  // const data: InvoiceType[] = await res.data.allData
 
-  const paths = data.map((item: InvoiceType) => ({
-    params: { id: `${item.id}` }
-  }))
+  // const paths = data.map((item: InvoiceType) => ({
+  //   params: { id: `${item.id}` }
+  // }))
 
   return {
-    paths,
+    paths: [],
     fallback: false
   }
 }

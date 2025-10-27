@@ -4,9 +4,6 @@ import { GetStaticPaths, GetStaticProps, GetStaticPropsContext, InferGetStaticPr
 // ** Third Party Imports
 import axios from 'axios'
 
-// ** Type Imports
-import { HelpCenterCategoriesType } from 'src/@fake-db/types'
-
 // ** Demo Components Imports
 import HelpCenterSubcategory from 'src/views/pages/help-center/subcategory'
 
@@ -15,21 +12,21 @@ const HelpCenterSubcategoryPage = ({ apiData }: InferGetStaticPropsType<typeof g
 }
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const res = await axios.get('/pages/help-center/subcategory', {
-    params: { category: 'getting-started' }
-  })
-  const apiData: { activeTab: string; data: HelpCenterCategoriesType; categories: HelpCenterCategoriesType[] } =
-    await res.data
+  // const res = await axios.get('/pages/help-center/subcategory', {
+  //   params: { category: 'getting-started' }
+  // })
+  // const apiData: { activeTab: string; data: HelpCenterCategoriesType; categories: HelpCenterCategoriesType[] } =
+  //   await res.data
 
-  const paths: any = []
-  apiData.categories.forEach((category: HelpCenterCategoriesType) =>
-    category.subCategories.forEach(subcategory => {
-      paths.push({ params: { category: `${category.slug}`, subcategory: `${subcategory.slug}` } })
-    })
-  )
+  // const paths: any = []
+  // apiData.categories.forEach((category: HelpCenterCategoriesType) =>
+  //   category.subCategories.forEach(subcategory => {
+  //     paths.push({ params: { category: `${category.slug}`, subcategory: `${subcategory.slug}` } })
+  //   })
+  // )
 
   return {
-    paths,
+    paths: [],
     fallback: false
   }
 }

@@ -1,11 +1,8 @@
 // ** Next Import
 import { GetStaticPaths, GetStaticProps, GetStaticPropsContext } from 'next/types'
 
-// ** Third Party Imports
-import axios from 'axios'
-
 // ** Types
-import { MailLayoutType, MailType } from 'src/types/apps/emailTypes'
+import { MailLayoutType } from 'src/types/apps/emailTypes'
 
 // ** Demo Components Imports
 import Email from 'src/views/apps/email/Email'
@@ -15,15 +12,16 @@ const EmailApp = ({ folder }: MailLayoutType) => {
 }
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const res = await axios.get('/apps/email/allEmails')
-  const data: MailType[] = await res.data.emails
+  // const res = await axios.get('/apps/email/allEmails')
+  // const data: MailType[] = await res.data.emails
 
-  const paths = data.map((mail: MailType) => ({
-    params: { folder: mail.folder }
-  }))
+  // const paths = data.map((mail: MailType) => ({
+  //   params: { folder: mail.folder }
+  // }))
 
+  // Return an array of paths; use an empty array for now if you don't want to pre-render any folders
   return {
-    paths,
+    paths: [],
     fallback: false
   }
 }
