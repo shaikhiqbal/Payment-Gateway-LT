@@ -160,6 +160,7 @@ const AnalyticsProject = () => {
     // axios.get('/pages/profile-table', { params: { q: value } }).then(response => {
     //   setData(response.data)
     // })
+    setData([])
   }, [value])
 
   const handleFilter = (val: string) => {

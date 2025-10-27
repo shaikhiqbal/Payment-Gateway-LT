@@ -8,7 +8,7 @@ import { GetStaticProps, InferGetStaticPropsType } from 'next/types'
 import Grid from '@mui/material/Grid'
 
 // ** Types
-import { InvoiceType, InvoiceClientType } from 'src/types/apps/invoiceTypes'
+import { InvoiceClientType } from 'src/types/apps/invoiceTypes'
 
 // ** Demo Components Imports
 import AddCard from 'src/views/apps/invoice/add/AddCard'

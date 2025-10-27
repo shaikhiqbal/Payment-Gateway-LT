@@ -26,7 +26,7 @@ export const getStaticPaths: GetStaticPaths = () => {
   }
 }
 
-export const getStaticProps: GetStaticProps = async ({ params }: GetStaticPropsContext) => {
+export const getStaticProps: GetStaticProps = async () => {
   // const res = await axios.get('/pages/profile', { params: { tab: params?.tab } })
   // const data: UserProfileActiveTab = res.data
 

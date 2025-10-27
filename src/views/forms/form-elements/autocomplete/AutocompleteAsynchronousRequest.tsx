@@ -28,7 +28,7 @@ const AutocompleteAsynchronousRequest = () => {
   const loading = open && options.length === 0
 
   useEffect(() => {
-    let active = true
+    // let active = true
 
     if (true) {
       return undefined

@@ -114,7 +114,7 @@ const EditCard = ({ data }: Props) => {
   // ** States
   const [count, setCount] = useState<number>(1)
   const [selected, setSelected] = useState<string>('')
-  const [clients, setClients] = useState<InvoiceClientType[] | undefined>(undefined)
+  // const [clients, setClients] = useState<InvoiceClientType[] | undefined>(undefined)
   const [selectedClient, setSelectedClient] = useState<InvoiceClientType | null>(null)
   const [dueDate, setDueDate] = useState<DateType>(data ? new Date(data.invoice.dueDate) : new Date())
   const [issueDate, setIssueDate] = useState<DateType>(data ? new Date(data.invoice.issuedDate) : new Date())
@@ -127,10 +127,10 @@ const EditCard = ({ data }: Props) => {
     //   if (response.data && clients === undefined) {
     //     setClients(response.data)
     //     setSelected(response.data[0].name)
-    //     setSelectedClient(response.data[0])
     //   }
     // })
-  }, [clients])
+    setSelectedClient(null)
+  }, [])
 
   // ** Deletes form
   const deleteForm = (e: SyntheticEvent) => {
@@ -143,9 +143,9 @@ const EditCard = ({ data }: Props) => {
   // ** Handle Invoice To Change
   const handleInvoiceChange = (e: SelectChangeEvent) => {
     setSelected(e.target.value)
-    if (clients !== undefined) {
-      setSelectedClient(clients.filter(i => i.name === e.target.value)[0])
-    }
+    // if (clients !== undefined) {
+    //   setSelectedClient(clients.filter(i => i.name === e.target.value)[0])
+    // }
   }
 
   if (data) {
@@ -250,12 +250,12 @@ const EditCard = ({ data }: Props) => {
             <Grid item xs={12} sm={6} sx={{ mb: { lg: 0, xs: 4 } }}>
               <Typography sx={{ mb: 6, fontWeight: 500 }}>Invoice To:</Typography>
               <Select size='small' value={selected} onChange={handleInvoiceChange} sx={{ mb: 4, width: '200px' }}>
-                {clients !== undefined &&
+                {/* {clients !== undefined &&
                   clients.map(client => (
                     <MenuItem key={client.name} value={client.name}>
                       {client.name}
                     </MenuItem>
-                  ))}
+                  ))} */}
               </Select>
               {selectedClient !== null ? (
                 <>

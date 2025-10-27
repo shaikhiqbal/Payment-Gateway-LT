@@ -37,6 +37,7 @@ const UserProfileHeader = () => {
     // axios.get('/pages/profile-header').then(response => {
     //   setData(response.data)
     // })
+    setData(null)
   }, [])
 
   const designationIcon = data?.designationIcon || 'tabler:briefcase'

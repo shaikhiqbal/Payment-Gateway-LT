@@ -31,7 +31,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
   }
 }
 
-export const getStaticProps: GetStaticProps = async ({ params }: GetStaticPropsContext) => {
+export const getStaticProps: GetStaticProps = async () => {
   // const res = await axios.get('/pages/help-center/subcategory', {
   //   params: { category: params?.category, subcategory: params?.subcategory }
   // })
