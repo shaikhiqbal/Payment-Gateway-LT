@@ -28,7 +28,6 @@ import CardContent, { CardContentProps } from '@mui/material/CardContent'
 import Icon from 'src/@core/components/icon'
 
 // ** Third Party Imports
-// import axios from 'axios'
 import DatePicker from 'react-datepicker'
 
 // ** Configs
@@ -129,6 +128,7 @@ const EditCard = ({ data }: Props) => {
     //     setSelected(response.data[0].name)
     //   }
     // })
+
     setSelectedClient(null)
   }, [])
 
@@ -143,6 +143,7 @@ const EditCard = ({ data }: Props) => {
   // ** Handle Invoice To Change
   const handleInvoiceChange = (e: SelectChangeEvent) => {
     setSelected(e.target.value)
+
     // if (clients !== undefined) {
     //   setSelectedClient(clients.filter(i => i.name === e.target.value)[0])
     // }

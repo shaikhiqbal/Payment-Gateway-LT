@@ -1,5 +1,5 @@
 // ** Next Import
-import { GetStaticPaths, GetStaticProps, GetStaticPropsContext, InferGetStaticPropsType } from 'next/types'
+import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from 'next/types'
 
 // ** Third Party Imports
 // import axios from 'axios'
