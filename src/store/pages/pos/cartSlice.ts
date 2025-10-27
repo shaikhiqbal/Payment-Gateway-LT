@@ -40,6 +40,7 @@ const cartSlice = createSlice({
     updateQuantity: (state, action: PayloadAction<{ id: string; quantity: number }>) => {
       const item = state.entities[action.payload.id]
       if (item) {
+        debugger
         state.payment.total -= item.price * item.quantity
         item.quantity = action.payload.quantity
         state.payment.total += item.price * item.quantity

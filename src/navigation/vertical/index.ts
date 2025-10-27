@@ -11,11 +11,9 @@ const navigation = (): VerticalNavItemsType => {
       title: 'Dashboard'
     },
     {
-      path: '/virtual-terminal',
+      sectionTitle: 'User & Permission',
       action: 'read',
-      subject: 'virtual-terminal',
-      icon: 'material-symbols-light:lab-profile-outline-rounded',
-      title: 'Virtual Terminal'
+      subject: 'permission'
     },
     {
       path: '/permission',
@@ -24,12 +22,39 @@ const navigation = (): VerticalNavItemsType => {
       icon: 'material-symbols:admin-panel-settings-outline-rounded',
       title: 'Role & Permissions'
     },
+
     {
       title: 'User',
       icon: 'tabler:user',
       path: '/apps/user-management/list',
       action: 'read',
       subject: 'user-management'
+    },
+    {
+      sectionTitle: 'Inventory',
+      action: 'read',
+      subject: 'permission'
+    },
+    {
+      title: 'Products',
+      icon: 'stash:shop-light',
+      path: '/products',
+      action: 'read',
+      subject: 'user-management'
+    },
+    {
+      title: 'Create Product',
+      icon: 'uit:create-dashboard',
+      path: '/create-product',
+      action: 'read',
+      subject: 'user-management'
+    },
+    {
+      path: '/virtual-terminal',
+      action: 'read',
+      subject: 'virtual-terminal',
+      icon: 'material-symbols-light:lab-profile-outline-rounded',
+      title: 'Virtual Terminal'
     },
     {
       title: 'Dashboards',

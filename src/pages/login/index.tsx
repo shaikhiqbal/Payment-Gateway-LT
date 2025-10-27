@@ -228,14 +228,14 @@ const LoginPage = () => {
                     </Typography>
                   </Box>
 
-                  <Alert icon={false} sx={{ py: 3, mb: 6, ...bgColors.primaryLight }}>
+                  {/* <Alert icon={false} sx={{ py: 3, mb: 6, ...bgColors.primaryLight }}>
                     <Typography variant='body2' sx={{ mb: 2, color: 'primary.main' }}>
                       Admin: <strong>admin@vuexy.com</strong> / Pass: <strong>admin</strong>
                     </Typography>
                     <Typography variant='body2' sx={{ color: 'primary.main' }}>
                       Client: <strong>client@vuexy.com</strong> / Pass: <strong>client</strong>
                     </Typography>
-                  </Alert>
+                  </Alert> */}
 
                   <LoginForm onVerify={handleGetToken} />
 

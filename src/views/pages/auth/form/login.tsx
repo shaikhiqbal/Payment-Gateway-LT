@@ -100,11 +100,11 @@ const LoginForm: React.FC<LoginFormProps> = ({ onVerify }) => {
 
   return (
     <>
-      <RadioGroup row value={userTypeToLog} onChange={handleUserType}>
+      {/* <RadioGroup row value={userTypeToLog} onChange={handleUserType}>
         <FormControlLabel value='local' control={<Radio />} label='Local User' />
         <FormControlLabel value='live' control={<Radio />} label='Live User' />
         <FormControlLabel value='super' control={<Radio />} label='Super User' />
-      </RadioGroup>
+      </RadioGroup> */}
       <form noValidate autoComplete='off' onSubmit={handleSubmit(onSubmit)}>
         <FormControl fullWidth sx={{ mb: 4 }}>
           <Controller

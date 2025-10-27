@@ -45,14 +45,14 @@ const index = () => {
       <Grid container spacing={6}>
         <Grid item sm={12} xs={12} md={6}>
           <ReportGraph
-            title='Statistics and sort by volume'
+            title='Statistics and sort by volume ($)'
             subtitle={'Statistics According to the status by volume'}
             data={data1}
           />
         </Grid>
         <Grid item sm={12} xs={12} md={6}>
           <ReportGraph
-            title='Statistics and sort by count'
+            title='Statistics and sort by count (Number Of Transactions)'
             subtitle={'Statistics According to the status by count'}
             data={data2}
           />
