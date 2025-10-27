@@ -10,10 +10,10 @@ import { styled } from '@mui/material/styles'
 import MuiCardContent, { CardContentProps } from '@mui/material/CardContent'
 
 // ** Third Party Imports
-import axios from 'axios'
+// import axios from 'axios'
 
 // ** Types
-import { PricingDataType } from 'src/@core/components/plan-details/types'
+// import { PricingDataType } from 'src/@core/components/plan-details/types'
 
 // ** Demo Imports
 import PricingCTA from 'src/views/pages/pricing/PricingCTA'
@@ -63,12 +63,12 @@ const Pricing = ({ apiData }: InferGetStaticPropsType<typeof getStaticProps>) =>
 }
 
 export const getStaticProps: GetStaticProps = async () => {
-  const res = await axios.get('/pages/pricing')
-  const apiData: PricingDataType = res.data
+  // const res = await axios.get('/pages/pricing')
+  // const apiData: PricingDataType = res.data
 
   return {
     props: {
-      apiData
+      apiData: null
     }
   }
 }

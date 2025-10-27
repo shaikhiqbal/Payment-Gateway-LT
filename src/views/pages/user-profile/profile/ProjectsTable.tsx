@@ -12,7 +12,7 @@ import AvatarGroup from '@mui/material/AvatarGroup'
 import LinearProgress from '@mui/material/LinearProgress'
 
 // ** Third Party Imports
-import axios from 'axios'
+// import axios from 'axios'
 
 // ** Types Imports
 import { ThemeColor } from 'src/@core/layouts/types'
@@ -134,9 +134,9 @@ const ProfileTable = () => {
   const [pageSize, setPageSize] = useState<number>(7)
 
   useEffect(() => {
-    axios.get('/pages/profile-table', { params: { q: value } }).then(response => {
-      setData(response.data)
-    })
+    // axios.get('/pages/profile-table', { params: { q: value } }).then(response => {
+    //   setData(response.data)
+    // })
   }, [value])
 
   const handleFilter = (val: string) => {

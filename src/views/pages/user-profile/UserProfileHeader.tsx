@@ -11,7 +11,7 @@ import Typography from '@mui/material/Typography'
 import CardContent from '@mui/material/CardContent'
 
 // ** Third Party Imports
-import axios from 'axios'
+// import axios from 'axios'
 
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
@@ -34,9 +34,9 @@ const UserProfileHeader = () => {
   const [data, setData] = useState<ProfileHeaderType | null>(null)
 
   useEffect(() => {
-    axios.get('/pages/profile-header').then(response => {
-      setData(response.data)
-    })
+    // axios.get('/pages/profile-header').then(response => {
+    //   setData(response.data)
+    // })
   }, [])
 
   const designationIcon = data?.designationIcon || 'tabler:briefcase'

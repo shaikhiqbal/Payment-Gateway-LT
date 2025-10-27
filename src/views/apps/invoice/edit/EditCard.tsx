@@ -28,7 +28,7 @@ import CardContent, { CardContentProps } from '@mui/material/CardContent'
 import Icon from 'src/@core/components/icon'
 
 // ** Third Party Imports
-import axios from 'axios'
+// import axios from 'axios'
 import DatePicker from 'react-datepicker'
 
 // ** Configs
@@ -123,13 +123,13 @@ const EditCard = ({ data }: Props) => {
   const theme = useTheme()
 
   useEffect(() => {
-    axios.get('/apps/invoice/clients').then(response => {
-      if (response.data && clients === undefined) {
-        setClients(response.data)
-        setSelected(response.data[0].name)
-        setSelectedClient(response.data[0])
-      }
-    })
+    // axios.get('/apps/invoice/clients').then(response => {
+    //   if (response.data && clients === undefined) {
+    //     setClients(response.data)
+    //     setSelected(response.data[0].name)
+    //     setSelectedClient(response.data[0])
+    //   }
+    // })
   }, [clients])
 
   // ** Deletes form

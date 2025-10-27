@@ -2,7 +2,7 @@
 import { GetStaticPaths, GetStaticProps, GetStaticPropsContext, InferGetStaticPropsType } from 'next/types'
 
 // ** Third Party Imports
-import axios from 'axios'
+// import axios from 'axios'
 
 // ** Demo Components Imports
 import HelpCenterSubcategory from 'src/views/pages/help-center/subcategory'
@@ -32,14 +32,14 @@ export const getStaticPaths: GetStaticPaths = async () => {
 }
 
 export const getStaticProps: GetStaticProps = async ({ params }: GetStaticPropsContext) => {
-  const res = await axios.get('/pages/help-center/subcategory', {
-    params: { category: params?.category, subcategory: params?.subcategory }
-  })
-  const apiData = await res.data
+  // const res = await axios.get('/pages/help-center/subcategory', {
+  //   params: { category: params?.category, subcategory: params?.subcategory }
+  // })
+  // const apiData = await res.data
 
   return {
     props: {
-      apiData
+      apiData: null
     }
   }
 }

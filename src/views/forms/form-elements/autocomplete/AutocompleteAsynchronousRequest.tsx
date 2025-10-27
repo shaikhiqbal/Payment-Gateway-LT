@@ -7,18 +7,18 @@ import Autocomplete from '@mui/material/Autocomplete'
 import CircularProgress from '@mui/material/CircularProgress'
 
 // ** Third Party Imports
-import axios from 'axios'
+// import axios from 'axios'
 
 interface FilmType {
   year: number
   title: string
 }
 
-const sleep = (delay = 0) => {
-  return new Promise(resolve => {
-    setTimeout(resolve, delay)
-  })
-}
+// const sleep = (delay = 0) => {
+//   return new Promise(resolve => {
+//     setTimeout(resolve, delay)
+//   })
+// }
 
 const AutocompleteAsynchronousRequest = () => {
   // ** States
@@ -30,24 +30,24 @@ const AutocompleteAsynchronousRequest = () => {
   useEffect(() => {
     let active = true
 
-    if (!loading) {
+    if (true) {
       return undefined
     }
 
-    const fetchData = async () => {
-      const response = await axios.get('/forms/autocomplete')
-      await sleep(1000)
-      const top100Films = await response.data
+    // const fetchData = async () => {
+    //   const response = await axios.get('/forms/autocomplete')
+    //   await sleep(1000)
+    //   const top100Films = await response.data
 
-      if (active) {
-        setOptions(Object.keys(top100Films).map(key => top100Films[key]) as FilmType[])
-      }
-    }
-    fetchData()
+    //   if (active) {
+    //     setOptions(Object.keys(top100Films).map(key => top100Films[key]) as FilmType[])
+    //   }
+    // }
+    // fetchData()
 
-    return () => {
-      active = false
-    }
+    // return () => {
+    //   active = false
+    // }
   }, [loading])
 
   useEffect(() => {

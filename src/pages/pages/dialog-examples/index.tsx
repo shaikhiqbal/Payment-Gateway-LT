@@ -4,12 +4,6 @@ import { GetStaticProps, InferGetStaticPropsType } from 'next/types'
 // ** MUI Imports
 import Grid from '@mui/material/Grid'
 
-// ** Third Party Components
-import axios from 'axios'
-
-// ** Type Import
-import { PricingDataType } from 'src/@core/components/plan-details/types'
-
 // ** Demo Components Imports
 import DialogAddCard from 'src/views/pages/dialog-examples/DialogAddCard'
 import DialogPricing from 'src/views/pages/dialog-examples/DialogPricing'
@@ -50,12 +44,12 @@ const DialogExamples = ({ apiPricingPlanData }: InferGetStaticPropsType<typeof g
 )
 
 export const getStaticProps: GetStaticProps = async () => {
-  const res = await axios.get('/pages/pricing')
-  const data: PricingDataType = res.data
+  // const res = await axios.get('/pages/pricing')
+  // const data: PricingDataType = res.data
 
   return {
     props: {
-      apiPricingPlanData: data.pricingPlans
+      apiPricingPlanData: null
     }
   }
 }

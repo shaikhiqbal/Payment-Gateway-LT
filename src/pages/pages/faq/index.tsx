@@ -11,8 +11,8 @@ import Typography from '@mui/material/Typography'
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
 
-// ** Third Party Imports
-import axios from 'axios'
+// // ** Third Party Imports
+// import axios from 'axios'
 
 // ** Types
 import { FaqType } from 'src/@fake-db/types'
@@ -29,17 +29,16 @@ const FAQ = ({ apiData }: InferGetStaticPropsType<typeof getStaticProps>) => {
   const [activeTab, setActiveTab] = useState<string>('payment')
 
   useEffect(() => {
-    if (searchTerm !== '') {
-      axios.get('/pages/faqs', { params: { q: searchTerm } }).then(response => {
-        if (response.data.faqData && Object.values(response.data.faqData).length) {
-          setData(response.data)
-
-          // @ts-ignore
-          setActiveTab(Object.values(response.data.faqData)[0].id)
-        } else {
-          setData(null)
-        }
-      })
+    if (false) {
+      // axios.get('/pages/faqs', { params: { q: searchTerm } }).then(response => {
+      //   if (response.data.faqData && Object.values(response.data.faqData).length) {
+      //     setData(response.data)
+      //     // @ts-ignore
+      //     setActiveTab(Object.values(response.data.faqData)[0].id)
+      //   } else {
+      //     setData(null)
+      //   }
+      // })
     } else {
       setData(apiData)
     }
@@ -66,12 +65,12 @@ const FAQ = ({ apiData }: InferGetStaticPropsType<typeof getStaticProps>) => {
 }
 
 export const getStaticProps: GetStaticProps = async () => {
-  const res = await axios.get('/pages/faqs')
-  const apiData: FaqType = res.data
+  // const res = await axios.get('/pages/faqs')
+  // const apiData: FaqType = res.data
 
   return {
     props: {
-      apiData
+      apiData: null
     }
   }
 }

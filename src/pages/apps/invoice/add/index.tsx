@@ -7,9 +7,6 @@ import { GetStaticProps, InferGetStaticPropsType } from 'next/types'
 // ** MUI Imports
 import Grid from '@mui/material/Grid'
 
-// ** Third Party Components
-import axios from 'axios'
-
 // ** Types
 import { InvoiceType, InvoiceClientType } from 'src/types/apps/invoiceTypes'
 
@@ -57,16 +54,16 @@ const InvoiceAdd = ({ apiClientData, invoiceNumber }: InferGetStaticPropsType<ty
 }
 
 export const getStaticProps: GetStaticProps = async () => {
-  const clientResponse = await axios.get('/apps/invoice/clients')
-  const apiClientData: InvoiceClientType = clientResponse.data
+  // const clientResponse = await axios.get('/apps/invoice/clients')
+  // const apiClientData: InvoiceClientType = clientResponse.data
 
-  const allInvoicesResponse = await axios.get('/apps/invoice/invoices', { params: { q: '', status: '' } })
-  const lastInvoiceNumber = Math.max(...allInvoicesResponse.data.allData.map((i: InvoiceType) => i.id))
+  // const allInvoicesResponse = await axios.get('/apps/invoice/invoices', { params: { q: '', status: '' } })
+  // const lastInvoiceNumber = Math.max(...allInvoicesResponse.data.allData.map((i: InvoiceType) => i.id))
 
   return {
     props: {
-      apiClientData,
-      invoiceNumber: lastInvoiceNumber + 1
+      apiClientData: null,
+      invoiceNumber: 1
     }
   }
 }

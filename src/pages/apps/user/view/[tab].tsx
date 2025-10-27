@@ -2,10 +2,10 @@
 import { GetStaticProps, GetStaticPaths, GetStaticPropsContext, InferGetStaticPropsType } from 'next/types'
 
 // ** Third Party Imports
-import axios from 'axios'
+// import axios from 'axios'
 
 // ** Types
-import { InvoiceType } from 'src/types/apps/invoiceTypes'
+// import { InvoiceType } from 'src/types/apps/invoiceTypes'
 
 // ** Demo Components Imports
 import UserViewPage from 'src/views/apps/user/view/UserViewPage'
@@ -28,13 +28,13 @@ export const getStaticPaths: GetStaticPaths = () => {
 }
 
 export const getStaticProps: GetStaticProps = async ({ params }: GetStaticPropsContext) => {
-  const res = await axios.get('/apps/invoice/invoices')
-  const invoiceData: InvoiceType[] = res.data.allData
+  // const res = await axios.get('/apps/invoice/invoices')
+  // const invoiceData: InvoiceType[] = res.data.allData
 
   return {
     props: {
-      invoiceData,
-      tab: params?.tab
+      invoiceData: null,
+      tab: undefined
     }
   }
 }

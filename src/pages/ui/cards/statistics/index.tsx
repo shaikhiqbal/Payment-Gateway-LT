@@ -5,10 +5,10 @@ import { GetStaticProps, InferGetStaticPropsType } from 'next/types'
 import Grid from '@mui/material/Grid'
 
 // ** Third Party Components
-import axios from 'axios'
+// import axios from 'axios'
 
 // ** Type Import
-import { CardStatsType } from 'src/@fake-db/types'
+// import { CardStatsType } from 'src/@fake-db/types'
 
 // ** Demo Components Imports
 import CardStatisticsOrder from 'src/views/ui/cards/statistics/CardStatisticsOrder'
@@ -93,12 +93,12 @@ const CardStatistics = ({ apiData }: InferGetStaticPropsType<typeof getStaticPro
 }
 
 export const getStaticProps: GetStaticProps = async () => {
-  const res = await axios.get('/cards/statistics')
-  const apiData: CardStatsType = res.data
+  // const res = await axios.get('/cards/statistics')
+  // const apiData: CardStatsType = res.data
 
   return {
     props: {
-      apiData
+      apiData: null
     }
   }
 }
