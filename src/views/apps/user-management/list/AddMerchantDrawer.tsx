@@ -1,4 +1,5 @@
 import { Fragment, useEffect } from 'react'
+
 // ** MUI Imports
 import Drawer from '@mui/material/Drawer'
 import Select from '@mui/material/Select'
@@ -126,9 +127,7 @@ const AddMerchantDrawer = (props: SidebarAddUserType) => {
   const {
     reset,
     control,
-    setValue,
     handleSubmit,
-    watch,
     formState: { errors, isSubmitting },
     setError
   } = useForm({

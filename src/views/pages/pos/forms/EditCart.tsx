@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Modal, Box, Typography, IconButton, Divider, Button, TextField, CardMedia } from '@mui/material'
 import { Controller, useForm } from 'react-hook-form'
+
 // import { Add, Remove, Close } from '@mui/icons-material'
 
 // ** Icon
@@ -8,9 +9,9 @@ import Icon from 'src/@core/components/icon'
 
 // ** Hooks
 import { useDispatch } from 'react-redux'
+
 // ** Action
 import { updateQuantity } from 'src/store/pages/pos/cartSlice'
-import { boolean } from 'yup'
 
 // ** Types
 interface CartItem {
@@ -30,6 +31,7 @@ interface EditCartProps {
 // ** Component
 const EditCart: React.FC<EditCartProps> = ({ open, onClose, product }) => {
   const [saveLoader, setSaveLoader] = useState<boolean>(false)
+
   // ** Hooks
   const dispatch = useDispatch()
 
@@ -46,7 +48,7 @@ const EditCart: React.FC<EditCartProps> = ({ open, onClose, product }) => {
     if (product && open) {
       setValue('quantity', product.quantity)
     }
-  }, [open])
+  }, [open, product, setValue])
 
   // If product is null, don’t render content
   if (!product) return null

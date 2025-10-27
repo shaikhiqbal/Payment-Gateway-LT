@@ -165,7 +165,7 @@ const TwoStepsV1 = () => {
         console.error('Invalid JSON:', e)
       }
     }
-  }, [])
+  }, [router.query.content])
   useEffect(() => {
     // console.clear()
     // console.log(userDetails)

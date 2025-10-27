@@ -20,8 +20,7 @@ import ListItemButton from '@mui/material/ListItemButton'
 import InputAdornment from '@mui/material/InputAdornment'
 import MuiAutocomplete, { AutocompleteRenderInputParams } from '@mui/material/Autocomplete'
 
-// ** Third Party Imports
-import axios from 'axios'
+
 
 // ** Types Imports
 import { AppBarSearchType } from 'src/@fake-db/types'
@@ -366,7 +365,7 @@ const AutocompleteComponent = ({ hidden, settings }: Props) => {
   const [isMounted, setIsMounted] = useState<boolean>(false)
   const [searchValue, setSearchValue] = useState<string>('')
   const [openDialog, setOpenDialog] = useState<boolean>(false)
-  const [options, setOptions] = useState<AppBarSearchType[]>([])
+  const [options] = useState<AppBarSearchType[]>([])
 
   // ** Hooks & Vars
   const theme = useTheme()

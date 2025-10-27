@@ -15,6 +15,7 @@ export type Permission = {
   moduleName: string
   action: string
 }
+
 /**
  * Please define your own Ability rules according to your app requirements.
  * We have just shown Admin and Client rules for demo purpose where

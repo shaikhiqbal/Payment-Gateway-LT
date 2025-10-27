@@ -1,32 +1,13 @@
 // ** React Imports
-import { useState, ReactNode, MouseEvent } from 'react'
-
-// ** Next Imports
-import Link from 'next/link'
+import { useState, ReactNode } from 'react'
 
 // ** MUI Components
-import Alert from '@mui/material/Alert'
 import Typography from '@mui/material/Typography'
 import Box, { BoxProps } from '@mui/material/Box'
 import useMediaQuery from '@mui/material/useMediaQuery'
 import { styled, useTheme } from '@mui/material/styles'
-import MuiFormControlLabel, { FormControlLabelProps } from '@mui/material/FormControlLabel'
-
-// ** Axios
-import axios from 'src/configs/axios'
-import endpoints from 'src/configs/endpoints'
-
-// ** Routes
-import { useRouter } from 'next/router'
-
-// ** Third Party Imports
-import * as yup from 'yup'
-import { useForm, Controller } from 'react-hook-form'
-import { yupResolver } from '@hookform/resolvers/yup'
 
 // ** Hooks
-import { useAuth } from 'src/hooks/useAuth'
-import useBgColor from 'src/@core/hooks/useBgColor'
 import { useSettings } from 'src/@core/hooks/useSettings'
 
 import { AnimatePresence, motion } from 'motion/react'
@@ -82,30 +63,7 @@ const RightWrapper = styled(Box)<BoxProps>(({ theme }) => ({
   }
 }))
 
-const schema = yup.object().shape({
-  email: yup.string().email().required(),
-  password: yup.string().min(5).required()
-})
 
-const defaultValues = {
-  super: {
-    password: 'admin',
-    email: 'admin@vuexy.com'
-  },
-  local: {
-    password: 'niraj123',
-    email: 'kardileomkar7262@gmail.com'
-  },
-  live: {
-    password: 'sneha@123',
-    email: 'sneha@logicluminary.com'
-  }
-}
-
-interface FormData {
-  email: string
-  password: string
-}
 
 interface UserDetails {
   token: string
@@ -122,9 +80,6 @@ const slideVariants = {
 }
 
 const LoginPage = () => {
-  const [rememberMe, setRememberMe] = useState<boolean>(true)
-  const [showPassword, setShowPassword] = useState<boolean>(false)
-  const [userTypeToLog, setUserTypeToLog] = useState<'local' | 'live' | 'super'>('local')
   const [isVerify, setIsVerify] = useState<boolean>(false)
   const [userDetails, setUserDetails] = useState<UserDetails>({
     token: '',
@@ -132,10 +87,7 @@ const LoginPage = () => {
   })
 
   // ** Hooks
-  const auth = useAuth()
-  const router = useRouter()
   const theme = useTheme()
-  const bgColors = useBgColor()
   const { settings } = useSettings()
   const hidden = useMediaQuery(theme.breakpoints.down('md'))
 

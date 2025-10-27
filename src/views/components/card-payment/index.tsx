@@ -1,5 +1,5 @@
 // ** React Imports
-import React, { useState, Fragment, ChangeEvent, useEffect } from 'react'
+import React, { useState, ChangeEvent, useEffect } from 'react'
 
 // ** MUI Imports
 import { Box, Grid, TextField, FormControlLabel, Switch } from '@mui/material'
@@ -57,7 +57,6 @@ const CardPayment = <
   control,
   watch,
   setValue,
-  clearErrors
 }: CardPaymentProps<T>) => {
   const [focus, setFocus] = useState<Focused | undefined>()
 
@@ -68,7 +67,6 @@ const CardPayment = <
     expiryDate = '',
     nameOnCard = '',
     cvv = '',
-    issuingBank = '',
     modeOfPayment = ''
   } = formValues as Partial<T>
 
@@ -86,7 +84,8 @@ const CardPayment = <
     if (target.name === 'cardNumber') return formatCreditCardNumber(target.value, Payment)
     if (target.name === 'expiryDate') return formatExpirationDate(target.value)
     if (target.name === 'cvv') return formatCVC(target.value, cardNumber, Payment)
-    return target.value
+    
+return target.value
   }
 
   const handleBlur = () => setFocus(undefined)
@@ -165,6 +164,7 @@ const CardPayment = <
                     expiry.setMonth(expiry.getMonth() + 1)
                     expiry.setDate(0)
                     if (expiry < now) return 'Expiry date must be in the future'
+
                     return true
                   }
                 }}

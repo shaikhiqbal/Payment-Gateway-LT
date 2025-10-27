@@ -6,14 +6,8 @@ import Fab from '@mui/material/Fab'
 import TextField from '@mui/material/TextField'
 import Autocomplete from '@mui/material/Autocomplete'
 import Dialog from '@mui/material/Dialog'
-import Button from '@mui/material/Button'
 import DialogTitle from '@mui/material/DialogTitle'
 import DialogContent from '@mui/material/DialogContent'
-import DialogActions from '@mui/material/DialogActions'
-import DialogContentText from '@mui/material/DialogContentText'
-
-// ** Animation
-import { AnimatePresence, motion } from 'motion/react'
 
 // ** Redux Hook
 import { useSelector, useDispatch } from 'react-redux'
@@ -63,7 +57,7 @@ const ChooseCustomer = () => {
     if (selectedCustomerId !== null && isCustomerSelected === false) {
       dispatch(selectCustomer(true))
     }
-  }, [selectedCustomerId])
+  }, [selectedCustomerId, dispatch, isCustomerSelected])
 
   useEffect(() => {
     if (warningCountSelectCutomer) {

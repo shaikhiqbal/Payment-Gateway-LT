@@ -1,13 +1,13 @@
 import React from 'react'
 
 // ** MUI Imports
-import { Box, Button, ButtonProps, Fab, Grid, TextField, Typography } from '@mui/material'
+import { Box, Button, ButtonProps, TextField, Typography } from '@mui/material'
 import styled from '@emotion/styled'
 
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
 
-const CustomButton = styled(Button)<ButtonProps>(({ theme }) => ({
+const CustomButton = styled(Button)<ButtonProps>(() => ({
   backgroundColor: '#001F54', // navy blue
   color: '#fff',
   '&:hover': {

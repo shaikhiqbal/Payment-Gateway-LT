@@ -1,5 +1,5 @@
 // ** MUI Imports
-import { CircularProgress, Box, Card, CardHeader, CardContent, Skeleton } from '@mui/material'
+import { Card, CardHeader, CardContent, Skeleton } from '@mui/material'
 
 const ChartLoader = () => {
   return (

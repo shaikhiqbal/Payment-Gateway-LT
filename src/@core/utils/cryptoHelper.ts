@@ -5,6 +5,7 @@ const NEXT_PUBLIC_CRYPTO_SECRET_KEY =
 
 export const decryptData = (data: string) => {
   const bytes = CryptoJS.AES.decrypt(data, NEXT_PUBLIC_CRYPTO_SECRET_KEY)
+
   return bytes.toString(CryptoJS.enc.Utf8)
 }
 function generateKey() {

@@ -1,7 +1,4 @@
-import React, { useCallback, useEffect } from 'react'
-
-// ** Axios
-import axios from 'axios'
+import React from 'react'
 
 // ** MUI
 import { Grid } from '@mui/material'
@@ -12,8 +9,7 @@ import TransactionStatus from 'src/views/dashboards/merchant/TransactionStatus'
 import MerchantBarChart from 'src/views/dashboards/merchant/BarChart'
 import TransactionTable from 'src/views/dashboards/merchant/table'
 
-// ** fk-Db
-import { transactionStatus } from './fak-db'
+
 
 // ** Third Party Styles Import
 import 'chart.js/auto'

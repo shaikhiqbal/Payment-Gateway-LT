@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react'
 import { Card } from '@mui/material'
 import { DataGrid } from '@mui/x-data-grid'
 
-import column, { columnSkeleton, fakeRows } from './column'
+import column, { fakeRows } from './column'
 
 // ** Loader
 import TableLoader from 'src/@core/components/skeleton/TableLoader'
@@ -20,26 +20,27 @@ type RowType = {
   remark: string
   action: string
 }
-const index = () => {
+const Index = () => {
   // ** States
-
-  const [rows, setRows] = useState<RowType[]>(fakeRows)
+  const [rows] = useState<RowType[]>(fakeRows)
   const [pageSize, setPageSize] = useState(10)
-  const [isLoading, setIsLoading] = useState<Boolean>(true)
+  const [isLoading, setIsLoading] = useState<boolean>(true)
 
   useEffect(() => {
     const timeoutId = setTimeout(() => {
       setIsLoading(false)
     }, 2000)
-    return () => clearTimeout(timeoutId)
+    
+return () => clearTimeout(timeoutId)
   }, [])
 
-  if (isLoading)
+  if (isLoading) {
     return (
       <Card>
         <TableLoader />
       </Card>
     )
+  }
 
   return (
     <Card>
@@ -51,10 +52,11 @@ const index = () => {
         disableSelectionOnClick
         rowsPerPageOptions={[10, 25, 50]}
         onPageSizeChange={newPageSize => setPageSize(newPageSize)}
+        
         // getRowId={row => row.uid}
       />
     </Card>
   )
 }
 
-export default index
+export default Index

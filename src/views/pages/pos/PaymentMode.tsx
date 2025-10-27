@@ -30,6 +30,7 @@ const paymentMethods: PaymentMethod[] = [
 
 const PaymentMethodsGrid = () => {
   const [selected, setSelected] = React.useState<string | null>(null)
+
   return (
     <>
       <Card sx={{ mt: 4 }}>

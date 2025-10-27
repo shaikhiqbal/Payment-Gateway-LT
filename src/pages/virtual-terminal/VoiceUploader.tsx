@@ -20,14 +20,8 @@ import { VoiceZoneWrapper } from 'src/@core/styles/libs/react-dropzone'
 import { UseFormSetValue } from 'react-hook-form'
 import { FormValues } from '.'
 
-interface FileProp {
-  name: string
-  type: string
-  size: number
-}
-
 // Styled component for the upload image inside the dropzone area
-const Img = styled('img')(({ theme }) => ({
+const Img = styled('img')(() => ({
   width: 48,
   height: 48
 }))
@@ -67,7 +61,7 @@ const VoiceUploader: React.FC<VoiceUploaderProps> = props => {
     } else {
       setValue('audio', null)
     }
-  }, [files])
+  }, [files, setValue])
 
   return (
     <VoiceZoneWrapper>

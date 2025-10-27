@@ -8,14 +8,9 @@ export interface Category {
   url: string
 }
 
-// ** Types
-interface CategoryRenderProps {
-  categories: Category[]
-  loading: boolean
-}
 
-const CategoryRender = (props: CategoryRenderProps) => {
-  const { categories, loading } = props
+
+const CategoryRender = () => {
 
   return <Box></Box>
 }

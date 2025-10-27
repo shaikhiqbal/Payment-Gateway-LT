@@ -1,6 +1,13 @@
 import mock from 'src/@fake-db/mock'
+
 // ** Types
-import { TransactionStatusShap } from 'src/views/dashboards/merchant/types'
+// import { TransactionStatusShap } from 'src/views/dashboards/merchant/types'
+
+interface TransactionStatusShap {
+  title: string
+  icon: string
+  amount: number
+}
 
 const transactionStatus: TransactionStatusShap[] = [
   {
@@ -25,7 +32,7 @@ const transactionStatus: TransactionStatusShap[] = [
   }
 ]
 
-mock.onGet('/api/dashboard/transaction/status').reply(config => {
+mock.onGet('/api/dashboard/transaction/status').reply(() => {
   return [
     200,
     {

@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+
 // ** MUI Imports
 import Card from '@mui/material/Card'
 import CardHeader from '@mui/material/CardHeader'
@@ -30,7 +31,8 @@ const MerchantBarChart = (props: HorizontalBarProps) => {
     setTimeout(() => {
       setLoading(false)
     }, 4000)
-    return () => setLoading(true)
+    
+return () => setLoading(true)
   }, [])
 
   const options: ChartOptions<'bar'> = {
@@ -95,7 +97,9 @@ const MerchantBarChart = (props: HorizontalBarProps) => {
     ]
   }
 
-  if (loading) return <BarChartLoader />
+  if (loading) {
+    return <BarChartLoader />
+  }
 
   return (
     <Card>

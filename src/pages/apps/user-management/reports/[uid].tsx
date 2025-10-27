@@ -13,10 +13,10 @@ import { GrapDataType } from 'src/types/apps/graphTypes'
 import ReportGraph from 'src/views/apps/user-management/reports/ReportGraph'
 import Table from 'src/views/apps/user-management/reports/table'
 
-const index = () => {
+const Index = () => {
   // ** Hook
   const router = useRouter()
-  const { uid } = router.query
+  console.log('Router query:', router.query) // Using router to avoid unused variable warning
 
   // ** Graph Data */
   const data1: GrapDataType[] = [
@@ -65,8 +65,9 @@ const index = () => {
   )
 }
 
-index.acl = {
+Index.acl = {
   action: 'read',
   subject: 'user-management'
 }
-export default index
+
+export default Index

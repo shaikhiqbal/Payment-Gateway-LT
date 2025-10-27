@@ -3,36 +3,7 @@ import Typography from '@mui/material/Typography'
 import Skeleton from '@mui/material/Skeleton'
 import { GridColumns, GridRenderCellParams } from '@mui/x-data-grid'
 
-// ** Custom Componensts
-import CustomAvatar from 'src/@core/components/mui/avatar'
 
-// ** Types Imports
-import { ThemeColor } from 'src/@core/layouts/types'
-
-// ** Utils Import
-import { getInitials } from 'src/@core/utils/get-initials'
-
-// ** renders client column
-const renderClient = (params: GridRenderCellParams) => {
-  const { row } = params
-  const stateNum = Math.floor(Math.random() * 6)
-  const states = ['success', 'error', 'warning', 'info', 'primary', 'secondary']
-  const color = states[stateNum]
-
-  if (row.avatar.length) {
-    return <CustomAvatar src={`/images/avatars/${row.avatar}`} sx={{ mr: 3, width: '1.875rem', height: '1.875rem' }} />
-  } else {
-    return (
-      <CustomAvatar
-        skin='light'
-        color={color as ThemeColor}
-        sx={{ mr: 3, fontSize: '.8rem', width: '1.875rem', height: '1.875rem' }}
-      >
-        {getInitials(row.full_name ? row.full_name : 'John Doe')}
-      </CustomAvatar>
-    )
-  }
-}
 
 export const columns: GridColumns = [
   {

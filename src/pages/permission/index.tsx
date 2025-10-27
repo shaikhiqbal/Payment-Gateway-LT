@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, FormEvent } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 
 // ** MUI Imports
 import Box from '@mui/material/Box'
@@ -7,7 +7,7 @@ import Grid from '@mui/material/Grid'
 import IconButton from '@mui/material/IconButton'
 import Typography from '@mui/material/Typography'
 import { DataGrid } from '@mui/x-data-grid'
-import { Backdrop, Skeleton } from '@mui/material'
+import { Backdrop } from '@mui/material'
 
 // ** Coloumn & Skeleton
 import { skeletonRows, skeletonColumns, defaultColumns, CellType } from 'src/views/pages/permission/column'
@@ -166,6 +166,7 @@ const Permission = () => {
   // ** Fetch Table List
   useEffect(() => {
     fetchData()
+
     return () => {
       setRows([])
     }

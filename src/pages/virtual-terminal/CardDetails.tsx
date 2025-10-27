@@ -65,7 +65,7 @@ const CardDetails: React.FC<CardDetailsProps> = (props: CardDetailsProps): JSX.E
   const handleBlur = () => setFocus(undefined)
 
   // ** Field Value
-  const { cardNumber = '', expiryDate = '', nameOnCard = '', cvv = '', issuingBank = '' } = watch()
+  const { cardNumber = '', expiryDate = '', nameOnCard = '', cvv = '' } = watch()
 
   // ** Handle Input Fromatted Value
   const handleInputChange = ({ target }: ChangeEvent<HTMLInputElement>) => {
@@ -88,7 +88,7 @@ const CardDetails: React.FC<CardDetailsProps> = (props: CardDetailsProps): JSX.E
 
   useEffect(() => {
     setValue('cardType' as keyof FormValues, Payment.fns.cardType(cardNumber) || '')
-  }, [cardNumber])
+  }, [cardNumber, setValue])
 
   return (
     <Box>
@@ -170,6 +170,7 @@ const CardDetails: React.FC<CardDetailsProps> = (props: CardDetailsProps): JSX.E
                   ...(isRequired ? { required: 'Expiry date is required' } : {}),
                   validate: value => {
                     if (!value) return true
+
                     // Expecting MM/YY
                     const [mm, yy] = value.split('/')
                     if (!mm || !yy || mm.length !== 2 || yy.length !== 2) return 'Invalid expiry format'
@@ -178,10 +179,12 @@ const CardDetails: React.FC<CardDetailsProps> = (props: CardDetailsProps): JSX.E
                     if (isNaN(month) || isNaN(year) || month < 1 || month > 12) return 'Invalid expiry date'
                     const now = new Date()
                     const expiry = new Date(year, month - 1, 1)
+
                     // Set expiry to last day of the month
                     expiry.setMonth(expiry.getMonth() + 1)
                     expiry.setDate(0)
                     if (expiry < now) return 'Expiry date must be in the future'
+
                     return true
                   }
                 }}
@@ -221,9 +224,10 @@ const CardDetails: React.FC<CardDetailsProps> = (props: CardDetailsProps): JSX.E
                       onBlur={handleBlur}
                       onChange={(e: ChangeEvent<HTMLInputElement>) => {
                         const value = handleInputChange(e)
+                        
+                        // Log card type for debugging
                         console.log('cardType', value, Payment)
                         field.onChange(value)
-                        // cardType(value, Payment)
                       }}
                       onFocus={e => setFocus(e.target.name as Focused)}
                       placeholder={Payment.fns.cardType(watch('cardNumber') || '') === 'amex' ? '1234' : '123'}

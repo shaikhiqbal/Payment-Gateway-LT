@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 
 // ** MUI
 import { Box, Button } from '@mui/material'
-import { GridColDef, GridRenderCellParams } from '@mui/x-data-grid'
+import { GridColDef } from '@mui/x-data-grid'
 
 // ** Custom Component
 import Table from './Table'
@@ -18,7 +18,7 @@ const actionColumn: GridColDef = {
   minWidth: 300,
   field: 'actions',
   headerName: 'Actions',
-  renderCell: (params: GridRenderCellParams) => {
+  renderCell: () => {
     return (
       <Box sx={{ display: 'flex', gap: 2 }}>
         <Button variant='contained' size='small'>

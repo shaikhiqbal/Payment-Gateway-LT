@@ -18,6 +18,7 @@ export const processPayment = createAsyncThunk(
   'payment/process',
   async (paymentData: { amount: number; method: string }) => {
     const res = await axios.post('/api/payment', paymentData)
+
     return res.data // { orderId, status }
   }
 )

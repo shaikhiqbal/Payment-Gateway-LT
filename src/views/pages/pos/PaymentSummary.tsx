@@ -11,8 +11,7 @@ import {
   IconButton,
   Typography,
   Switch,
-  FormControlLabel,
-  Box
+  FormControlLabel
 } from '@mui/material'
 
 // ** Icon Imports

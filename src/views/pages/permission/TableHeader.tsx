@@ -39,6 +39,7 @@ import { extractUID } from './utils'
 
 // ** Third Party Imports
 import { BeatLoader } from 'react-spinners'
+
 // ** Types
 interface DefaultForm {
   roleName: string
@@ -108,8 +109,9 @@ const TableHeader = ({
     if (!actions.length) return 'none'
     const all = actions.every(a => a.isSelected)
     const some = actions.some(a => a.isSelected)
+
     return all ? 'all' : some ? 'some' : 'none'
-  }, [watch('permissions')])
+  }, [watch])
 
   // ** Populate form data on edit
   useEffect(() => {
@@ -121,7 +123,7 @@ const TableHeader = ({
     } else {
       setValue('permissions', permissionList)
     }
-  }, [permissionList, editRowFormDetails])
+  }, [permissionList, editRowFormDetails, reset, setValue])
 
   // ** Toggle  dialog
   const handleDialogToggle = () => setOpen(prev => !prev)
@@ -152,6 +154,7 @@ const TableHeader = ({
         roleName: data.roleName,
         permissionIds: extractUID(data.permissions)
       }
+
       // await axios.post(endpoints.rolePermission.endpoint, payload)
       if (data?.uid) {
         await axios.put(`${endpoints.rolePermission.endpoint}/${data.uid}`, payload)

@@ -1,5 +1,5 @@
 // ** React Imports
-import { ReactNode, ChangeEvent, useState, KeyboardEvent, useContext, useEffect } from 'react'
+import { ChangeEvent, useState, KeyboardEvent, useEffect } from 'react'
 
 // ** Next Import
 import Link from 'next/link'
@@ -7,8 +7,7 @@ import Link from 'next/link'
 // ** MUI Components
 import Button from '@mui/material/Button'
 import Typography from '@mui/material/Typography'
-import Box, { BoxProps } from '@mui/material/Box'
-import useMediaQuery from '@mui/material/useMediaQuery'
+import Box from '@mui/material/Box'
 import { styled, useTheme } from '@mui/material/styles'
 import FormHelperText from '@mui/material/FormHelperText'
 
@@ -156,7 +155,7 @@ const VerifyUser = ({ token, mobile, otp }: { token: string; mobile: string; otp
         Array.from({ length: 6 }, (_, i) => [`val${i + 1}`, (otp + '')[i] || ''])
       ) as unknown as ValuesObject
     )
-  }, [otp])
+  }, [otp, reset])
 
   return (
     <Box sx={{ width: '100%', maxWidth: 400 }}>

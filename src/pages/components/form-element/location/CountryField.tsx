@@ -5,7 +5,6 @@ import Autocomplete, { AutocompleteProps, createFilterOptions } from '@mui/mater
 
 // ** Data
 import { countries } from 'src/@fake-db/autocomplete'
-import { co } from '@fullcalendar/core/internal-common'
 
 export interface CountryType {
   code: string
@@ -18,7 +17,7 @@ type Props = Partial<AutocompleteProps<CountryType, false, false, false>> & {
   label?: string
   error?: boolean
   helperText?: React.ReactNode
-  valueType: 'code' | 'label' | 'phone'
+  valueType?: 'code' | 'label' | 'phone'
 }
 
 const filterOptions = createFilterOptions<CountryType>({
@@ -26,12 +25,13 @@ const filterOptions = createFilterOptions<CountryType>({
 })
 
 // ✅ Use forwardRef here!
-const CountryField = forwardRef<HTMLDivElement, Props>(({ error, helperText, label, valueType, ...props }, ref) => {
+const CountryField = forwardRef<HTMLDivElement, Props>(({ error, helperText, label, ...props }, ref) => {
   return (
     <Autocomplete
       autoHighlight
       id='autocomplete-country-select'
       options={countries as CountryType[]}
+      
       // getOptionLabel={option => {
       //   if (typeof option === 'string') return option
       //   return valueType == 'phone' ? `+${option[valueType]}` : option[valueType] || ''

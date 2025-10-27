@@ -1,4 +1,4 @@
-import { Box, Button, Skeleton, Typography } from '@mui/material'
+import { Button, Typography } from '@mui/material'
 
 const column: any[] = [
   {
@@ -89,7 +89,4 @@ export const fakeRows = Array.from({ length: 10 }, (_, i) => ({
   action: ''
 }))
 
-const columnSkeleton = []
-
-export { columnSkeleton }
 export default column

@@ -1,6 +1,7 @@
-import React, { Fragment, ReactNode, useEffect } from 'react'
+import React, { ReactNode, useEffect } from 'react'
+
 // ** MUI Imports
-import { Box, Button, Grid, Paper } from '@mui/material'
+import { Grid, Paper } from '@mui/material'
 
 // ** Components
 import TopBar from 'src/views/pages/pos/TopBar'
@@ -14,11 +15,10 @@ import { fetchProducts, fetchCategories } from 'src/store/pages/pos'
 import { useDispatch } from 'react-redux'
 
 // ** Types
-import { AppDispatch, RootState } from 'src/store'
+import { AppDispatch } from 'src/store'
 import PaymentMethodsGrid from 'src/views/pages/pos/PaymentMode'
 
-// ** Icon Imports
-import Icon from 'src/@core/components/icon'
+
 
 // ** Layout Import
 import PosLayout from 'src/@core/layouts/PosLayout'

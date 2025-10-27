@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 
 // ** MUI
-import { Grid, Skeleton } from '@mui/material'
+import { Grid } from '@mui/material'
 
 // ** Types
 import { TransactionStatusShap } from './types'
@@ -37,6 +37,7 @@ const TransactionStatus = () => {
       setTransactionStatusList(transactionStatus)
       setLoading(false)
     }, 3000)
+
     return () => {
       setLoading(true)
       setTransactionStatusList([])

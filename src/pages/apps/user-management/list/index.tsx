@@ -33,7 +33,6 @@ import AddMerchantDrawer from 'src/views/apps/user-management/list/AddMerchantDr
 import CustomAvatar from 'src/@core/components/mui/avatar'
 
 // ** Types Imports
-import { ThemeColor } from 'src/@core/layouts/types'
 import { MerchantType } from 'src/types/apps/merchantTypes'
 import { PermissionTableRowType } from 'src/types/pages/permission'
 
@@ -71,7 +70,8 @@ const columns = [
     headerName: 'Full Name',
     renderCell: ({ row }: CellType) => {
       const { firstName, lastName, emailId } = row
-      return (
+      
+return (
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
           {renderClient(row)}
           <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
@@ -115,13 +115,16 @@ const columns = [
 
 const fetchUsers = async (): Promise<MerchantType[]> => {
   const response = await axios.get(endpoints.userManagement.getAll)
+
   // Ensure each row has a unique "id" for DataGrid
+
   return response.data.content.result.map((obj: MerchantType, idx: number) => ({ ...obj, id: obj.id ?? idx }))
 }
 
 const fetchRoles = async (): Promise<PermissionTableRowType[]> => {
   const response = await axios.get(endpoints.rolePermission.endpoint)
   const result = response.data.content.result
+
   return result.map((item: any, idx: number) => ({
     id: idx,
     uid: item.uid,
@@ -168,7 +171,8 @@ const UserList = () => {
   // —— Roles query
   const {
     data: roleList = [],
-    isLoading: isLoadingRoles,
+
+    // isLoading: isLoadingRoles,
     isError: isRolesError,
     error: rolesError,
     refetch: refetchRoles
@@ -179,6 +183,7 @@ const UserList = () => {
     refetchOnWindowFocus: false
   })
 
+  // Column with actions
   const columnmWithAction = [
     ...columns,
     {
@@ -289,6 +294,7 @@ const UserList = () => {
             </Grid>
           </CardContent>
 
+          
           {/* Errors (users / roles) */}
           {(isUsersError || isRolesError) && (
             <Box px={3} pb={2}>
@@ -319,10 +325,12 @@ const UserList = () => {
             rowsPerPageOptions={[10, 25, 50]}
             onPageSizeChange={(newPageSize: number) => setPageSize(newPageSize)}
             loading={isLoadingUsers || isFetchingUsers}
+            
             // If your API returns a different primary key, you can set getRowId here instead of mapping id above:
             // getRowId={(row) => row.uid}
           />
 
+          
           {/* Optional manual refresh */}
           <Box display='flex' gap={2} p={3}>
             <Button onClick={() => refetchUsers()} variant='outlined' startIcon={<Icon icon='mdi:refresh' />}>
@@ -341,6 +349,7 @@ const UserList = () => {
         roleList={roleList}
         editRow={editRow}
         setEditRow={setEditRow}
+
         // Keep your existing prop name; under the hood we call react-query's refetch
         fetchUsers={refetchUsers}
       />

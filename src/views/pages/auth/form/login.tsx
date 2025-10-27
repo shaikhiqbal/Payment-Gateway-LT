@@ -11,19 +11,16 @@ import InputLabel from '@mui/material/InputLabel'
 import OutlinedInput from '@mui/material/OutlinedInput'
 import FormHelperText from '@mui/material/FormHelperText'
 import TextField from '@mui/material/TextField'
-import Radio from '@mui/material/Radio'
-import RadioGroup from '@mui/material/RadioGroup'
 import FormControlLabel from '@mui/material/FormControlLabel'
 import Checkbox from '@mui/material/Checkbox'
-import { styled, useTheme } from '@mui/material/styles'
+import { styled } from '@mui/material/styles'
 
 // ** Third Party Imports
 import { useForm, Controller } from 'react-hook-form'
 import * as yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
 
-// ** Next Routes
-import { useRouter } from 'next/router'
+
 
 // ** Next & Axios
 import axios from 'src/configs/axios'
@@ -61,28 +58,25 @@ interface LoginFormProps {
 
 const LoginForm: React.FC<LoginFormProps> = ({ onVerify }) => {
   const [showPassword, setShowPassword] = useState(false)
-  const [userTypeToLog, setUserTypeToLog] = useState<'local' | 'live' | 'super'>('local')
+  const [userTypeToLog] = useState<'local' | 'live' | 'super'>('local')
   const [isSubmiting, setIsSubmiting] = useState<boolean>(false)
-
-  const router = useRouter()
 
   const {
     control,
     setError,
     handleSubmit,
-    formState: { errors },
-    reset
+    formState: { errors }
   } = useForm({
     defaultValues: defaultValues[userTypeToLog],
     mode: 'onBlur',
     resolver: yupResolver(schema)
   })
 
-  const handleUserType = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const value = event.target.value as 'local' | 'live' | 'super'
-    setUserTypeToLog(value)
-    reset(defaultValues[value])
-  }
+  // const handleUserType = (event: React.ChangeEvent<HTMLInputElement>) => {
+  //   const value = event.target.value as 'local' | 'live' | 'super'
+  //   setUserTypeToLog(value)
+  //   reset(defaultValues[value])
+  // }
 
   const onSubmit = async (userDetail: FormData) => {
     try {

@@ -34,19 +34,16 @@ import CleaveWrapper from 'src/@core/styles/libs/react-cleave'
 import Cleave from 'cleave.js/react'
 import { useForm, Controller } from 'react-hook-form'
 
-// ** Util Import
-import { hexToRGBA } from 'src/@core/utils/hex-to-rgba'
-
 // ** Third Party Imports
 import * as yup from 'yup'
 import toast from 'react-hot-toast'
-import { useMutation, useQuery } from '@tanstack/react-query'
+import { useMutation } from '@tanstack/react-query'
 import { motion, AnimatePresence } from 'framer-motion'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { BeatLoader } from 'react-spinners'
 
 // ** Utils
-import { encryptData, decryptData } from 'src/@core/utils/cryptoHelper'
+import { encryptData } from 'src/@core/utils/cryptoHelper'
 
 interface State {
   newPassword: string
@@ -61,7 +58,6 @@ import endpoints from 'src/configs/endpoints'
 
 // ** Next Imports
 import { useRouter } from 'next/router'
-import { AlertTitle } from '@mui/material'
 
 export const resetPasswordSchema = yup.object().shape({
   otp: yup.object().shape({
@@ -187,10 +183,7 @@ const ResetPassword = () => {
   const {
     control,
     handleSubmit,
-    formState: { errors, touchedFields },
-    watch,
-    clearErrors,
-    setError
+    formState: { errors }
   } = useForm({
     defaultValues: {
       otp: {
@@ -319,7 +312,7 @@ const ResetPassword = () => {
 
   useEffect(() => {
     if (resetToken) callOtp(resetToken)
-  }, [resetToken])
+  }, [callOtp, resetToken])
 
   return (
     <Box className='content-right' sx={{ backgroundColor: 'background.paper' }}>
@@ -380,6 +373,7 @@ const ResetPassword = () => {
                           display: 'flex',
                           alignItems: 'center',
                           justifyContent: 'space-between'
+                          
                           // ...(errorsArray.length && {
                           //   '& .invalid:focus': {
                           //     borderColor: theme => `${theme.palette.error.main} !important`,

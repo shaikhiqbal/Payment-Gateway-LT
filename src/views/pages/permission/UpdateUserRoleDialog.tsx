@@ -106,23 +106,7 @@ const UpdateUserRoleDialog = (props: UserListAndDetailShap) => {
     name: 'users'
   })
 
-  const fetchData = async function () {
-    try {
-      const response = await axios.get(endpoints.rolePermission.endpoint)
-      const result = response.data.content.result
 
-      const transformed: PermissionTableRowType[] = result.map((item: any, id: number) => ({
-        id,
-        uid: item.uid,
-        roleName: item.roleName,
-        createdAt: item.createdAt
-      }))
-      return transformed
-    } catch (error) {
-      console.log('Error fetching permission data:', error)
-    } finally {
-    }
-  }
 
   const column: GridColDef[] = [
     ...userColumns,
@@ -133,7 +117,8 @@ const UpdateUserRoleDialog = (props: UserListAndDetailShap) => {
       headerName: 'Role Assigned',
       renderCell: params => {
         const index = userList.findIndex(u => u.uid === params.row.uid)
-        return (
+        
+return (
           <Box>
             <Controller
               control={control}
@@ -179,8 +164,9 @@ const UpdateUserRoleDialog = (props: UserListAndDetailShap) => {
       })
       setOpen(true)
     }
-    return () => setOpen(false)
-  }, [users])
+    
+return () => setOpen(false)
+  }, [users, reset, selectedRow])
 
   // ** Form submit handler
   const onSubmit = async (data: FormValues) => {
@@ -191,10 +177,11 @@ const UpdateUserRoleDialog = (props: UserListAndDetailShap) => {
           type: 'manual',
           message: 'Please select a different role to delete this user.'
         })
-        return
+        
+return
       }
 
-      const results = await Promise.all(
+      await Promise.all(
         data.users.map((user: UserType) =>
           axios.put(endpoints.userManagement.endpoint + user.uid, {
             emailId: user.email,
@@ -233,7 +220,7 @@ const UpdateUserRoleDialog = (props: UserListAndDetailShap) => {
     }
 
     if (!roles.length) fetchData()
-  }, [])
+  }, [roles.length])
 
   useEffect(() => {
     if (watch('userRole') === selectedRow?.uid) {
@@ -251,7 +238,7 @@ const UpdateUserRoleDialog = (props: UserListAndDetailShap) => {
       }))
       reset({ users: updatedUsers, userRole: watch('userRole') })
     }
-  }, [watch('userRole')])
+  }, [watch, selectedRow, setError, getValues, reset])
 
   return (
     <Dialog
@@ -274,6 +261,7 @@ const UpdateUserRoleDialog = (props: UserListAndDetailShap) => {
           <FormControl
             fullWidth
             sx={{ mb: 4 }}
+
             //  error={Boolean(errors.userRoles)}
           >
             <InputLabel id='userRoles-label'>Select Role Name</InputLabel>
@@ -330,6 +318,7 @@ const UpdateUserRoleDialog = (props: UserListAndDetailShap) => {
               color='error'
               type='submit'
               startIcon={<Icon icon='tabler:trash' />}
+
               // onClick={() => handleDelete(selectedRowUid)}
             >
               {/* BeatLoader     Update & Delete */}

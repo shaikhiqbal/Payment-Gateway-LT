@@ -3,16 +3,10 @@ import { ChangeEvent, Fragment, useEffect, useState } from 'react'
 
 // ** MUI Imports
 import Card from '@mui/material/Card'
-import Typography from '@mui/material/Typography'
-import { DataGrid, GridColumns, GridRenderCellParams, GridColDef } from '@mui/x-data-grid'
+import { DataGrid, GridColDef } from '@mui/x-data-grid'
 
 // ** Custom Components
-import CustomChip from 'src/@core/components/mui/chip'
-import CustomAvatar from 'src/@core/components/mui/avatar'
 import QuickSearchToolbar from 'src/views/table/data-grid/QuickSearchToolbar'
-
-// ** Types Imports
-import { ThemeColor } from 'src/@core/layouts/types'
 import { TransactionRowType } from 'src/@fake-db/types'
 
 // ** Column
@@ -54,6 +48,7 @@ const TransactionTable = ({ actionColumn, row, loading }: TransactionTableProps)
   useEffect(() => {
     setData(row)
   }, [row])
+
   return (
     <Fragment>
       <Card style={{ paddingTop: '2rem' }}>

@@ -14,7 +14,6 @@ import {
   CardHeader,
   CardContent,
   MenuItem,
-  ListSubheader,
   Select,
   FormControl,
   InputLabel,
@@ -161,6 +160,7 @@ const VirtualTerminal = () => {
     if (data.modeOfPayment === 'CREDIT_CARD') {
       const [month, year] = data.expiryDate ? data.expiryDate.split('/') : ['', '']
       data.expiryMonth = month
+
       // Convert 2-digit year to 4-digit (assume 20xx for 00-99)
       if (year && year.length === 2) {
         data.expiryYear = `20${year}`
@@ -173,20 +173,20 @@ const VirtualTerminal = () => {
 
     Object.keys(data).forEach(key => {
       const value = data[key as keyof FormValues]
-
       if (value !== undefined && value !== null) {
         formData.append(key, value as any)
       }
     })
 
-    // const
-
     try {
       await axios.post(endpoints.virtualTerminal.create, formData)
-      reset() // Reset the form after successful submission
+      reset()
+
+      // Reset the form after successful submission
       toast.success('Successfully submitted form!')
     } catch (error) {
       console.error('Error submitting form:', error)
+
       // Handle error appropriately, e.g., show a notification
     }
   }
@@ -295,7 +295,8 @@ const VirtualTerminal = () => {
                 rules={{ required: 'Country is required' }}
                 render={({ field }) => {
                   const selectedCountry = countries.find(c => c.code === field.value) || null
-                  return (
+                  
+return (
                     <CountryField
                       {...field}
                       value={selectedCountry}
@@ -355,11 +356,11 @@ const VirtualTerminal = () => {
               <Controller
                 name='countryCode'
                 control={control}
-                rules={{ required: 'Contact Number is required' }}
+                rules={{ required: 'Country Code is required' }}
                 render={({ field }) => {
                   const selectedCountry = countries.find(c => c.code === field.value) || null
-
-                  return (
+                  
+return (
                     <Fragment>
                       <CountryField
                         {...field}
@@ -369,8 +370,8 @@ const VirtualTerminal = () => {
                         }}
                         valueType='phone'
                         label='Country Code *'
-                        error={!!errors.country}
-                        helperText={errors.country?.message}
+                        error={!!errors.countryCode}
+                        helperText={errors.countryCode?.message}
                         fullWidth
                         ref={field.ref}
                       />
@@ -379,25 +380,24 @@ const VirtualTerminal = () => {
                 }}
               />
             </Grid>
+
             {/* Country Number */}
             <Grid item xs={12} sm={6}>
               <Controller
                 name='contactNumber'
                 control={control}
                 rules={{ required: 'Contact Number is required' }}
-                render={({ field }) => {
-                  return (
-                    <Fragment>
-                      <TextField
-                        {...field}
-                        fullWidth
-                        label='Contact Number *'
-                        error={!!errors.contactNumber}
-                        helperText={errors.contactNumber?.message}
-                      />
-                    </Fragment>
-                  )
-                }}
+                render={({ field }) => (
+                  <Fragment>
+                    <TextField
+                      {...field}
+                      fullWidth
+                      label='Contact Number *'
+                      error={!!errors.contactNumber}
+                      helperText={errors.contactNumber?.message}
+                    />
+                  </Fragment>
+                )}
               />
             </Grid>
 
@@ -436,6 +436,7 @@ const VirtualTerminal = () => {
                 )}
               />
             </Grid>
+
             <Grid item xs={12} sm={6}>
               <FormControl fullWidth error={!!errors.transactionType}>
                 <InputLabel id='grouped-select-label'>Transaction Type *</InputLabel>
@@ -447,11 +448,15 @@ const VirtualTerminal = () => {
                     <Select
                       labelId='grouped-select-label'
                       id='grouped-select'
-                      label='Grouping'
+                      label='Transaction Type *'
                       value={field.value || ''}
                       onChange={event => {
-                        field.onChange(event) // Update form value
-                        console.log(event.target.value) // Optional: log the value
+                        field.onChange(event.target.value)
+
+                        // Update form value
+                        console.log(event.target.value)
+
+                        // Optional: log the value
                       }}
                     >
                       {groupedOptions.map(group => (
@@ -465,6 +470,7 @@ const VirtualTerminal = () => {
                 {errors.transactionType && <FormHelperText>{errors.transactionType.message}</FormHelperText>}
               </FormControl>
             </Grid>
+
             {/* Mode Of Payment */}
             <Grid item xs={12}>
               <FormControl component='fieldset' error={!!errors.modeOfPayment}>
@@ -487,13 +493,17 @@ const VirtualTerminal = () => {
                 )}
               </FormControl>
             </Grid>
-            {watch('modeOfPayment') == 'CREDIT_CARD' ? (
+
+            {watch('modeOfPayment') === 'CREDIT_CARD' ? (
               <Grid item xs={12}>
                 <CardDetails control={control} watch={watch} clearErrors={clearErrors} setValue={setValue} />
               </Grid>
             ) : (
-              <BankAccountDetails control={control} watch={watch} clearErrors={clearErrors} />
+              <Grid item xs={12}>
+                <BankAccountDetails control={control} watch={watch} clearErrors={clearErrors} />
+              </Grid>
             )}
+
             {/* Upload Audio */}
             <Grid item xs={12}>
               <FormLabel>Upload Audio</FormLabel>

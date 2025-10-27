@@ -54,7 +54,7 @@ const PermisionRoleTrashDialog = (props: PermisionRoleTrashDialogTypes) => {
     setIsDeleting(true)
     try {
       if (selectedRow) {
-        const response = await axios.delete(`${endpoints.rolePermission.endpoint}/${selectedRow.uid}`)
+        await axios.delete(`${endpoints.rolePermission.endpoint}/${selectedRow.uid}`)
         handleTrashToggle(null, true)
       }
     } catch (error) {

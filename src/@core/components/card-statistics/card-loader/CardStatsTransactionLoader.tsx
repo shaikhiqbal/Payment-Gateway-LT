@@ -2,7 +2,6 @@
 import Card from '@mui/material/Card'
 import Skeleton from '@mui/material/Skeleton'
 import CardContent from '@mui/material/CardContent'
-import Box from '@mui/material/Box'
 
 const CardStatsTransactionLoader = () => {
   return (

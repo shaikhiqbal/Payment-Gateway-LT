@@ -27,6 +27,7 @@ import Icon from 'src/@core/components/icon'
 // Form data interface
 interface PricingStocksFormData {
   productType: 'single' | 'variable'
+
   // Single Product fields
   quantity?: number
   price?: number
@@ -34,6 +35,7 @@ interface PricingStocksFormData {
   discountType?: string
   discountValue?: number
   quantityAlert?: number
+
   // Variable Product fields
   variantAttribute?: string
   variantColor?: string
@@ -76,6 +78,7 @@ const PricingStocksForm: React.FC<PricingStocksFormProps> = ({ onSubmit: externa
     }
   }
 
+  
   // Mock options for selects
   const taxTypes: string[] = ['Exclusive', 'Inclusive', 'No Tax']
   const discountTypes: string[] = ['Percentage', 'Fixed']

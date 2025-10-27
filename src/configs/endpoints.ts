@@ -1,6 +1,7 @@
 const endpoints = {
   auth: {
     login: 'auth/login',
+
     // verifyUser: '/auth/user/profile/',
     verifyUser: '/auth/verify_account/',
     register: '/auth/user/create',
