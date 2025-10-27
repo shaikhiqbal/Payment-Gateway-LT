@@ -113,7 +113,9 @@ const EditCard = ({ data }: Props) => {
   // ** States
   const [count, setCount] = useState<number>(1)
   const [selected, setSelected] = useState<string>('')
+
   // const [clients, setClients] = useState<InvoiceClientType[] | undefined>(undefined)
+
   const [selectedClient, setSelectedClient] = useState<InvoiceClientType | null>(null)
   const [dueDate, setDueDate] = useState<DateType>(data ? new Date(data.invoice.dueDate) : new Date())
   const [issueDate, setIssueDate] = useState<DateType>(data ? new Date(data.invoice.issuedDate) : new Date())
