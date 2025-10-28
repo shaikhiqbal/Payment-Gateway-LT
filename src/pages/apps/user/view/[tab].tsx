@@ -34,7 +34,7 @@ export const getStaticProps: GetStaticProps = async () => {
   return {
     props: {
       invoiceData: null,
-      tab: undefined
+      tab: {}
     }
   }
 }

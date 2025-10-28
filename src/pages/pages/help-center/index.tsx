@@ -8,10 +8,10 @@ import Typography from '@mui/material/Typography'
 import CardContent, { CardContentProps } from '@mui/material/CardContent'
 
 // ** Third Party Imports
-import axios from 'axios'
+// import axios from 'axios'
 
 // ** Types
-import { HelpCenterCategoriesType, HelpCenterArticlesOverviewType } from 'src/@fake-db/types'
+// import { HelpCenterCategoriesType, HelpCenterArticlesOverviewType } from 'src/@fake-db/types'
 
 // ** Demo Imports
 import HelpCenterLandingHeader from 'src/views/pages/help-center/landing/HelpCenterLandingHeader'
@@ -19,11 +19,11 @@ import HelpCenterLandingFooter from 'src/views/pages/help-center/landing/HelpCen
 import HelpCenterLandingKnowledgeBase from 'src/views/pages/help-center/landing/HelpCenterLandingKnowledgeBase'
 import HelpCenterLandingArticlesOverview from 'src/views/pages/help-center/landing/HelpCenterLandingArticlesOverview'
 
-type ApiDataType = {
-  categories: HelpCenterCategoriesType[]
-  keepLearning: HelpCenterArticlesOverviewType[]
-  popularArticles: HelpCenterArticlesOverviewType[]
-}
+// type ApiDataType = {
+//   categories: HelpCenterCategoriesType[]
+//   keepLearning: HelpCenterArticlesOverviewType[]
+//   popularArticles: HelpCenterArticlesOverviewType[]
+// }
 
 const StyledCardContent = styled(CardContent)<CardContentProps>(({ theme }) => ({
   paddingTop: `${theme.spacing(20)} !important`,
@@ -68,8 +68,9 @@ const HelpCenter = ({ apiData }: InferGetStaticPropsType<typeof getStaticProps>)
 }
 
 export const getStaticProps: GetStaticProps = async () => {
-  const res = await axios.get('/pages/help-center/landing')
-  const apiData: ApiDataType = res.data
+  // const res = await axios.get('/pages/help-center/landing')
+  // const apiData: ApiDataType = res.data
+  const apiData = null
 
   return {
     props: {

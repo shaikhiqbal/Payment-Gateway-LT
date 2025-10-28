@@ -33,7 +33,7 @@ export const getStaticProps: GetStaticProps = async () => {
 
   return {
     props: {
-      tab: undefined,
+      tab: {},
       apiPricingPlanData: 0
     }
   }
