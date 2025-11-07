@@ -9,7 +9,6 @@ const instance = axios.create({
 const getLocation = (): Promise<{ lat: number; long: number }> => {
   return new Promise((resolve, reject) => {
     if (!navigator.geolocation) {
-
       return reject('Geolocation not supported')
     }
 
@@ -33,7 +32,6 @@ const getUserIp = async (): Promise<string> => {
 
     return data.ip
   } catch (error) {
-
     return ''
   }
 }

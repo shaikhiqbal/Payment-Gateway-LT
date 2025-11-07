@@ -106,8 +106,6 @@ const UpdateUserRoleDialog = (props: UserListAndDetailShap) => {
     name: 'users'
   })
 
-
-
   const column: GridColDef[] = [
     ...userColumns,
     {
@@ -117,8 +115,8 @@ const UpdateUserRoleDialog = (props: UserListAndDetailShap) => {
       headerName: 'Role Assigned',
       renderCell: params => {
         const index = userList.findIndex(u => u.uid === params.row.uid)
-        
-return (
+
+        return (
           <Box>
             <Controller
               control={control}
@@ -164,8 +162,8 @@ return (
       })
       setOpen(true)
     }
-    
-return () => setOpen(false)
+
+    return () => setOpen(false)
   }, [users, reset, selectedRow])
 
   // ** Form submit handler
@@ -177,8 +175,8 @@ return () => setOpen(false)
           type: 'manual',
           message: 'Please select a different role to delete this user.'
         })
-        
-return
+
+        return
       }
 
       await Promise.all(

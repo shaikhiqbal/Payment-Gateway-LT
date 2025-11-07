@@ -63,8 +63,8 @@ export const ProductCard: React.FC<ProductCardProps> = ({
       dispatch(handleAlertSelectCustomer(1))
 
       toast.error('Please select a customer before adding products to the cart.')
-      
-return
+
+      return
     }
     dispatch(addToCart({ ...items, quantity: 1 }))
     setAdded(true)

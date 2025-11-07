@@ -3,8 +3,6 @@ import Typography from '@mui/material/Typography'
 import Skeleton from '@mui/material/Skeleton'
 import { GridColumns, GridRenderCellParams } from '@mui/x-data-grid'
 
-
-
 export const columns: GridColumns = [
   {
     flex: 0.15,

@@ -9,8 +9,6 @@ import TransactionStatus from 'src/views/dashboards/merchant/TransactionStatus'
 import MerchantBarChart from 'src/views/dashboards/merchant/BarChart'
 import TransactionTable from 'src/views/dashboards/merchant/table'
 
-
-
 // ** Third Party Styles Import
 import 'chart.js/auto'
 

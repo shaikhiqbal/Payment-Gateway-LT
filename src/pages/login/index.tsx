@@ -63,8 +63,6 @@ const RightWrapper = styled(Box)<BoxProps>(({ theme }) => ({
   }
 }))
 
-
-
 interface UserDetails {
   token: string
   mobileNum: string

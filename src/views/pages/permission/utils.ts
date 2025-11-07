@@ -17,8 +17,8 @@ export const convertToTitleCase = (str: string): string => {
 export const convertListToFormat = (obj: PermissionListType): Array<PermissionFormValueType<ActionType>> => {
   const updatedObject = Object.keys(obj).map(key => {
     const typedKey = key as keyof typeof pageIndexes
-    
-return {
+
+    return {
       title: convertToTitleCase(key),
       index: pageIndexes[typedKey] ?? 0,
       actions: obj[key as keyof PermissionListType].map(({ action, moduleName, uid }: ActionType) => {
@@ -49,8 +49,8 @@ export const formEditPermisions = (
 ): PermissionFormValueType<ActionType>[] => {
   const { permissionIds } = fetchedPermisions
   const hash = new Map(permissionIds.map((id: string) => [id, 1]))
-  
-return actionList.map(({ actions, ...rest }) => ({
+
+  return actionList.map(({ actions, ...rest }) => ({
     ...rest,
     actions: actions.map(action => ({
       ...action,

@@ -70,8 +70,8 @@ const columns = [
     headerName: 'Full Name',
     renderCell: ({ row }: CellType) => {
       const { firstName, lastName, emailId } = row
-      
-return (
+
+      return (
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
           {renderClient(row)}
           <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
@@ -294,7 +294,6 @@ const UserList = () => {
             </Grid>
           </CardContent>
 
-          
           {/* Errors (users / roles) */}
           {(isUsersError || isRolesError) && (
             <Box px={3} pb={2}>
@@ -325,12 +324,11 @@ const UserList = () => {
             rowsPerPageOptions={[10, 25, 50]}
             onPageSizeChange={(newPageSize: number) => setPageSize(newPageSize)}
             loading={isLoadingUsers || isFetchingUsers}
-            
+
             // If your API returns a different primary key, you can set getRowId here instead of mapping id above:
             // getRowId={(row) => row.uid}
           />
 
-          
           {/* Optional manual refresh */}
           <Box display='flex' gap={2} p={3}>
             <Button onClick={() => refetchUsers()} variant='outlined' startIcon={<Icon icon='mdi:refresh' />}>
@@ -349,7 +347,6 @@ const UserList = () => {
         roleList={roleList}
         editRow={editRow}
         setEditRow={setEditRow}
-
         // Keep your existing prop name; under the hood we call react-query's refetch
         fetchUsers={refetchUsers}
       />

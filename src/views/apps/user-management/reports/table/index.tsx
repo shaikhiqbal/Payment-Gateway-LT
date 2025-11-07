@@ -30,8 +30,8 @@ const Index = () => {
     const timeoutId = setTimeout(() => {
       setIsLoading(false)
     }, 2000)
-    
-return () => clearTimeout(timeoutId)
+
+    return () => clearTimeout(timeoutId)
   }, [])
 
   if (isLoading) {
@@ -52,7 +52,7 @@ return () => clearTimeout(timeoutId)
         disableSelectionOnClick
         rowsPerPageOptions={[10, 25, 50]}
         onPageSizeChange={newPageSize => setPageSize(newPageSize)}
-        
+
         // getRowId={row => row.uid}
       />
     </Card>

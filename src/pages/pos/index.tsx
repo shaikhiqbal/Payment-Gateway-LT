@@ -18,8 +18,6 @@ import { useDispatch } from 'react-redux'
 import { AppDispatch } from 'src/store'
 import PaymentMethodsGrid from 'src/views/pages/pos/PaymentMode'
 
-
-
 // ** Layout Import
 import PosLayout from 'src/@core/layouts/PosLayout'
 

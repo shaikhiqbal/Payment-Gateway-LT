@@ -56,19 +56,13 @@ const CardPayment = <
 >({
   control,
   watch,
-  setValue,
+  setValue
 }: CardPaymentProps<T>) => {
   const [focus, setFocus] = useState<Focused | undefined>()
 
   // ** Include modeOfPayment in destructuring and remove 'as any'
   const formValues = watch()
-  const {
-    cardNumber = '',
-    expiryDate = '',
-    nameOnCard = '',
-    cvv = '',
-    modeOfPayment = ''
-  } = formValues as Partial<T>
+  const { cardNumber = '', expiryDate = '', nameOnCard = '', cvv = '', modeOfPayment = '' } = formValues as Partial<T>
 
   // ** Check if card payment is required based on modeOfPayment
   const isRequired = modeOfPayment === 'CREDIT_CARD'
@@ -84,8 +78,8 @@ const CardPayment = <
     if (target.name === 'cardNumber') return formatCreditCardNumber(target.value, Payment)
     if (target.name === 'expiryDate') return formatExpirationDate(target.value)
     if (target.name === 'cvv') return formatCVC(target.value, cardNumber, Payment)
-    
-return target.value
+
+    return target.value
   }
 
   const handleBlur = () => setFocus(undefined)

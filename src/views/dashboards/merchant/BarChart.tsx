@@ -31,8 +31,8 @@ const MerchantBarChart = (props: HorizontalBarProps) => {
     setTimeout(() => {
       setLoading(false)
     }, 4000)
-    
-return () => setLoading(true)
+
+    return () => setLoading(true)
   }, [])
 
   const options: ChartOptions<'bar'> = {

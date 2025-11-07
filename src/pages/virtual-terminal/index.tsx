@@ -295,8 +295,8 @@ const VirtualTerminal = () => {
                 rules={{ required: 'Country is required' }}
                 render={({ field }) => {
                   const selectedCountry = countries.find(c => c.code === field.value) || null
-                  
-return (
+
+                  return (
                     <CountryField
                       {...field}
                       value={selectedCountry}
@@ -359,8 +359,8 @@ return (
                 rules={{ required: 'Country Code is required' }}
                 render={({ field }) => {
                   const selectedCountry = countries.find(c => c.code === field.value) || null
-                  
-return (
+
+                  return (
                     <Fragment>
                       <CountryField
                         {...field}

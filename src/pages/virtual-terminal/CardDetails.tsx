@@ -224,7 +224,7 @@ const CardDetails: React.FC<CardDetailsProps> = (props: CardDetailsProps): JSX.E
                       onBlur={handleBlur}
                       onChange={(e: ChangeEvent<HTMLInputElement>) => {
                         const value = handleInputChange(e)
-                        
+
                         // Log card type for debugging
                         console.log('cardType', value, Payment)
                         field.onChange(value)

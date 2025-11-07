@@ -373,7 +373,7 @@ const ResetPassword = () => {
                           display: 'flex',
                           alignItems: 'center',
                           justifyContent: 'space-between'
-                          
+
                           // ...(errorsArray.length && {
                           //   '& .invalid:focus': {
                           //     borderColor: theme => `${theme.palette.error.main} !important`,

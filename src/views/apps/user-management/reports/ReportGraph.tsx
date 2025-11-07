@@ -120,8 +120,8 @@ const ReportGraph: React.FC<GraphProps> = props => {
     setTimeout(() => {
       setIsDataLoaded(false)
     }, 2000)
-    
-return () => setIsDataLoaded(true)
+
+    return () => setIsDataLoaded(true)
   }, [])
 
   if (isDataLoaded) {

@@ -31,7 +31,6 @@ const CountryField = forwardRef<HTMLDivElement, Props>(({ error, helperText, lab
       autoHighlight
       id='autocomplete-country-select'
       options={countries as CountryType[]}
-      
       // getOptionLabel={option => {
       //   if (typeof option === 'string') return option
       //   return valueType == 'phone' ? `+${option[valueType]}` : option[valueType] || ''

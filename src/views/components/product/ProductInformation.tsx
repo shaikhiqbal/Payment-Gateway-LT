@@ -426,11 +426,6 @@ const ProductForm: React.FC<ProductFormProps> = ({ onSubmit: externalOnSubmit })
               </Grid>
 
               {/* Submit Button */}
-              <Grid item xs={12}>
-                <Button type='submit' variant='contained' color='primary' size='large'>
-                  Submit
-                </Button>
-              </Grid>
             </Grid>
           </Box>
         </AccordionDetails>

@@ -97,7 +97,7 @@ const productsSlice = createSlice({
         state.error = action.error.message || 'Error'
         console.log(action.error)
       })
-    
+
     //**  Categories
     builder
       .addCase(fetchCategories.pending, state => {

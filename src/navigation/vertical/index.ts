@@ -45,7 +45,7 @@ const navigation = (): VerticalNavItemsType => {
     {
       title: 'Create Product',
       icon: 'uit:create-dashboard',
-      path: '/create-product',
+      path: '/products/create-product',
       action: 'read',
       subject: 'user-management'
     },

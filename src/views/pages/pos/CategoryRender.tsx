@@ -8,10 +8,7 @@ export interface Category {
   url: string
 }
 
-
-
 const CategoryRender = () => {
-
   return <Box></Box>
 }
 
