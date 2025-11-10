@@ -1,12 +1,13 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Autocomplete, TextField, Chip, Box, createFilterOptions } from '@mui/material'
+import { FieldValue, FieldValues, UseFormSetValue } from 'react-hook-form'
 
 interface SizeItem {
   label: string
   value: string
 }
 
-interface SizeSelectProps {
+interface SizeSelectProps<T extends FieldValues = any> {
   label?: string
   options?: SizeItem[]
   error?: boolean
@@ -14,6 +15,8 @@ interface SizeSelectProps {
   required?: boolean
   disabled?: boolean
   placeholder?: string
+  setValue: UseFormSetValue<T>
+  fieldName: string
 }
 
 const defaultSizes: SizeItem[] = [
@@ -34,15 +37,13 @@ const SizeSelect: React.FC<SizeSelectProps> = ({
   helperText,
   required = false,
   disabled = false,
-  placeholder = 'Select or create sizes...'
+  placeholder = 'Select or create sizes...',
+  setValue,
+  fieldName
 }) => {
   const [inputValue, setInputValue] = useState('')
   const [selectedSizes, setSelectedSizes] = useState<SizeItem[]>([])
   const [customOptions, setCustomOptions] = useState<SizeItem[]>([])
-
-  const handleChange = (_event: React.SyntheticEvent, newValue: SizeItem[]) => {
-    setSelectedSizes(newValue)
-  }
 
   const handleFilterOptions = (opts: SizeItem[], params: any) => {
     const filtered = filter([...options, ...customOptions], params)
@@ -72,13 +73,18 @@ const SizeSelect: React.FC<SizeSelectProps> = ({
     }
   }
 
+  useEffect(() => {
+    if (selectedSizes.length) {
+      setValue(fieldName as any, selectedSizes, { shouldDirty: true, shouldValidate: true })
+    }
+  }, [selectedSizes])
+
   return (
     <Box sx={{ mt: 3 }}>
       <Autocomplete
         multiple
         value={selectedSizes}
         onChange={handleSelect}
-        size='small'
         inputValue={inputValue}
         onInputChange={(_event, newInputValue) => setInputValue(newInputValue)}
         options={[...options, ...customOptions]}

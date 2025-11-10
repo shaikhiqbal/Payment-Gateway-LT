@@ -59,7 +59,6 @@ const PricingStocksForm: React.FC<PricingStocksFormProps> = ({ handleToggle }) =
           <AccordionSummary
             expandIcon={<Icon icon='uiw:up' fontSize='inherit' />}
             sx={{
-              bgcolor: 'white',
               '& .MuiAccordionSummary-content': {
                 display: 'flex',
                 alignItems: 'center',

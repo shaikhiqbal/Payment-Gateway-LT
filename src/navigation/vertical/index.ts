@@ -50,6 +50,13 @@ const navigation = (): VerticalNavItemsType => {
       subject: 'user-management'
     },
     {
+      title: 'Categories',
+      icon: 'uit:create-dashboard',
+      path: '/categories',
+      action: 'read',
+      subject: 'user-management'
+    },
+    {
       path: '/virtual-terminal',
       action: 'read',
       subject: 'virtual-terminal',

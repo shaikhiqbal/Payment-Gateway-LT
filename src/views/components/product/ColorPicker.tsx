@@ -24,6 +24,7 @@ import { ChromePicker, ColorResult } from 'react-color'
 
 // ** Icons
 import Icon from 'src/@core/components/icon'
+import { FieldValues, SetValueConfig, UseFormSetValue } from 'react-hook-form'
 
 // ** Animations
 const slideIn = keyframes`
@@ -113,7 +114,7 @@ interface ColorItem {
   value: string
 }
 
-interface ColorPickerProps {
+interface ColorPickerProps<T extends FieldValues = any> {
   label?: string
   value?: ColorItem[]
   onChange?: (colors: ColorItem[]) => void
@@ -122,6 +123,11 @@ interface ColorPickerProps {
   required?: boolean
   disabled?: boolean
   maxColors?: number
+  setValue: UseFormSetValue<T>
+  fieldName: string
+}
+{
+  /* name={``} */
 }
 
 // ✅ Memoized Popup to isolate re-renders
@@ -175,7 +181,9 @@ const ColorPicker: React.FC<ColorPickerProps> = ({
   helperText,
   required = false,
   disabled = false,
-  maxColors = 10
+  maxColors = 10,
+  setValue,
+  fieldName
 }) => {
   const [selectedColors, setSelectedColors] = useState<ColorItem[]>(value)
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
@@ -233,16 +241,9 @@ const ColorPicker: React.FC<ColorPickerProps> = ({
     [selectedColors, handleColorsChange]
   )
 
-  const getContrastColor = useMemo(
-    () => (hexColor: string) => {
-      const r = parseInt(hexColor.slice(1, 3), 16)
-      const g = parseInt(hexColor.slice(3, 5), 16)
-      const b = parseInt(hexColor.slice(5, 7), 16)
-      const brightness = (r * 299 + g * 587 + b * 114) / 1000
-      return brightness > 128 ? '#000000' : '#FFFFFF'
-    },
-    []
-  )
+  useEffect(() => {
+    if (selectedColors.length) setValue(fieldName as any, selectedColors, { shouldDirty: true, shouldValidate: true })
+  }, [selectedColors])
 
   return (
     <FormControl fullWidth error={error} disabled={disabled} sx={{ mb: 2 }}>

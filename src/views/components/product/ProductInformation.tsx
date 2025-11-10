@@ -109,50 +109,6 @@ const ProductForm: React.FC<ProductFormProps> = ({ onSubmit: externalOnSubmit })
           <Box component='form' onSubmit={handleSubmit(onSubmit)}>
             <Grid container spacing={3}>
               {/* Store */}
-              <Grid item xs={12} sm={6}>
-                <Controller
-                  name='store'
-                  control={control}
-                  rules={{ required: 'Store is required' }}
-                  render={({ field }) => (
-                    <FormControl fullWidth error={!!errors.store}>
-                      <InputLabel>Store *</InputLabel>
-                      <Select {...field} label='Store *'>
-                        <MenuItem value=''>Choose</MenuItem>
-                        {stores.map(store => (
-                          <MenuItem key={store} value={store}>
-                            {store}
-                          </MenuItem>
-                        ))}
-                      </Select>
-                      {errors.store && <FormHelperText>{errors.store.message}</FormHelperText>}
-                    </FormControl>
-                  )}
-                />
-              </Grid>
-
-              {/* Warehouse */}
-              <Grid item xs={12} sm={6}>
-                <Controller
-                  name='warehouse'
-                  control={control}
-                  rules={{ required: 'Warehouse is required' }}
-                  render={({ field }) => (
-                    <FormControl fullWidth error={!!errors.warehouse}>
-                      <InputLabel>Warehouse *</InputLabel>
-                      <Select {...field} label='Warehouse *'>
-                        <MenuItem value=''>Choose</MenuItem>
-                        {warehouses.map(warehouse => (
-                          <MenuItem key={warehouse} value={warehouse}>
-                            {warehouse}
-                          </MenuItem>
-                        ))}
-                      </Select>
-                      {errors.warehouse && <FormHelperText>{errors.warehouse.message}</FormHelperText>}
-                    </FormControl>
-                  )}
-                />
-              </Grid>
 
               {/* Product Name */}
               <Grid item xs={12} sm={6}>

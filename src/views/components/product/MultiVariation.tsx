@@ -2,18 +2,26 @@
 import { useState, useEffect } from 'react'
 
 // ** React Hook Form Imports
-import { useForm, Controller, useFieldArray } from 'react-hook-form'
+import { useForm, Controller, useFieldArray, UseFormSetValue } from 'react-hook-form'
 
 // ** MUI Imports
-import Box from '@mui/material/Box'
-import Chip from '@mui/material/Chip'
-import TextField from '@mui/material/TextField'
-import Autocomplete from '@mui/material/Autocomplete'
-import Typography from '@mui/material/Typography'
-import FormControl from '@mui/material/FormControl'
-import Divider from '@mui/material/Divider'
-import Grid from '@mui/material/Grid'
-import IconButton from '@mui/material/IconButton'
+import {
+  Box,
+  Grid,
+  Chip,
+  Divider,
+  TextField,
+  Autocomplete,
+  Typography,
+  FormControl,
+  IconButton,
+  Button,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  DialogActions
+} from '@mui/material'
 
 // ** Custom Components
 import ColorPicker from './ColorPicker'
@@ -22,38 +30,91 @@ import SizeSelect from './SizeSelect'
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
 
-// ✅ Base Variation Options — Color & Size at top
-const defaultVariations = [
-  'Color',
-  'Size',
-  'Material',
-  'Pattern',
-  'Style',
-  'Storage',
-  'RAM',
-  'Finish',
-  'Dimension',
-  'Weight'
-]
+// ** Types
+import { ProductFormData, LabelValue, Variant } from 'src/pages/products/create-product'
 
-// ✅ Form type
+const defaultVariations = ['Color', 'Size', 'Style']
+
 interface VariationField {
   name: string
-  values: string[] // e.g. multiple color or size options
+  values: string[] | LabelValue[]
 }
 
 interface ProductForm {
   variations: VariationField[]
 }
 
-const MultiVariation = () => {
+interface MultiVariationProps {
+  setValue: UseFormSetValue<ProductFormData>
+}
+
+const emptyVariant = {
+  key: '',
+  name: '',
+  sku: '',
+  buyingPrice: 0,
+  sellingPrice: 0,
+  discountPrice: 0,
+  quantity: 0,
+  alertQuantity: 0,
+  weight: '',
+  gtin: ''
+}
+
+// ✅ Generate all combinations
+function generateCombinations(variations: VariationField[]): Record<string, string>[] {
+  return variations.reduce<Record<string, string>[]>(
+    (acc, variation) => {
+      const temp: Record<string, string>[] = []
+      const values =
+        typeof variation.values[0] === 'object'
+          ? (variation.values as LabelValue[]).map(v => v.value)
+          : (variation.values as string[])
+      acc.forEach(a => {
+        values.forEach(v => {
+          if (v) temp.push({ ...a, [variation.name]: v })
+        })
+      })
+      return temp
+    },
+    [{}]
+  )
+}
+
+// ✅ Map combinations into typed variants
+function mapToVariants(combinations: Record<string, string>[], variations: VariationField[]): Variant[] {
+  return combinations.map((combo, index) => {
+    const variantName: Record<string, any> = {}
+
+    for (const [key, value] of Object.entries(combo)) {
+      const original = variations.find(v => v.name === key)
+
+      if (key === 'Color' || key === 'Size' || key === 'Style') {
+        const labelValue = (original?.values as LabelValue[])?.find(lv => lv.value === value)
+        variantName[key] = labelValue ? [labelValue] : []
+      }
+    }
+
+    return {
+      ...emptyVariant,
+      key: `VAR-${index + 1}`,
+      name: Object.values(combo).join(' / '),
+      sku: `SKU-${index + 1}`,
+      variantName
+    }
+  })
+}
+
+const MultiVariation = ({ setValue }: MultiVariationProps) => {
   const [options, setOptions] = useState<string[]>(defaultVariations)
   const [selectedValues, setSelectedValues] = useState<string[]>([])
 
-  const { control, setValue, watch } = useForm<ProductForm>({
-    defaultValues: {
-      variations: []
-    }
+  const {
+    control,
+    setValue: setLocalValue,
+    handleSubmit
+  } = useForm<ProductForm>({
+    defaultValues: { variations: [] }
   })
 
   const { fields, append, remove } = useFieldArray({
@@ -61,29 +122,19 @@ const MultiVariation = () => {
     name: 'variations'
   })
 
-  // Add new variation field when selected
   useEffect(() => {
-    // find missing variations
     const existing = fields.map(f => f.name)
     const newOnes = selectedValues.filter(v => !existing.includes(v))
     const removed = existing.filter(e => !selectedValues.includes(e))
 
-    // Add new variations
-    newOnes.forEach(v =>
-      append({
-        name: v,
-        values: []
-      })
-    )
-
-    // Remove unselected ones
+    newOnes.forEach(v => append({ name: v, values: [] }))
     removed.forEach(rm => {
       const index = fields.findIndex(f => f.name === rm)
       if (index !== -1) remove(index)
     })
   }, [selectedValues])
 
-  const handleVariationChange = (event: any, newValue: string[]) => {
+  const handleVariationChange = (_: any, newValue: string[]) => {
     const lastValue = newValue[newValue.length - 1]
     if (lastValue && !options.includes(lastValue)) {
       setOptions(prev => [...prev, lastValue])
@@ -91,13 +142,28 @@ const MultiVariation = () => {
     setSelectedValues(newValue)
   }
 
+  const handleRemoveVariation = (index: number) => {
+    const fieldName = fields[index].name
+    setSelectedValues(prev => prev.filter(v => v !== fieldName))
+    remove(index)
+  }
+
+  const onSubmit = (data: ProductForm) => {
+    const combos = generateCombinations(data.variations)
+    const variants = mapToVariants(combos, data.variations)
+    setValue('variants', variants)
+  }
+
   return (
-    <Box sx={{ mt: 2 }}>
-      <Typography variant='h6' sx={{ mb: 2 }}>
-        Product Variations
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <Typography id='variant-dialog-title' sx={{ textAlign: 'center', fontSize: '1.5rem !important' }}>
+        Add Variants
       </Typography>
 
-      {/* Main Select */}
+      <DialogContentText variant='body2' sx={{ textAlign: 'center', mb: 4 }}>
+        Customize your product by adding Color, Size, and Style variations.
+      </DialogContentText>
+
       <FormControl fullWidth>
         <Autocomplete
           multiple
@@ -105,8 +171,8 @@ const MultiVariation = () => {
           options={options}
           value={selectedValues}
           onChange={handleVariationChange}
-          renderTags={(value: readonly string[], getTagProps) =>
-            value.map((option: string, index: number) => (
+          renderTags={(value, getTagProps) =>
+            value.map((option, index) => (
               <Chip
                 label={option}
                 color={
@@ -122,12 +188,11 @@ const MultiVariation = () => {
             ))
           }
           renderInput={params => (
-            <TextField {...params} label='Select or create variations' placeholder='Type to add or select...' />
+            <TextField {...params} label='Select or create variations' placeholder='Color, Size, Style...' />
           )}
         />
       </FormControl>
 
-      {/* Variation Inputs */}
       {fields.length > 0 && (
         <Box sx={{ mt: 4 }}>
           <Divider sx={{ mb: 3 }} />
@@ -138,9 +203,8 @@ const MultiVariation = () => {
           <Grid container spacing={3}>
             {fields.map((field, index) => {
               const fieldName = field.name.toLowerCase()
-
               return (
-                <Grid item xs={12} md={12} key={field.id}>
+                <Grid item xs={12} key={field.id}>
                   <Box
                     sx={{
                       p: 2,
@@ -150,59 +214,40 @@ const MultiVariation = () => {
                       position: 'relative'
                     }}
                   >
-                    <Box
-                      sx={{
-                        display: 'flex',
-                        justifyContent: 'space-between',
-                        alignItems: 'center',
-                        mb: 2
-                      }}
-                    >
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
                       <Typography variant='subtitle2'>{field.name}</Typography>
-                      <IconButton aria-label='capture screenshot' color='error'>
+                      <IconButton color='error' onClick={() => handleRemoveVariation(index)}>
                         <Icon icon='tabler:trash' />
                       </IconButton>
                     </Box>
 
-                    {/* Conditional Inputs */}
                     {fieldName === 'color' && (
-                      <Controller
-                        name={`variations.${index}.values`}
-                        control={control}
-                        render={({ field }) => <ColorPicker label='Choose Colors' />}
+                      <ColorPicker
+                        label='Choose Colors'
+                        setValue={setLocalValue}
+                        fieldName={`variations.${index}.values`}
                       />
                     )}
 
                     {fieldName === 'size' && (
-                      <Controller
-                        name={`variations.${index}.values`}
-                        control={control}
-                        render={({ field }) => <SizeSelect label='Select Sizes' />}
+                      <SizeSelect
+                        label='Select Sizes'
+                        setValue={setLocalValue}
+                        fieldName={`variations.${index}.values`}
                       />
                     )}
 
-                    {fieldName !== 'color' && fieldName !== 'size' && (
+                    {fieldName === 'style' && (
                       <Controller
                         name={`variations.${index}.values`}
                         control={control}
                         render={({ field }) => (
                           <TextField
+                            {...field}
                             fullWidth
-                            label={`Enter ${fields[index].name} options (comma separated)`}
-                            placeholder={`e.g. ${
-                              fields[index].name.toLowerCase() === 'material'
-                                ? 'Cotton, Silk, Denim'
-                                : 'Option1, Option2'
-                            }`}
-                            value={(field.value || []).join(', ')}
-                            onChange={e =>
-                              field.onChange(
-                                e.target.value
-                                  .split(',')
-                                  .map(v => v.trim())
-                                  .filter(Boolean)
-                              )
-                            }
+                            value={field.value?.join(', ') || ''}
+                            onChange={e => field.onChange(e.target.value.split(',').map(v => v.trim()))}
+                            label='Enter Styles (comma separated)'
                           />
                         )}
                       />
@@ -214,7 +259,7 @@ const MultiVariation = () => {
           </Grid>
         </Box>
       )}
-    </Box>
+    </form>
   )
 }
 
