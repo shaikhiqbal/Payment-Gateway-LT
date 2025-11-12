@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Autocomplete, TextField, Chip, Box, createFilterOptions } from '@mui/material'
-import { FieldValue, FieldValues, UseFormSetValue } from 'react-hook-form'
+import { FieldValues, UseFormSetValue } from 'react-hook-form'
 
 interface SizeItemShape {
   label: string
@@ -77,7 +77,7 @@ const SizeSelect: React.FC<SizeSelectProps> = ({
     if (selectedSizes.length) {
       setValue(fieldName as any, selectedSizes, { shouldDirty: true, shouldValidate: true })
     }
-  }, [selectedSizes])
+  }, [selectedSizes, setValue, fieldName])
 
   return (
     <Box sx={{ mt: 3 }}>

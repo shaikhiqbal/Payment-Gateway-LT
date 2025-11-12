@@ -1,29 +1,13 @@
 import React, { Fragment, useState } from 'react'
-import {
-  Box,
-  Accordion,
-  AccordionSummary,
-  AccordionDetails,
-  Typography,
-  Button,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  DialogContentText
-} from '@mui/material'
+import { Box, Accordion, AccordionSummary, AccordionDetails, Typography, Button } from '@mui/material'
 
 // **  Icon Imports
 import Icon from 'src/@core/components/icon'
 
-// ** Components
-import VariationTable from './VariationTable'
-import ColorPicker from './ColorPicker'
-import SizeSelect from './SizeSelect'
-
 // ** Form data interface
 interface PricingStocksFormData {
   productType: 'single' | 'variable'
+
   // ** Single Product fields
   quantity?: number
   price?: number

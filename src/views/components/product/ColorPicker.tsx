@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 
 // ** MUI Imports
 import {
@@ -8,7 +8,6 @@ import {
   Menu,
   MenuItem,
   Stack,
-  Typography,
   FormControl,
   FormLabel,
   FormHelperText,
@@ -24,7 +23,7 @@ import { ChromePicker, ColorResult } from 'react-color'
 
 // ** Icons
 import Icon from 'src/@core/components/icon'
-import { FieldValues, SetValueConfig, UseFormSetValue } from 'react-hook-form'
+import { FieldValues, UseFormSetValue } from 'react-hook-form'
 
 // ** Animations
 const slideIn = keyframes`
@@ -230,7 +229,7 @@ const ColorPicker: React.FC<ColorPickerProps> = ({
       handleColorsChange(newColors)
     }
     handleClose()
-  }, [selectedColors, maxColors, pickerColor, handleColorsChange])
+  }, [selectedColors, maxColors, pickerColor, handleColorsChange, handleClose])
 
   const handleDelete = useCallback(
     (value: string) => {
@@ -243,7 +242,7 @@ const ColorPicker: React.FC<ColorPickerProps> = ({
 
   useEffect(() => {
     if (selectedColors.length) setValue(fieldName as any, selectedColors, { shouldDirty: true, shouldValidate: true })
-  }, [selectedColors])
+  }, [selectedColors, setValue, fieldName])
 
   return (
     <FormControl fullWidth error={error} disabled={disabled} sx={{ mb: 2 }}>

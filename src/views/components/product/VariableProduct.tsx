@@ -1,69 +1,24 @@
 // components/VariableProduct.tsx
-import React, { useEffect, useState, useCallback } from 'react'
-import { useForm, Controller, useFieldArray } from 'react-hook-form'
-import { yupResolver } from '@hookform/resolvers/yup'
-import * as yup from 'yup'
-import { Box, Button, Checkbox, TextField, Snackbar, Alert, Typography, Grid } from '@mui/material'
+import React, { useState } from 'react'
 
-import { styled, useTheme } from '@mui/material/styles'
+// ** MUI Imports
+import { Box, Button, Checkbox, Snackbar, Alert, Typography } from '@mui/material'
+
+// ** Component Imports
 import { AddSize, ColorPicker } from './VariationOptionDialog'
 
-interface VariationData {
-  img?: File | null
-  imagePreview?: string | null
-  sku: string
-  buying_price: string
-  selling_price: string
-  discount: string
-  qty: string
-  minimum_quantity: string
-  weight: string
-  weightUnit: string
-  gtin: string
-  name: string
-  parentName: string
-}
-
-type ColorOption = { label: string; value: string } | string
-
-type FormData = {
-  productName: string
-  sku: string
-  price: number
-  colors: { label: string; value: string }[]
-  sizes: string[]
-  variants: VariationData[]
-}
-
-const schema = yup.object({
-  productName: yup.string().required('Product name is required'),
-  sku: yup.string().required('SKU is required'),
-  price: yup.number().typeError('Price must be a number').positive('Price must be > 0').required('Price is required'),
-  // Accept array of objects with value hex string
-  colors: yup
-    .array()
-    .of(
-      yup.object({
-        label: yup.string().required(),
-        value: yup
-          .string()
-          .matches(/^#(?:[0-9a-fA-F]{3}){1,2}$/, 'Invalid color code')
-          .required()
-      })
-    )
-    .optional(),
-  sizes: yup.array().of(yup.string()).optional()
-})
-
 export default function VariableProduct(): JSX.Element {
+  // ** State
   const [colorModalOpen, setColorModalOpen] = useState(false)
   const [sizeModalOpen, setSizeModalOpen] = useState(false)
   const [snackbarOpen, setSnackbarOpen] = useState(false)
-  const [selectedVariation, setSelectedVariation] = useState<{ label: string; value: string }[]>([])
+
+  // const [selectedVariation, setSelectedVariation] = useState<{ label: string; value: string }[]>([])
 
   const onSaveVariation = (list: { label: string; value: string }[]) => {
-    console.log('onSaveVariation')
-    setSelectedVariation(list)
+    console.log('onSaveVariation', list)
+
+    // setSelectedVariation(list)
   }
 
   return (

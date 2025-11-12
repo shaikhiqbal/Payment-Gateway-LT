@@ -1,4 +1,6 @@
 import React, { useState } from 'react'
+
+// ** MUI Imports
 import {
   Box,
   Button,
@@ -12,9 +14,13 @@ import {
   Typography,
   IconButton
 } from '@mui/material'
+
+// ** Third Party Imports
 import { ChromePicker } from 'react-color'
-import { styled } from '@mui/material/styles'
 import namer from 'color-namer'
+
+// ** MUI Styles Imports
+import { styled } from '@mui/material/styles'
 import Icon from 'src/@core/components/icon'
 
 const StyledChromePicker = styled(Box)(({ theme }) => ({
@@ -74,11 +80,10 @@ interface ColorPickerProps {
 interface AddSizeProps {
   open: boolean
   onClose: () => void
-  onSave: (list: { label: string; value: string }[]) => void
 }
 
 // ** Color Picker Dialog
-export function ColorPicker({ open, onClose, onSave }: ColorPickerProps) {
+export function ColorPicker({ open, onClose }: ColorPickerProps) {
   const [customHex, setCustomHex] = useState('#FF0000')
   const [selectedColors, setSelectedColors] = useState<{ label: string; value: string }[]>([])
 
@@ -89,6 +94,7 @@ export function ColorPicker({ open, onClose, onSave }: ColorPickerProps) {
         map.set(c.value.toUpperCase(), { label: c.label, value: c.value.toUpperCase() })
       }
     })
+
     // onColorsChange(Array.from(map.values()))
     onClose()
   }
@@ -200,7 +206,7 @@ export function ColorPicker({ open, onClose, onSave }: ColorPickerProps) {
   )
 }
 
-export function AddSize({ open, onClose, onSave }: AddSizeProps) {
+export function AddSize({ open, onClose }: AddSizeProps) {
   const [newSize, setNewSize] = useState('')
   const [selectedSizes, setSelectedSizes] = useState<string[]>([])
 

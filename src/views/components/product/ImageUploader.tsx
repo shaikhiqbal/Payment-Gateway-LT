@@ -3,8 +3,7 @@ import { useState } from 'react'
 
 // ** MUI Imports
 import Box from '@mui/material/Box'
-import Typography from '@mui/material/Typography'
-import { styled, useTheme } from '@mui/material/styles'
+import { useTheme } from '@mui/material/styles'
 
 // ** Third Party Imports
 import { useDropzone } from 'react-dropzone'
@@ -20,11 +19,11 @@ interface FileProp {
 }
 
 // Styled component for the upload image inside the dropzone area
-const Img = styled('img')(({ theme }) => ({
-  width: 48,
-  height: 48,
-  marginBottom: theme.spacing(8.5)
-}))
+// const Img = styled('img')(({ theme }) => ({
+//   width: 48,
+//   height: 48,
+//   marginBottom: theme.spacing(8.5)
+// }))
 
 const ImageUploader = () => {
   // ** State

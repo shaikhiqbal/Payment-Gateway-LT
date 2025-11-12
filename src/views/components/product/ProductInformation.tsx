@@ -20,9 +20,6 @@ import {
 // ** React Hook Form Imports
 import { Controller, Control, FieldErrorsImpl, UseFormSetValue, UseFormWatch } from 'react-hook-form'
 
-// ** Customed Components Imports
-import Icon from 'src/@core/components/icon'
-
 // ** Redux Imports
 import { RootState } from 'src/store'
 import { useSelector } from 'react-redux'
@@ -63,7 +60,6 @@ interface ProductFormProps {
 
 const ProductForm: React.FC<ProductFormProps> = ({ control, setValue, errors, watch }) => {
   // ** States
-  const [expanded, setExpanded] = useState<boolean>(true)
   const [openCategoryModal, setOpenCategoryModal] = useState<boolean>(false)
 
   const handleToggle = () => {
@@ -111,13 +107,15 @@ const ProductForm: React.FC<ProductFormProps> = ({ control, setValue, errors, wa
     )
   }
 
+  const categoryValue = watch('category')
+
   useEffect(() => {
-    if (!watch('category')) return
-    const findedCategory = categories.find(cat => cat.slug === watch('category'))
+    if (!categoryValue) return
+    const findedCategory = categories.find(cat => cat.slug === categoryValue)
     if (findedCategory) {
       setValue('variants', generateCombinations(findedCategory.variations))
     }
-  }, [watch('category')])
+  }, [categoryValue, categories, setValue])
 
   return (
     <Card sx={{ p: 3, mx: 'auto' }}>

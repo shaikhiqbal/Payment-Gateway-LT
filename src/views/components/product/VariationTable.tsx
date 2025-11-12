@@ -1,5 +1,9 @@
-import React, { Fragment, useEffect, useState } from 'react'
+import React, { Fragment } from 'react'
+
+// ** React Hook Form Imports
 import { useFieldArray, Controller } from 'react-hook-form'
+
+// ** MUI Imports
 import {
   Card,
   CardContent,
@@ -12,7 +16,6 @@ import {
   TableRow,
   TextField,
   Button,
-  Avatar,
   IconButton,
   InputAdornment,
   Select,
@@ -21,23 +24,6 @@ import {
   Typography,
   Box
 } from '@mui/material'
-// import { Delete } from '@mui/icons-material'
-
-interface VariationData {
-  img?: File | null
-  imagePreview?: string | null
-  sku: string
-  buying_price: string
-  selling_price: string
-  discount: string
-  qty: string
-  minimum_quantity: string
-  weight: string
-  weightUnit: string
-  gtin: string
-  name: string
-  parentName: string
-}
 
 interface VariationSelected {
   optionName: string
@@ -47,30 +33,13 @@ interface VariationSelected {
 interface VariationTableProps {
   control: any
   watch: any
-  //   handleToggle: (key: string) => void
   variationSelected: VariationSelected[]
-}
-
-const defaultVal: Partial<VariationData> = {
-  buying_price: '1000',
-  selling_price: '1000',
-  discount: '100',
-  sku: '',
-  qty: '1',
-  minimum_quantity: '1',
-  weight: '',
-  weightUnit: 'kg',
-  gtin: ''
 }
 
 const unitList = ['kg', 'g', 'ltr', 'ml']
 
-export default function VariationTable({ control, watch, variationSelected }: VariationTableProps) {
-  const {
-    fields: variationFields,
-    append,
-    remove
-  } = useFieldArray({
+export default function VariationTable({ control, watch }: VariationTableProps) {
+  const { fields: variationFields, remove } = useFieldArray({
     name: 'variations',
     control
   })
@@ -83,15 +52,8 @@ export default function VariationTable({ control, watch, variationSelected }: Va
 
       const newVariations = [...watch('variations')]
       newVariations[index] = updated
-      // Update form value here based on your form library setup
     }
   }
-
-  useEffect(() => {
-    if (variationSelected?.length > 0) {
-      //   handleVariationList(variationSelected)
-    }
-  }, [variationSelected])
 
   const variations = watch('variations')
 

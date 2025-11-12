@@ -69,6 +69,7 @@ const CategoryTable = () => {
   // Handle sorting (placeholder for server-side)
   const handleSortModel = (newModel: GridSortModel) => {
     // TODO: Implement server-side sorting if needed
+    console.log('Sort Model Changed: ', newModel, page)
   }
 
   // Handle searching (client-side filtering)

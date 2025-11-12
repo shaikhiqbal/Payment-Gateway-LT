@@ -1,18 +1,17 @@
-import React, { Fragment, useState } from 'react'
+import React, { Fragment } from 'react'
 
 // ** MUI Imports
 import { Button, Grid } from '@mui/material'
 
 // ** Custom Components
 import ProductInformation from '../../../views/components/product/ProductInformation'
-import PricingStock from '../../../views/components/product/PricingStock'
-import MultiVariation from 'src/views/components/product/MultiVariation'
 
 // ** React Hook Form Imports
-import { useForm, useFieldArray } from 'react-hook-form'
+import { useForm } from 'react-hook-form'
 
 import VariantForm from 'src/views/components/product/VariationListForm'
-// ✅ Types
+
+//**  ✅ Types
 export interface LabelValue {
   label: string
   value: string
@@ -52,8 +51,6 @@ export interface ProductFormData {
 }
 
 const CreateProduct = () => {
-  const [openVariationModal, setOpenVariationModal] = useState(false)
-
   const {
     control,
     handleSubmit,

@@ -89,8 +89,7 @@ const CreateCategory = (props: { show: boolean; setShow: (show: boolean) => void
     handleSubmit,
     reset,
     formState: { errors },
-    setValue,
-    watch
+    setValue
   } = useForm<CategoryFormData>({
     defaultValues: {
       name: '',
@@ -141,7 +140,7 @@ const CreateCategory = (props: { show: boolean; setShow: (show: boolean) => void
         .sort((a, b) => b - a) // remove from end to start
       indicesToRemove.forEach(i => remove(i))
     }
-  }, [selectedValues])
+  }, [selectedValues, append, remove, fields])
 
   const renderInput = (field: Variation & { id: string }, index: number) => {
     const { name } = field
@@ -178,7 +177,7 @@ const CreateCategory = (props: { show: boolean; setShow: (show: boolean) => void
             rules={{
               required: 'Please select at least one size'
             }}
-            render={({ field: { onChange, value }, fieldState: { error } }) => (
+            render={({ fieldState: { error } }) => (
               <SizeSelect
                 label='Select Sizes'
                 setValue={setValue}
@@ -365,7 +364,7 @@ const CreateCategory = (props: { show: boolean; setShow: (show: boolean) => void
             </Grid>
             {fields.map((field, index) => {
               return (
-                <Grid item xs={12}>
+                <Grid item xs={12} key={field.id}>
                   {renderInput(field, index)}
                 </Grid>
               )

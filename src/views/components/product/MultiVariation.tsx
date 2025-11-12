@@ -15,12 +15,7 @@ import {
   Typography,
   FormControl,
   IconButton,
-  Button,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogContentText,
-  DialogActions
+  DialogContentText
 } from '@mui/material'
 
 // ** Custom Components
@@ -132,7 +127,7 @@ const MultiVariation = ({ setValue }: MultiVariationProps) => {
       const index = fields.findIndex(f => f.name === rm)
       if (index !== -1) remove(index)
     })
-  }, [selectedValues])
+  }, [selectedValues, append, remove, fields])
 
   const handleVariationChange = (_: any, newValue: string[]) => {
     const lastValue = newValue[newValue.length - 1]
