@@ -162,17 +162,15 @@ const UserList = () => {
     error: usersError,
     refetch: refetchUsers
   } = useQuery({
-    queryKey: ['users'], // add filters/pagination here if server-side filtering
+    queryKey: ['users'],
     queryFn: fetchUsers,
-    staleTime: 60 * 1000, // cache as fresh for 1 min
-    refetchOnWindowFocus: true // change as you prefer
+    staleTime: 60 * 1000,
+    refetchOnWindowFocus: true
   })
 
   // —— Roles query
   const {
     data: roleList = [],
-
-    // isLoading: isLoadingRoles,
     isError: isRolesError,
     error: rolesError,
     refetch: refetchRoles
@@ -347,7 +345,6 @@ const UserList = () => {
         roleList={roleList}
         editRow={editRow}
         setEditRow={setEditRow}
-        // Keep your existing prop name; under the hood we call react-query's refetch
         fetchUsers={refetchUsers}
       />
     </Grid>
