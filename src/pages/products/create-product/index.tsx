@@ -1,7 +1,7 @@
 import React, { Fragment, useState } from 'react'
 
 // ** MUI Imports
-import { Grid } from '@mui/material'
+import { Button, Grid } from '@mui/material'
 
 // ** Custom Components
 import ProductInformation from '../../../views/components/product/ProductInformation'
@@ -10,8 +10,8 @@ import MultiVariation from 'src/views/components/product/MultiVariation'
 
 // ** React Hook Form Imports
 import { useForm, useFieldArray } from 'react-hook-form'
-import VariantForm from 'src/views/components/product/VariationListForm'
 
+import VariantForm from 'src/views/components/product/VariationListForm'
 // ✅ Types
 export interface LabelValue {
   label: string
@@ -37,8 +37,6 @@ export interface Variant {
 }
 
 export interface ProductFormData {
-  store: string
-  warehouse: string
   productName: string
   slug: string
   sku: string
@@ -56,35 +54,51 @@ export interface ProductFormData {
 const CreateProduct = () => {
   const [openVariationModal, setOpenVariationModal] = useState(false)
 
-  const { control, setValue, handleSubmit, watch } = useForm<ProductFormData>({
+  const {
+    control,
+    handleSubmit,
+    setValue,
+    watch,
+    formState: { errors }
+  } = useForm<ProductFormData>({
     defaultValues: {
+      productName: '',
+      slug: '',
+      sku: '',
+      sellingType: '',
+      category: '',
+      subCategory: '',
+      brand: '',
+      unit: '',
+      barcodeSymbology: '',
+      itemCode: '',
+      description: '',
       variants: []
     }
   })
 
-  const { fields: variantFields } = useFieldArray({
-    control,
-    name: 'variants'
-  })
-
-  const handleToggle = () => setOpenVariationModal(prev => !prev)
-
   const onSubmit = (data: ProductFormData) => {
     console.log('✅ Final Product Data:', data)
   }
-
   return (
     <Fragment>
       <form onSubmit={handleSubmit(onSubmit)}>
         <Grid container spacing={3}>
           <Grid item xs={12}>
-            <ProductInformation />
+            <ProductInformation control={control} setValue={setValue} errors={errors} watch={watch} />
           </Grid>
+
           <Grid item xs={12}>
-            <PricingStock handleToggle={handleToggle} />
+            <VariantForm control={control} watch={watch} />
           </Grid>
-          <Grid item xs={12}>
-            <VariantForm control={control} />
+          <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'flex-end', gap: 2 }}>
+            <Button type='button' variant='contained' sx={{ mr: 1 }}>
+              Create
+            </Button>
+
+            <Button variant='outlined' color='secondary'>
+              Cancel
+            </Button>
           </Grid>
         </Grid>
       </form>

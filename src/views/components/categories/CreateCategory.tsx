@@ -6,7 +6,6 @@ import { Ref, useState, forwardRef, ReactElement, useEffect } from 'react'
 import {
   Box,
   Grid,
-  Card,
   Dialog,
   Button,
   TextField,
@@ -14,13 +13,11 @@ import {
   Typography,
   InputLabel,
   FormControl,
-  CardContent,
   Fade,
   DialogContent,
   DialogActions,
   MenuItem,
   Select,
-  SelectChangeEvent,
   FadeProps,
   Autocomplete,
   Chip
@@ -31,8 +28,19 @@ import Icon from 'src/@core/components/icon'
 
 // ** React Hook Form Imports
 import { useForm, Controller, useFieldArray } from 'react-hook-form'
-import ColorPicker from '../product/ColorPicker'
-import SizeSelect from '../product/SizeSelect'
+
+// ** Third Party Imports
+import toast from 'react-hot-toast'
+
+// ** Custom Component Imports
+import ColorPicker, { ColorItemShape } from '../product/ColorPicker'
+import SizeSelect, { SizeItemShape } from '../product/SizeSelect'
+
+// ** Redux Imports
+import { useDispatch } from 'react-redux'
+
+// ** Redux Actions Imports
+import { addCategory } from 'src/store/pages/categories'
 
 const Transition = forwardRef(function Transition(
   props: FadeProps & { children?: ReactElement<any, any> },
@@ -41,10 +49,19 @@ const Transition = forwardRef(function Transition(
   return <Fade ref={ref} {...props} />
 })
 
-type Variation = {
-  name: string
-  values: string[]
-}
+type Variation =
+  | {
+      name: 'Color'
+      values: ColorItemShape[]
+    }
+  | {
+      name: 'Size'
+      values: SizeItemShape[]
+    }
+  | {
+      name: string
+      values: string[]
+    }
 
 interface CategoryFormData {
   name: string
@@ -63,6 +80,9 @@ const CreateCategory = (props: { show: boolean; setShow: (show: boolean) => void
   // ** States
   const [options, setOptions] = useState<string[]>(defaultVariations)
   const [selectedValues, setSelectedValues] = useState<string[]>([])
+
+  // ** Redux Hooks
+  const dispatch = useDispatch()
 
   const {
     control,
@@ -87,7 +107,6 @@ const CreateCategory = (props: { show: boolean; setShow: (show: boolean) => void
   })
 
   const handleVariationChange = (_: any, newValue: string[]) => {
-    debugger
     const lastValue = newValue[newValue.length - 1]
     if (lastValue && !options.includes(lastValue)) {
       setOptions(prev => [...prev, lastValue])
@@ -96,12 +115,12 @@ const CreateCategory = (props: { show: boolean; setShow: (show: boolean) => void
   }
 
   const onSubmit = (data: CategoryFormData) => {
-    console.log('Category Created:', data)
-    // Here you can send data to API, e.g.:
-    // await axios.post('/api/categories', data)
-    // alert(`✅ Category "${data.name}" created successfully!`)
-    // reset()
-    // setShow(false)
+    dispatch(addCategory(data))
+
+    setSelectedValues([])
+    toast.success(`Category "${data.name}" created successfully!`)
+    reset()
+    setShow(false)
   }
 
   useEffect(() => {
@@ -109,37 +128,66 @@ const CreateCategory = (props: { show: boolean; setShow: (show: boolean) => void
     const newOnes = selectedValues.filter(v => !existing.includes(v))
     const removed = existing.filter(e => !selectedValues.includes(e))
 
+    // Append new variations
     newOnes.forEach(v => append({ name: v, values: [] }))
-    removed.forEach(rm => {
-      const index = fields.findIndex(f => f.name === rm)
-      if (index !== -1) remove(index)
-    })
+
+    // Remove those that are no longer selected
+    if (removed.length > 0) {
+      // Find indices to remove, sort descending to avoid shifting
+      const indicesToRemove = fields
+        .map((f, i) => ({ name: f.name.toLowerCase(), index: i }))
+        .filter(f => removed.map(r => r.toLowerCase()).includes(f.name))
+        .map(f => f.index)
+        .sort((a, b) => b - a) // remove from end to start
+      indicesToRemove.forEach(i => remove(i))
+    }
   }, [selectedValues])
 
-  const renderInput = (
-    field: Variation & { id: string }, // ensure includes RHF's id field
-    index: number
-  ) => {
+  const renderInput = (field: Variation & { id: string }, index: number) => {
     const { name } = field
 
     switch (name) {
       case 'Color':
         return (
-          <ColorPicker
-            label='Choose Colors'
-            setValue={setValue}
-            fieldName={`variations.${index}.values`}
-            required={true}
+          <Controller
+            name={`variations.${index}.values`}
+            control={control}
+            rules={{
+              required: 'Please select at least one color'
+            }}
+            render={({ field: { onChange, value }, fieldState: { error } }) => (
+              <ColorPicker
+                label='Choose Colors'
+                setValue={setValue}
+                fieldName={`variations.${index}.values`}
+                value={Array.isArray(value) ? (value as ColorItemShape[]) : []}
+                onChange={onChange}
+                required={true}
+                error={!!error}
+                helperText={error?.message}
+              />
+            )}
           />
         )
 
       case 'Size':
         return (
-          <SizeSelect
-            label='Select Sizes'
-            setValue={setValue}
-            fieldName={`variations.${index}.values`}
-            required={true}
+          <Controller
+            name={`variations.${index}.values`}
+            control={control}
+            rules={{
+              required: 'Please select at least one size'
+            }}
+            render={({ field: { onChange, value }, fieldState: { error } }) => (
+              <SizeSelect
+                label='Select Sizes'
+                setValue={setValue}
+                fieldName={`variations.${index}.values`}
+                required={true}
+                error={!!error}
+                helperText={error?.message}
+              />
+            )}
           />
         )
 
@@ -148,19 +196,25 @@ const CreateCategory = (props: { show: boolean; setShow: (show: boolean) => void
           <Controller
             name={`variations.${index}.values`}
             control={control}
-            render={({ field }) => (
+            rules={{
+              required: `Please enter at least one ${name} value`
+            }}
+            render={({ field, fieldState: { error } }) => (
               <TextField
                 {...field}
                 fullWidth
                 value={field.value?.join(', ') || ''}
                 onChange={e => field.onChange(e.target.value.split(',').map(v => v.trim()))}
                 label={`Enter ${name} values (comma separated)`}
+                error={!!error}
+                helperText={error?.message}
               />
             )}
           />
         )
     }
   }
+
   return (
     <Dialog
       fullWidth
@@ -194,7 +248,7 @@ const CreateCategory = (props: { show: boolean; setShow: (show: boolean) => void
           <Typography variant='body2'>Fill in the details below to create a new category.</Typography>
         </Box>
 
-        <Box component='form' noValidate onSubmit={handleSubmit(onSubmit)}>
+        <Box>
           <Grid container spacing={6}>
             {/* Category Name */}
             <Grid item xs={12}>
@@ -326,9 +380,10 @@ const CreateCategory = (props: { show: boolean; setShow: (show: boolean) => void
               pt: theme => [`${theme.spacing(6)} !important`, `${theme.spacing(10)} !important`]
             }}
           >
-            <Button type='submit' variant='contained' sx={{ mr: 1 }}>
+            <Button type='button' variant='contained' sx={{ mr: 1 }} onClick={() => handleSubmit(onSubmit)()}>
               Create
             </Button>
+
             <Button
               variant='outlined'
               color='secondary'

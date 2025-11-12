@@ -2,14 +2,14 @@ import React, { useEffect, useState } from 'react'
 import { Autocomplete, TextField, Chip, Box, createFilterOptions } from '@mui/material'
 import { FieldValue, FieldValues, UseFormSetValue } from 'react-hook-form'
 
-interface SizeItem {
+interface SizeItemShape {
   label: string
   value: string
 }
 
 interface SizeSelectProps<T extends FieldValues = any> {
   label?: string
-  options?: SizeItem[]
+  options?: SizeItemShape[]
   error?: boolean
   helperText?: string
   required?: boolean
@@ -19,7 +19,7 @@ interface SizeSelectProps<T extends FieldValues = any> {
   fieldName: string
 }
 
-const defaultSizes: SizeItem[] = [
+const defaultSizes: SizeItemShape[] = [
   { label: 'XS', value: 'xs' },
   { label: 'S', value: 's' },
   { label: 'M', value: 'm' },
@@ -28,7 +28,7 @@ const defaultSizes: SizeItem[] = [
   { label: 'XXL', value: 'xxl' }
 ]
 
-const filter = createFilterOptions<SizeItem>()
+const filter = createFilterOptions<SizeItemShape>()
 
 const SizeSelect: React.FC<SizeSelectProps> = ({
   label = 'Sizes',
@@ -42,10 +42,10 @@ const SizeSelect: React.FC<SizeSelectProps> = ({
   fieldName
 }) => {
   const [inputValue, setInputValue] = useState('')
-  const [selectedSizes, setSelectedSizes] = useState<SizeItem[]>([])
-  const [customOptions, setCustomOptions] = useState<SizeItem[]>([])
+  const [selectedSizes, setSelectedSizes] = useState<SizeItemShape[]>([])
+  const [customOptions, setCustomOptions] = useState<SizeItemShape[]>([])
 
-  const handleFilterOptions = (opts: SizeItem[], params: any) => {
+  const handleFilterOptions = (opts: SizeItemShape[], params: any) => {
     const filtered = filter([...options, ...customOptions], params)
     const { inputValue } = params
     const isExisting = filtered.some(opt => inputValue === opt.label)
@@ -60,7 +60,7 @@ const SizeSelect: React.FC<SizeSelectProps> = ({
     return filtered
   }
 
-  const handleSelect = (_event: any, newValue: SizeItem[]) => {
+  const handleSelect = (_event: any, newValue: SizeItemShape[]) => {
     // Detect newly added option (starts with Add “text”)
     const lastItem = newValue[newValue.length - 1]
     if (lastItem?.label.startsWith('Add "')) {
@@ -123,4 +123,4 @@ const SizeSelect: React.FC<SizeSelectProps> = ({
 }
 
 export default SizeSelect
-export type { SizeItem, SizeSelectProps }
+export type { SizeItemShape, SizeSelectProps }

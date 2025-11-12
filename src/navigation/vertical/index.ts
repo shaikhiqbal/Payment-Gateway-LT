@@ -51,7 +51,7 @@ const navigation = (): VerticalNavItemsType => {
     },
     {
       title: 'Categories',
-      icon: 'uit:create-dashboard',
+      icon: 'carbon:category-new-each',
       path: '/categories',
       action: 'read',
       subject: 'user-management'

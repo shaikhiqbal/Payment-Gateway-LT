@@ -1,147 +1,16 @@
-// import React, { Fragment } from 'react'
-// import { Box, Grid, TextField, Typography, Divider, Paper, Chip, Card } from '@mui/material'
-// import { useForm, Controller, useFieldArray, Control } from 'react-hook-form'
-// import { ProductFormData } from 'src/pages/products/create-product'
-// import ImageUploader from './ImageUploader'
-// import ProductOverview from './ProductOverview'
-
-// // ✅ Types
-// interface LabelValue {
-//   label: string
-//   value: string
-// }
-
-// interface Variant {
-//   key: string
-//   name: string
-//   sku: string
-//   buyingPrice: number
-//   sellingPrice: number
-//   discountPrice: number
-//   quantity: number
-//   alertQuantity: number
-//   weight: string
-//   gtin: string
-//   variantName: {
-//     Color?: LabelValue[]
-//     Style?: string[]
-//     Size?: LabelValue[]
-//   }
-// }
-// interface VariantFormProps {
-//   control: Control<ProductFormData>
-// }
-// const VariantForm = ({ control }: VariantFormProps) => {
-//   const { fields } = useFieldArray({
-//     control,
-//     name: 'variants'
-//   })
-
-//   if (!fields.length) return null
-
-//   return (
-//     <Card sx={{ p: 3, mx: 'auto' }}>
-//       <Grid container spacing={2}>
-//         {fields.map((field, index) => (
-//           <Grid item xs={12} key={field.id} sx={{ mb: 3 }}>
-//             <Grid container spacing={2}>
-//               {/* Variation Info */}
-//               <Grid item xs={12} md={4}>
-//                 {/* <ImageUploader /> */}
-//                 <ProductOverview ImageUploader={<ImageUploader />} />
-//               </Grid>
-//               {/* Editable Fields */}
-//               <Grid item xs={12} md={8}>
-//                 <Grid container spacing={2}>
-//                   <Grid item xs={12} sm={6} md={4}>
-//                     <Controller
-//                       name={`variants.${index}.buyingPrice`}
-//                       control={control}
-//                       render={({ field }) => (
-//                         <TextField {...field} size='small' type='number' label='Buying Price' fullWidth />
-//                       )}
-//                     />
-//                   </Grid>
-
-//                   <Grid item xs={12} sm={6} md={4}>
-//                     <Controller
-//                       name={`variants.${index}.sellingPrice`}
-//                       control={control}
-//                       render={({ field }) => (
-//                         <TextField {...field} size='small' type='number' label='Selling Price' fullWidth />
-//                       )}
-//                     />
-//                   </Grid>
-
-//                   <Grid item xs={12} sm={6} md={4}>
-//                     <Controller
-//                       name={`variants.${index}.discountPrice`}
-//                       control={control}
-//                       render={({ field }) => (
-//                         <TextField {...field} size='small' type='number' label='Discount Price' fullWidth />
-//                       )}
-//                     />
-//                   </Grid>
-
-//                   <Grid item xs={12} sm={6} md={4}>
-//                     <Controller
-//                       name={`variants.${index}.quantity`}
-//                       control={control}
-//                       render={({ field }) => (
-//                         <TextField {...field} size='small' type='number' label='Quantity' fullWidth />
-//                       )}
-//                     />
-//                   </Grid>
-
-//                   <Grid item xs={12} sm={6} md={4}>
-//                     <Controller
-//                       name={`variants.${index}.alertQuantity`}
-//                       control={control}
-//                       render={({ field }) => (
-//                         <TextField {...field} size='small' type='number' label='Alert Qty' fullWidth />
-//                       )}
-//                     />
-//                   </Grid>
-
-//                   <Grid item xs={12} sm={6} md={4}>
-//                     <Controller
-//                       name={`variants.${index}.weight`}
-//                       control={control}
-//                       render={({ field }) => <TextField {...field} size='small' label='Weight' fullWidth />}
-//                     />
-//                   </Grid>
-
-//                   <Grid item xs={12} sm={6} md={4}>
-//                     <Controller
-//                       name={`variants.${index}.gtin`}
-//                       control={control}
-//                       render={({ field }) => <TextField {...field} size='small' label='GTIN' fullWidth />}
-//                     />
-//                   </Grid>
-//                 </Grid>
-//               </Grid>
-//             </Grid>
-//           </Grid>
-//         ))}
-//       </Grid>
-//     </Card>
-//   )
-// }
-
-// export default VariantForm
-
 import React from 'react'
-import { Card, Grid, TextField, Divider, Box } from '@mui/material'
-import { Controller, useFieldArray, Control } from 'react-hook-form'
+import { Card, Grid, TextField, Box, Typography, Stack, InputAdornment, alpha } from '@mui/material'
+import { Controller, useFieldArray, Control, UseFormWatch } from 'react-hook-form'
 import ProductOverview from './ProductOverview'
 import ImageUploader from './ImageUploader'
 import type { ProductFormData } from 'src/pages/products/create-product'
 
 interface VariantFormProps {
   control: Control<ProductFormData>
+  watch: UseFormWatch<ProductFormData>
 }
 
-const VariantForm = ({ control }: VariantFormProps) => {
+const VariantForm = ({ control, watch }: VariantFormProps) => {
   const { fields } = useFieldArray({
     control,
     name: 'variants'
@@ -149,141 +18,227 @@ const VariantForm = ({ control }: VariantFormProps) => {
 
   if (!fields.length) return null
 
+  console.clear()
+  console.log(fields)
+
   return (
-    <Grid container spacing={2}>
+    <Stack spacing={3}>
       {fields.map((field, index) => (
-        <Card sx={{ p: 3, mx: 'auto', maxWidth: 1200, mb: 2 }}>
-          <Grid item xs={12} key={field.id} sx={{ mb: 4 }}>
+        <Card
+          key={field.id}
+          elevation={0}
+          sx={{
+            border: '1px solid',
+            borderColor: 'divider',
+            borderRadius: 2,
+            overflow: 'hidden',
+            transition: 'all 0.2s ease-in-out',
+            '&:hover': {
+              borderColor: 'primary.main',
+              boxShadow: theme => `0 0 0 1px ${alpha(theme.palette.primary.main, 0.1)}`
+            }
+          }}
+        >
+          <Grid container>
+            {/* Left Section - Product Preview */}
             <Grid
-              container
-              spacing={0}
-              alignItems='stretch'
+              item
+              xs={12}
+              md={4}
               sx={{
-                borderRadius: 2,
-                overflow: 'hidden'
+                bgcolor: theme => alpha(theme.palette.primary.main, 0.02),
+                p: 3,
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'center',
+                borderRight: theme => ({ md: `1px dashed ${theme.palette.divider}` }),
+                borderBottom: { xs: '1px solid', md: 'none' },
+                borderColor: 'divider'
               }}
             >
-              {/* Left: Product Overview */}
-              <Grid
-                item
-                xs={12}
-                md={4}
-                sx={{
-                  p: 2,
-                  display: 'flex',
-                  flexDirection: 'column',
-                  justifyContent: 'center'
-                }}
-              >
-                <ProductOverview ImageUploader={<ImageUploader />} />
-              </Grid>
+              <ProductOverview ImageUploader={<ImageUploader />} watch={watch} />
+            </Grid>
 
-              {/* Vertical Divider */}
-              <Grid
-                item
-                xs={12}
-                md='auto'
-                sx={{
-                  display: { xs: 'none', md: 'flex' },
-                  alignItems: 'stretch'
-                }}
-              >
-                <Divider
-                  orientation='vertical'
-                  flexItem
-                  sx={{
-                    width: '1px',
-                    // backgroundColor: '#e0e0e0',
-                    mx: 1
-                  }}
-                />
-              </Grid>
+            {/* Right Section - Form Fields */}
+            <Grid item xs={12} md={8}>
+              <Box sx={{ p: 3 }}>
+                {/* Pricing Section */}
+                <Box sx={{ mb: 3 }}>
+                  <Typography
+                    variant='overline'
+                    sx={{
+                      color: 'text.secondary',
+                      fontWeight: 600,
+                      letterSpacing: 1,
+                      mb: 2,
+                      display: 'block'
+                    }}
+                  >
+                    Pricing
+                  </Typography>
+                  <Grid container spacing={2}>
+                    <Grid item xs={12} sm={4}>
+                      <Controller
+                        name={`variants.${index}.buyingPrice`}
+                        control={control}
+                        render={({ field }) => (
+                          <TextField
+                            {...field}
+                            size='small'
+                            type='number'
+                            label='Buying Price'
+                            fullWidth
+                            InputProps={{
+                              startAdornment: <InputAdornment position='start'>$</InputAdornment>
+                            }}
+                          />
+                        )}
+                      />
+                    </Grid>
 
-              {/* Right: Form Fields */}
-              <Grid
-                item
-                xs={12}
-                md
-                sx={{
-                  p: 3,
-                  display: 'flex',
-                  flexDirection: 'column',
-                  justifyContent: 'center'
-                }}
-              >
-                <Grid container spacing={2}>
-                  <Grid item xs={12} sm={6} md={4}>
-                    <Controller
-                      name={`variants.${index}.buyingPrice`}
-                      control={control}
-                      render={({ field }) => (
-                        <TextField {...field} size='small' type='number' label='Buying Price' fullWidth />
-                      )}
-                    />
+                    <Grid item xs={12} sm={4}>
+                      <Controller
+                        name={`variants.${index}.sellingPrice`}
+                        control={control}
+                        render={({ field }) => (
+                          <TextField
+                            {...field}
+                            size='small'
+                            type='number'
+                            label='Selling Price'
+                            fullWidth
+                            InputProps={{
+                              startAdornment: <InputAdornment position='start'>$</InputAdornment>
+                            }}
+                          />
+                        )}
+                      />
+                    </Grid>
+
+                    <Grid item xs={12} sm={4}>
+                      <Controller
+                        name={`variants.${index}.discountPrice`}
+                        control={control}
+                        render={({ field }) => (
+                          <TextField
+                            {...field}
+                            size='small'
+                            type='number'
+                            label='Discount Price'
+                            fullWidth
+                            InputProps={{
+                              startAdornment: <InputAdornment position='start'>$</InputAdornment>
+                            }}
+                          />
+                        )}
+                      />
+                    </Grid>
                   </Grid>
+                </Box>
 
-                  <Grid item xs={12} sm={6} md={4}>
-                    <Controller
-                      name={`variants.${index}.sellingPrice`}
-                      control={control}
-                      render={({ field }) => (
-                        <TextField {...field} size='small' type='number' label='Selling Price' fullWidth />
-                      )}
-                    />
-                  </Grid>
+                {/* Inventory Section */}
+                <Box sx={{ mb: 3 }}>
+                  <Typography
+                    variant='overline'
+                    sx={{
+                      color: 'text.secondary',
+                      fontWeight: 600,
+                      letterSpacing: 1,
+                      mb: 2,
+                      display: 'block'
+                    }}
+                  >
+                    Inventory
+                  </Typography>
+                  <Grid container spacing={2}>
+                    <Grid item xs={12} sm={6}>
+                      <Controller
+                        name={`variants.${index}.quantity`}
+                        control={control}
+                        render={({ field }) => (
+                          <TextField
+                            {...field}
+                            size='small'
+                            type='number'
+                            label='Available Quantity'
+                            fullWidth
+                            InputProps={{
+                              endAdornment: <InputAdornment position='end'>units</InputAdornment>
+                            }}
+                          />
+                        )}
+                      />
+                    </Grid>
 
-                  <Grid item xs={12} sm={6} md={4}>
-                    <Controller
-                      name={`variants.${index}.discountPrice`}
-                      control={control}
-                      render={({ field }) => (
-                        <TextField {...field} size='small' type='number' label='Discount Price' fullWidth />
-                      )}
-                    />
+                    <Grid item xs={12} sm={6}>
+                      <Controller
+                        name={`variants.${index}.alertQuantity`}
+                        control={control}
+                        render={({ field }) => (
+                          <TextField
+                            {...field}
+                            size='small'
+                            type='number'
+                            label='Low Stock Alert'
+                            fullWidth
+                            InputProps={{
+                              endAdornment: <InputAdornment position='end'>units</InputAdornment>
+                            }}
+                          />
+                        )}
+                      />
+                    </Grid>
                   </Grid>
+                </Box>
 
-                  <Grid item xs={12} sm={6} md={4}>
-                    <Controller
-                      name={`variants.${index}.quantity`}
-                      control={control}
-                      render={({ field }) => (
-                        <TextField {...field} size='small' type='number' label='Quantity' fullWidth />
-                      )}
-                    />
-                  </Grid>
+                {/* Product Details Section */}
+                <Box>
+                  <Typography
+                    variant='overline'
+                    sx={{
+                      color: 'text.secondary',
+                      fontWeight: 600,
+                      letterSpacing: 1,
+                      mb: 2,
+                      display: 'block'
+                    }}
+                  >
+                    Product Details
+                  </Typography>
+                  <Grid container spacing={2}>
+                    <Grid item xs={12} sm={6}>
+                      <Controller
+                        name={`variants.${index}.weight`}
+                        control={control}
+                        render={({ field }) => (
+                          <TextField {...field} size='small' label='Weight' fullWidth placeholder='e.g., 0.5 kg' />
+                        )}
+                      />
+                    </Grid>
 
-                  <Grid item xs={12} sm={6} md={4}>
-                    <Controller
-                      name={`variants.${index}.alertQuantity`}
-                      control={control}
-                      render={({ field }) => (
-                        <TextField {...field} size='small' type='number' label='Alert Qty' fullWidth />
-                      )}
-                    />
+                    <Grid item xs={12} sm={6}>
+                      <Controller
+                        name={`variants.${index}.gtin`}
+                        control={control}
+                        render={({ field }) => (
+                          <TextField
+                            {...field}
+                            size='small'
+                            label='GTIN / Barcode'
+                            fullWidth
+                            placeholder='Global Trade Item Number'
+                          />
+                        )}
+                      />
+                    </Grid>
                   </Grid>
-
-                  <Grid item xs={12} sm={6} md={4}>
-                    <Controller
-                      name={`variants.${index}.weight`}
-                      control={control}
-                      render={({ field }) => <TextField {...field} size='small' label='Weight' fullWidth />}
-                    />
-                  </Grid>
-
-                  <Grid item xs={12} sm={6} md={4}>
-                    <Controller
-                      name={`variants.${index}.gtin`}
-                      control={control}
-                      render={({ field }) => <TextField {...field} size='small' label='GTIN' fullWidth />}
-                    />
-                  </Grid>
-                </Grid>
-              </Grid>
+                </Box>
+              </Box>
             </Grid>
           </Grid>
         </Card>
       ))}
-    </Grid>
+    </Stack>
   )
 }
 

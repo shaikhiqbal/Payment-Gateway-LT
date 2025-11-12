@@ -13,6 +13,7 @@ import permissions from 'src/store/apps/permissions'
 import pos from 'src/store/pages/pos'
 import payment from 'src/store/pages/pos/paymentSlice'
 import cartSlice from 'src/store/pages/pos/cartSlice'
+import categories from 'src/store/pages/categories'
 
 export const store = configureStore({
   reducer: {
@@ -24,7 +25,8 @@ export const store = configureStore({
     permissions,
     pos,
     cartSlice,
-    payment
+    payment,
+    categories
   },
   middleware: getDefaultMiddleware =>
     getDefaultMiddleware({

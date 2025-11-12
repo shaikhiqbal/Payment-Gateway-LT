@@ -16,6 +16,8 @@ import Grid, { GridProps } from '@mui/material/Grid'
 
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
+import { ProductFormData } from './ProductInformation'
+import { UseFormWatch } from 'react-hook-form'
 
 // Styled Grid component
 const StyledGrid = styled(Grid)<GridProps>(({ theme }) => ({
@@ -31,10 +33,11 @@ const StyledGrid = styled(Grid)<GridProps>(({ theme }) => ({
 }))
 
 interface ProductOverviewProps {
-  ImageUploader: React.ReactNode // 👈 JSX element type
+  ImageUploader: React.ReactNode
+  watch: UseFormWatch<ProductFormData>
 }
 
-const ProductOverview: React.FC<ProductOverviewProps> = ({ ImageUploader }) => {
+const ProductOverview: React.FC<ProductOverviewProps> = ({ ImageUploader, watch }) => {
   // ** State
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
 
@@ -52,15 +55,16 @@ const ProductOverview: React.FC<ProductOverviewProps> = ({ ImageUploader }) => {
       <CardContent sx={{ display: 'flex', justifyContent: 'center' }}>{ImageUploader}</CardContent>
       <CardContent>
         <Typography variant='h6' sx={{ mb: 2 }}>
-          Apple iPhone 11 Pro
+          {watch('productName') || 'Apple iPhone 11 Pro'}
         </Typography>
         <Typography variant='body2' sx={{ mb: 3.5 }}>
-          Apple iPhone 11 Pro smartphone. Announced Sep 2019. Features 5.8″ display Apple A13 Bionic
+          {watch('description') ||
+            'Apple iPhone 11 Pro smartphone. Announced Sep 2019. Features 5.8″ display Apple A13 Bionic'}
         </Typography>
         <Typography sx={{ fontWeight: 500, mb: 3 }}>
           Price:{' '}
           <Box component='span' sx={{ fontWeight: 'bold' }}>
-            $899
+            {/* {watch('productPrice') || '$899'} */}
           </Box>
         </Typography>
       </CardContent>
@@ -69,11 +73,3 @@ const ProductOverview: React.FC<ProductOverviewProps> = ({ ImageUploader }) => {
 }
 
 export default ProductOverview
-
-/*
- <StyledGrid item md={5} xs={12}>
-          <CardContent sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <img width={137} height={176} alt='Apple iPhone 11 Pro' src='/images/cards/iPhone-11-pro.png' />
-          </CardContent>
-        </StyledGrid>
-*/

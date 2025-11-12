@@ -109,15 +109,15 @@ const AddColorButton = styled(Button)(({ theme }) => ({
 }))
 
 // ** Types
-interface ColorItem {
+interface ColorItemShape {
   label: string
   value: string
 }
 
 interface ColorPickerProps<T extends FieldValues = any> {
   label?: string
-  value?: ColorItem[]
-  onChange?: (colors: ColorItem[]) => void
+  value?: ColorItemShape[]
+  onChange?: (colors: ColorItemShape[]) => void
   error?: boolean
   helperText?: string
   required?: boolean
@@ -185,7 +185,7 @@ const ColorPicker: React.FC<ColorPickerProps> = ({
   setValue,
   fieldName
 }) => {
-  const [selectedColors, setSelectedColors] = useState<ColorItem[]>(value)
+  const [selectedColors, setSelectedColors] = useState<ColorItemShape[]>(value)
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
   const [pickerColor, setPickerColor] = useState('#6366f1')
 
@@ -196,7 +196,7 @@ const ColorPicker: React.FC<ColorPickerProps> = ({
   // }, [value])
 
   const handleColorsChange = useCallback(
-    (colors: ColorItem[]) => {
+    (colors: ColorItemShape[]) => {
       onChange?.(colors)
     },
     [onChange]
@@ -331,4 +331,4 @@ const ColorPicker: React.FC<ColorPickerProps> = ({
 }
 
 export default ColorPicker
-export type { ColorItem, ColorPickerProps }
+export type { ColorItemShape, ColorPickerProps }
