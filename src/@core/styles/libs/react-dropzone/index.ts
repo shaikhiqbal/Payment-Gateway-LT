@@ -216,5 +216,69 @@ const ProductDropzoneWrapper = styled(Box)<BoxProps>(({ theme }) => ({
   }
 }))
 
-export { ProductDropzoneWrapper }
+const ProductUploadedImageWrapper = styled(Box)<BoxProps>(({ theme }) => ({
+  '& .uploaded-image': {
+    position: 'relative',
+    overflow: 'hidden',
+    width: 200,
+    height: 200,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: theme.shape.borderRadius,
+    cursor: 'pointer',
+    transition: 'all 0.3s ease',
+
+    // ✅ Theme-based border
+    border: `2px dashed ${
+      theme.palette.mode === 'light'
+        ? 'rgba(93, 89, 98, 0.2)' // subtle gray for light
+        : 'rgba(247, 244, 254, 0.2)' // soft tone for dark
+    }`,
+
+    // ✅ Image Styling
+    '& img': {
+      width: '100%',
+      height: '100%',
+      objectFit: 'cover',
+      borderRadius: theme.shape.borderRadius,
+      transition: 'all 0.4s ease'
+    },
+
+    // ✅ Glass hover overlay (frosted effect)
+    '&::after': {
+      content: '""',
+      position: 'absolute',
+      inset: 0,
+      borderRadius: theme.shape.borderRadius,
+      background:
+        theme.palette.mode === 'light'
+          ? 'rgba(255, 255, 255, 0)' // transparent base (light)
+          : 'rgba(0, 0, 0, 0)', // transparent base (dark)
+      backdropFilter: 'none',
+      transition: 'all 0.4s ease'
+    },
+
+    // ✅ Hover effects (glass + zoom)
+    '&:hover::after': {
+      background:
+        theme.palette.mode === 'light'
+          ? 'rgba(255, 255, 255, 0.2)' // frosted overlay in light
+          : 'rgba(0, 0, 0, 0.25)', // frosted overlay in dark
+      backdropFilter: 'blur(6px)'
+    },
+
+    '&:hover img': {
+      transform: 'scale(1.05)' // zoom effect
+    },
+
+    // ✅ Focus accessibility
+    '&:focus': {
+      outline: 'none',
+      boxShadow: `0 0 0 3px ${theme.palette.mode === 'light' ? 'rgba(93, 89, 98, 0.2)' : 'rgba(247, 244, 254, 0.2)'}`
+    }
+  }
+}))
+
+export { ProductDropzoneWrapper, ProductUploadedImageWrapper }
 export default DropzoneWrapper

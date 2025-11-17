@@ -104,21 +104,31 @@ const navigation = (): VerticalNavItemsType => {
     {
       title: 'Invoice',
       icon: 'tabler:file-dollar',
+      action: 'read',
+      subject: 'user-management',
       children: [
         {
-          title: 'List',
+          title: 'Invoice',
           path: '/apps/invoice/list'
         },
         {
-          title: 'Preview',
+          title: 'Create Invoice',
           path: '/apps/invoice/preview'
         },
         {
-          title: 'Edit',
+          title: 'Invoice Details',
           path: '/apps/invoice/edit'
         },
         {
-          title: 'Add',
+          title: 'Invoice Templates',
+          path: '/apps/invoice/add'
+        },
+        {
+          title: 'Recuirring Invoice',
+          path: '/apps/invoice/add'
+        },
+        {
+          title: 'Invoice Settings',
           path: '/apps/invoice/add'
         }
       ]

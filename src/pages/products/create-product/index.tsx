@@ -30,8 +30,8 @@ export interface Variant {
   alertQuantity: number
   weight: string
   gtin: string
-  variantName: {
-    [K in 'Color' | 'Size' | 'Style']?: VariantNameType<K>
+  variantNames: {
+    [key: string]: string
   }
 }
 
@@ -89,7 +89,7 @@ const CreateProduct = () => {
             <VariantForm control={control} watch={watch} />
           </Grid>
           <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'flex-end', gap: 2 }}>
-            <Button type='button' variant='contained' sx={{ mr: 1 }}>
+            <Button type='submit' variant='contained' sx={{ mr: 1 }}>
               Create
             </Button>
 

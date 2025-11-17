@@ -39,18 +39,20 @@ const fakeDb: Category[] = [
       {
         name: 'Color',
         values: [
-          { label: 'Dark Blue', value: '#050ADA' },
-          { label: 'Monza', value: '#CD0314' }
-        ]
-      },
-      {
-        name: 'Size',
-        values: [
-          { label: 'S', value: 's' },
-          { label: 'XL', value: 'xl' },
-          { label: 'XXL', value: 'xxl' }
+          { label: 'Dark Blue', value: '#050ADA' }
+
+          // { label: 'Monza', value: '#CD0314' }
         ]
       }
+
+      // {
+      //   name: 'Size',
+      //   values: [
+      //     { label: 'S', value: 's' },
+      //     { label: 'XL', value: 'xl' },
+      //     { label: 'XXL', value: 'xxl' }
+      //   ]
+      // }
     ]
   },
   {

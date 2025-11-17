@@ -12,10 +12,116 @@ interface AuthGuardProps {
   fallback: ReactElement | null
 }
 
+const fakeUser = {
+  accessToken:
+    'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJrYXJkaWxlb21rYXI3MjYyQGdtYWlsLmNvbSIsImlhdCI6MTc2MDU0MTgyMSwiZXhwIjoxNzYwNTQ3ODIxfQ.4KZFqOl7ZApkwcMj281T3BaMdmL9dCs7NvnHSUkz8aI',
+  refreshToken:
+    'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJrYXJkaWxlb21rYXI3MjYyQGdtYWlsLmNvbSIsImlhdCI6MTc2MDU0MTgyMSwiZXhwIjoxNzY1NzI1ODIxfQ.yfo9M9bqrDxxGnpX3g779d4unuVzRJbWx2jEjGHA_EY',
+  user: {
+    firstName: 'Gaurav',
+    lastName: 'Nerkar',
+    mobileNum: '9359583345',
+    isSubUser: false,
+    permissions: [
+      {
+        moduleName: 'user management',
+        action: 'CREATE'
+      },
+      {
+        moduleName: 'user management',
+        action: 'UPDATE'
+      },
+      {
+        moduleName: 'user management',
+        action: 'VIEW'
+      },
+      {
+        moduleName: 'user management',
+        action: 'DELETE'
+      },
+      {
+        moduleName: 'virtual terminal',
+        action: 'CREATE'
+      },
+      {
+        moduleName: 'virtual terminal',
+        action: 'UPDATE'
+      },
+      {
+        moduleName: 'virtual terminal',
+        action: 'VIEW'
+      },
+      {
+        moduleName: 'virtual terminal',
+        action: 'DELETE'
+      },
+      {
+        moduleName: 'dashboard',
+        action: 'CREATE'
+      },
+      {
+        moduleName: 'dashboard',
+        action: 'UPDATE'
+      },
+      {
+        moduleName: 'dashboard',
+        action: 'VIEW'
+      },
+      {
+        moduleName: 'dashboard',
+        action: 'DELETE'
+      },
+      {
+        moduleName: 'permissions',
+        action: 'CREATE'
+      },
+      {
+        moduleName: 'permissions',
+        action: 'UPDATE'
+      },
+      {
+        moduleName: 'permissions',
+        action: 'VIEW'
+      },
+      {
+        moduleName: 'permissions',
+        action: 'DELETE'
+      },
+      {
+        moduleName: 'vendor',
+        action: 'CREATE'
+      },
+      {
+        moduleName: 'vendor',
+        action: 'UPDATE'
+      },
+      {
+        moduleName: 'vendor',
+        action: 'VIEW'
+      },
+      {
+        moduleName: 'vendor',
+        action: 'DELETE'
+      },
+      {
+        moduleName: 'manager',
+        action: 'CREATE'
+      },
+      {
+        moduleName: 'manager',
+        action: 'update'
+      }
+    ],
+    emailId: 'kardileomkar7262@gmail.com'
+  }
+}
+
 const AuthGuard = (props: AuthGuardProps) => {
   const { children, fallback } = props
   const auth = useAuth()
   const router = useRouter()
+
+  console.log(auth)
 
   useEffect(() => {
     if (!router.isReady) {

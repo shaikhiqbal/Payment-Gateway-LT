@@ -75,8 +75,6 @@ const ProductForm: React.FC<ProductFormProps> = ({ control, setValue, errors, wa
   // ** Redux States
   const categories = useSelector((state: RootState) => state.categories.categories)
 
-  console.log({ categories })
-
   // ** SKU & Item Code Generators
   const generateSKU = (): void => {
     const randomSKU = 'SKU-' + Math.random().toString(36).substr(2, 9).toUpperCase()
@@ -113,7 +111,10 @@ const ProductForm: React.FC<ProductFormProps> = ({ control, setValue, errors, wa
     if (!categoryValue) return
     const findedCategory = categories.find(cat => cat.slug === categoryValue)
     if (findedCategory) {
-      setValue('variants', generateCombinations(findedCategory.variations))
+      setValue(
+        'variants',
+        generateCombinations(findedCategory.variations).map(variantNames => ({ variantNames }))
+      )
     }
   }, [categoryValue, categories, setValue])
 

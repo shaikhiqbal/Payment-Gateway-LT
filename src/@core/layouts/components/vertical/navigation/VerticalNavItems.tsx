@@ -33,6 +33,7 @@ const VerticalNavItems = (props: Props) => {
   const { verticalNavItems } = props
 
   const RenderMenuItems = verticalNavItems?.map((item: NavGroup | NavLink | NavSectionTitle, index: number) => {
+    debugger
     const TagName: any = resolveNavItemComponent(item)
 
     return <TagName {...props} key={index} item={item} />

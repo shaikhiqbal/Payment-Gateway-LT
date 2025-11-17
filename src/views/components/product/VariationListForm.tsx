@@ -56,7 +56,7 @@ const VariantForm = ({ control, watch }: VariantFormProps) => {
                 borderColor: 'divider'
               }}
             >
-              <ProductOverview ImageUploader={<ImageUploader />} watch={watch} />
+              <ProductOverview ImageUploader={<ImageUploader />} watch={watch} variants={field.variantNames} />
             </Grid>
 
             {/* Right Section - Form Fields */}
