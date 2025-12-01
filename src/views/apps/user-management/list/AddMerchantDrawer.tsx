@@ -138,7 +138,6 @@ const AddMerchantDrawer = (props: SidebarAddUserType) => {
 
   const onSubmit = async (data: MerchantType) => {
     try {
-      debugger
       if (data.password && typeof data.password == 'string') data.password = encryptData(data.password)
       data.countryCode = data.countryCode.includes('+') ? data.countryCode : `+${data.countryCode}`
       if (data.uid) {

@@ -103,33 +103,45 @@ const navigation = (): VerticalNavItemsType => {
     },
     {
       title: 'Invoice',
-      icon: 'tabler:file-dollar',
+      icon: 'teenyicons:invoice-outline',
       action: 'read',
       subject: 'user-management',
       children: [
         {
           title: 'Invoice',
-          path: '/apps/invoice/list'
+          path: '/apps/invoice/list',
+          action: 'read',
+          subject: 'user-management'
         },
         {
           title: 'Create Invoice',
-          path: '/apps/invoice/preview'
+          path: '/apps/invoice/add',
+          action: 'read',
+          subject: 'user-management'
         },
         {
           title: 'Invoice Details',
-          path: '/apps/invoice/edit'
+          path: '/apps/invoice/edit',
+          action: 'read',
+          subject: 'user-management'
         },
         {
           title: 'Invoice Templates',
-          path: '/apps/invoice/add'
+          path: '/apps/invoice/template',
+          action: 'read',
+          subject: 'user-management'
         },
         {
           title: 'Recuirring Invoice',
-          path: '/apps/invoice/add'
+          path: '/apps/invoice/recuirring',
+          action: 'read',
+          subject: 'user-management'
         },
         {
           title: 'Invoice Settings',
-          path: '/apps/invoice/add'
+          path: '/apps/invoice/settings',
+          action: 'read',
+          subject: 'user-management'
         }
       ]
     },

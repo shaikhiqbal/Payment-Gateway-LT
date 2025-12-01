@@ -1,71 +1,181 @@
-// ** React Imports
-import { useState } from 'react'
-
-// ** Next Imports
-import { GetStaticProps, InferGetStaticPropsType } from 'next/types'
-
 // ** MUI Imports
-import Grid from '@mui/material/Grid'
+import { Box, BoxProps, Button, Card, CardContent, Divider, Grid, styled, Typography } from '@mui/material'
+import Link from 'next/link'
+
+// ** React Hook Form Imports
+import { FormProvider, useForm } from 'react-hook-form'
+
+// ** Custome Component Imports
+import Icon from 'src/@core/components/icon'
+import BilingToFrom from 'src/views/apps/invoice/add/BilingToFrom'
+import BilinigDetails from 'src/views/apps/invoice/add/BilinigDetails'
+import ExtraInformation from 'src/views/apps/invoice/add/ExtraInformation'
+import InvoiceHeaderSection from 'src/views/apps/invoice/add/InvoiceHeaderSection'
+import ItemsDetails from 'src/views/apps/invoice/add/ItemsDetails'
 
 // ** Types
-import { InvoiceClientType } from 'src/types/apps/invoiceTypes'
+export interface InvoiceItem {
+  productServices: string
+  quantity: number | string
+  unit: string
+  rate: number | string
+  discount: number | string
+  tax: number | string
+  amount: number | string
+}
 
-// ** Demo Components Imports
-import AddCard from 'src/views/apps/invoice/add/AddCard'
-import AddActions from 'src/views/apps/invoice/add/AddActions'
-import AddNewCustomers from 'src/views/apps/invoice/add/AddNewCustomer'
+export interface InvoiceFormType {
+  // Header Section
+  status: string
+  currency: string
+  invoiceNumber: string
+  referenceNumber: string
+  date: Date | null
 
-// ** Styled Component
-import DatePickerWrapper from 'src/@core/styles/libs/react-datepicker'
+  // Billing To/From
+  billedBy: string
+  customerName: string
 
-const InvoiceAdd = ({ apiClientData, invoiceNumber }: InferGetStaticPropsType<typeof getStaticProps>) => {
-  // ** State
-  const [addCustomerOpen, setAddCustomerOpen] = useState<boolean>(false)
-  const [selectedClient, setSelectedClient] = useState<InvoiceClientType | null>(null)
-  const [clients, setClients] = useState<InvoiceClientType[] | undefined>(apiClientData)
+  // Item Section
+  itemType: 'Product' | 'Service'
+  productServices: string
+  items: InvoiceItem[]
 
-  const toggleAddCustomerDrawer = () => setAddCustomerOpen(!addCustomerOpen)
+  // Extra Information
+  notes: string
+  termsCondition: string
+  bankDetails: string
+
+  // Billing Details
+  discount: string
+  roundOff: boolean
+  person: string
+  signatureName: string
+  signatureFile: File | null // upload signature
+}
+
+const InvoiceAdd = () => {
+  const method = useForm<InvoiceFormType>({
+    defaultValues: {
+      // Header
+      status: 'Draft',
+      currency: 'USD',
+      invoiceNumber: '',
+      referenceNumber: '',
+      date: new Date(),
+
+      // Billing To/From
+      billedBy: '',
+      customerName: '',
+
+      // Items Section
+      itemType: 'Product',
+      productServices: '',
+      items: [
+        {
+          productServices: '',
+          quantity: '',
+          unit: '',
+          rate: '',
+          discount: '',
+          tax: '',
+          amount: ''
+        }
+      ],
+
+      // Extra Information
+      notes: '',
+      termsCondition: '',
+      bankDetails: '',
+
+      // Billing Details
+      discount: '',
+      roundOff: false,
+      person: '',
+      signatureName: '',
+      signatureFile: null
+    }
+  })
+
+  const { handleSubmit } = method
+  const onSubmit = (data: InvoiceFormType) => {
+    console.log(data)
+  }
 
   return (
-    <DatePickerWrapper sx={{ '& .react-datepicker-wrapper': { width: 'auto' } }}>
-      <Grid container spacing={6}>
-        <Grid item xl={9} md={8} xs={12}>
-          <AddCard
-            clients={clients}
-            invoiceNumber={invoiceNumber}
-            selectedClient={selectedClient}
-            setSelectedClient={setSelectedClient}
-            toggleAddCustomerDrawer={toggleAddCustomerDrawer}
-          />
-        </Grid>
-        <Grid item xl={3} md={4} xs={12}>
-          <AddActions />
-        </Grid>
-      </Grid>
-      <AddNewCustomers
-        clients={clients}
-        open={addCustomerOpen}
-        setClients={setClients}
-        toggle={toggleAddCustomerDrawer}
-        setSelectedClient={setSelectedClient}
-      />
-    </DatePickerWrapper>
+    <>
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <Typography variant='h6' sx={{ mb: 4, fontWeight: 'bold' }}>
+          Invoice
+        </Typography>
+        <Link href={'/apps/invoice/preview/12345'}>
+          <Button
+            variant='outlined'
+            color='secondary'
+            size='small'
+            sx={theme => ({
+              mr: 2,
+              m: 0,
+              color: theme.palette.mode === 'dark' ? theme.palette.grey[200] : '#101010',
+              borderColor: theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.12)' : 'rgba(16,16,16,0.12)',
+              backgroundColor: 'transparent',
+              '&:hover': {
+                borderColor: theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.24)' : 'rgba(16,16,16,0.24)',
+                backgroundColor: theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.04)' : 'rgba(16,16,16,0.04)'
+              }
+            })}
+          >
+            <Icon icon='tabler:eye' style={{ marginRight: '4px', fontSize: '16px', color: 'inherit' }} />
+            Preview
+          </Button>
+        </Link>
+      </Box>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <Card className='invoice-details'>
+          <FormProvider {...method}>
+            <CardContent>
+              <InvoiceHeaderSection />
+            </CardContent>
+
+            <Divider />
+
+            <CardContent>
+              <Grid container spacing={6}>
+                <BilingToFrom title='Billed To:' name='billedBy' />
+                <BilingToFrom title='Billed From:' name='customerName' />
+              </Grid>
+            </CardContent>
+
+            <Divider />
+
+            <CardContent>
+              <ItemsDetails />
+            </CardContent>
+
+            <Divider />
+            <CardContent>
+              <Grid container spacing={6}>
+                <Grid item xs={12} sm={7}>
+                  <ExtraInformation />
+                </Grid>
+                <Grid item xs={12} sm={5}>
+                  <BilinigDetails />
+                </Grid>
+              </Grid>
+            </CardContent>
+          </FormProvider>
+        </Card>
+        <Button variant='contained' color='primary' sx={{ mt: 4 }} type='submit'>
+          Save
+        </Button>
+      </form>
+    </>
   )
 }
 
-export const getStaticProps: GetStaticProps = async () => {
-  // const clientResponse = await axios.get('/apps/invoice/clients')
-  // const apiClientData: InvoiceClientType = clientResponse.data
-
-  // const allInvoicesResponse = await axios.get('/apps/invoice/invoices', { params: { q: '', status: '' } })
-  // const lastInvoiceNumber = Math.max(...allInvoicesResponse.data.allData.map((i: InvoiceType) => i.id))
-
-  return {
-    props: {
-      apiClientData: null,
-      invoiceNumber: 1
-    }
-  }
+InvoiceAdd.acl = {
+  action: 'read',
+  subject: 'user-management'
 }
 
 export default InvoiceAdd
