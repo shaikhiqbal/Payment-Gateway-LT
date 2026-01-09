@@ -31,6 +31,25 @@ const navigation = (): VerticalNavItemsType => {
       subject: 'user-management'
     },
     {
+      sectionTitle: 'Money',
+      action: 'read',
+      subject: 'permission'
+    },
+    {
+      title: 'Add Money',
+      icon: 'hugeicons:money-add-01',
+      path: '/add-money',
+      action: 'read',
+      subject: 'user-management'
+    },
+    {
+      title: 'Send Money',
+      icon: 'hugeicons:money-send-02',
+      path: '/send-money',
+      action: 'read',
+      subject: 'user-management'
+    },
+    {
       sectionTitle: 'Inventory',
       action: 'read',
       subject: 'permission'
@@ -62,6 +81,13 @@ const navigation = (): VerticalNavItemsType => {
       subject: 'virtual-terminal',
       icon: 'material-symbols-light:lab-profile-outline-rounded',
       title: 'Virtual Terminal'
+    },
+    {
+      path: '/pos',
+      action: 'read',
+      subject: 'virtual-terminal',
+      icon: 'mdi:printer-point-of-sale-outline',
+      title: 'POS'
     },
     {
       title: 'Dashboards',
