@@ -14,26 +14,26 @@ const StepIndicator = ({ currentStep, totalSteps, title }: StepIndicatorProps) =
 
   return (
     <Box sx={{ textAlign: 'center', mb: 2 }}>
-      <Typography 
-        variant="h5" 
-        sx={{ 
-          fontWeight: 600, 
+      <Typography
+        variant='h5'
+        sx={{
+          fontWeight: 600,
           mb: 1,
           color: 'text.primary'
         }}
       >
         {title}
       </Typography>
-      <Typography 
-        variant="body2" 
-        sx={{ 
+      {/* <Typography
+        variant='body2'
+        sx={{
           color: 'text.secondary',
           fontSize: '0.875rem'
         }}
       >
         Step {currentStep} of {totalSteps}
-      </Typography>
-      
+      </Typography> */}
+
       {/* Progress indicator */}
       <Box sx={{ mt: 2, display: 'flex', justifyContent: 'center' }}>
         <Box
@@ -46,7 +46,7 @@ const StepIndicator = ({ currentStep, totalSteps, title }: StepIndicatorProps) =
             overflow: 'hidden'
           }}
         >
-          <Box
+          {/* <Box
             sx={{
               width: `${(currentStep / totalSteps) * 100}%`,
               height: '100%',
@@ -54,7 +54,7 @@ const StepIndicator = ({ currentStep, totalSteps, title }: StepIndicatorProps) =
               borderRadius: 2,
               transition: 'width 0.3s ease'
             }}
-          />
+          /> */}
         </Box>
       </Box>
     </Box>

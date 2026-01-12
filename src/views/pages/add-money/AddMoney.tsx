@@ -9,10 +9,10 @@ import Typography from '@mui/material/Typography'
 import Button from '@mui/material/Button'
 import Switch from '@mui/material/Switch'
 import FormControlLabel from '@mui/material/FormControlLabel'
-import Select from '@mui/material/Select'
 import MenuItem from '@mui/material/MenuItem'
 import FormControl from '@mui/material/FormControl'
 import InputLabel from '@mui/material/InputLabel'
+import Select, { SelectChangeEvent } from '@mui/material/Select'
 
 // ** Motion Imports
 import { motion } from 'motion/react'
@@ -23,19 +23,19 @@ import { AmountSelector, PaymentMethodGrid, StepIndicator } from './components'
 // ** Types
 import { PaymentMethod, AddFundsFormData } from './types'
 
+// ** Payments Components
+// ** Add Money
+import ACH from 'src/views/pages/add-money/old/ACH'
+import EVoucherList from 'src/views/pages/add-money/old/QrCode'
+import Wire from 'src/views/pages/add-money/old/Wire'
+import QrCode from 'src/views/pages/add-money/old/QrCode'
+
+// ** Send Mopney
+
 const PRESET_AMOUNTS = [50, 100, 200]
 const CURRENCIES = ['EUR', 'USD', 'GBP']
 
-const PAYMENT_METHODS: PaymentMethod[] = [
-  { id: 'skrill', name: 'Skrill', description: 'Digital wallet' },
-  { id: 'neteller', name: 'Neteller', description: 'Digital wallet' },
-  { id: 'sofort', name: 'Sofort', description: 'Bank transfer' },
-  { id: 'trustly', name: 'Trustly', description: 'Bank transfer' },
-  { id: 'card', name: 'Credit/Debit Card', description: 'Visa, Mastercard' },
-  { id: 'bank', name: 'Bank Transfer', description: 'Direct transfer' }
-]
-
-const AddMoney = () => {
+const AddMoney = ({ PAYMENT_METHODS, title }: { PAYMENT_METHODS: PaymentMethod[]; title: string }) => {
   const [selectedAmount, setSelectedAmount] = useState<number | null>(null)
   const [customAmount, setCustomAmount] = useState('')
   const [selectedCurrency, setSelectedCurrency] = useState('EUR')
@@ -67,7 +67,7 @@ const AddMoney = () => {
       paymentMethod: selectedPaymentMethod,
       saveAsDefault
     }
-    
+
     // Mock handler - API integration can be added here
     console.log('Add Funds Form Data:', formData)
   }
@@ -82,19 +82,15 @@ const AddMoney = () => {
     >
       <Card>
         <CardContent sx={{ p: 6 }}>
-          <StepIndicator currentStep={2} totalSteps={4} title="Add Funds" />
-          
+          <StepIndicator currentStep={2} totalSteps={4} title={title} />
+
           <Box sx={{ mt: 6 }}>
             {/* Currency Selector */}
             <Box sx={{ mb: 4 }}>
-              <FormControl size="small" sx={{ minWidth: 120 }}>
+              <FormControl size='small' sx={{ minWidth: 120 }}>
                 <InputLabel>Currency</InputLabel>
-                <Select
-                  value={selectedCurrency}
-                  label="Currency"
-                  onChange={(e) => setSelectedCurrency(e.target.value)}
-                >
-                  {CURRENCIES.map((currency) => (
+                <Select value={selectedCurrency} label='Currency' onChange={e => setSelectedCurrency(e.target.value)}>
+                  {CURRENCIES.map(currency => (
                     <MenuItem key={currency} value={currency}>
                       {currency}
                     </MenuItem>
@@ -105,10 +101,10 @@ const AddMoney = () => {
 
             {/* Amount Selection */}
             <Box sx={{ mb: 6 }}>
-              <Typography variant="h6" sx={{ mb: 3, fontWeight: 600 }}>
+              <Typography variant='h6' sx={{ mb: 3, fontWeight: 600 }}>
                 Select Amount
               </Typography>
-              
+
               <AmountSelector
                 presetAmounts={PRESET_AMOUNTS}
                 selectedAmount={selectedAmount}
@@ -121,39 +117,64 @@ const AddMoney = () => {
 
             {/* Payment Methods */}
             <Box sx={{ mb: 6 }}>
-              <Typography variant="h6" sx={{ mb: 3, fontWeight: 600 }}>
-                Choose Payment Method
-              </Typography>
-              
-              <PaymentMethodGrid
-                paymentMethods={PAYMENT_METHODS}
-                selectedMethod={selectedPaymentMethod}
-                onMethodSelect={handlePaymentMethodSelect}
-              />
+              <FormControl fullWidth size='medium'>
+                <InputLabel id='payment-method-label'>Payment Method</InputLabel>
+
+                <Select
+                  labelId='payment-method-label'
+                  id='payment-method-select'
+                  value={selectedPaymentMethod ?? ''}
+                  label='Payment Method'
+                  onChange={(e: SelectChangeEvent) => setSelectedPaymentMethod(e.target.value)}
+                  sx={{
+                    width: 300,
+                    height: 56,
+                    borderRadius: '14px',
+                    '& .MuiSelect-select': {
+                      display: 'flex',
+                      alignItems: 'center',
+                      paddingLeft: '14px'
+                    }
+                  }}
+                >
+                  <MenuItem value=''>
+                    <em>Select payment method</em>
+                  </MenuItem>
+
+                  {PAYMENT_METHODS.map(method => (
+                    <MenuItem key={method.id} value={method.id}>
+                      {method.name}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
             </Box>
 
             {/* Save as Default Toggle */}
             <Box sx={{ mb: 6 }}>
               <FormControlLabel
                 control={
-                  <Switch
-                    checked={saveAsDefault}
-                    onChange={(e) => setSaveAsDefault(e.target.checked)}
-                    color="primary"
-                  />
+                  <Switch checked={saveAsDefault} onChange={e => setSaveAsDefault(e.target.checked)} color='primary' />
                 }
-                label="Save as default payment method"
+                label='Save as default payment method'
               />
             </Box>
 
+            {/* Components */}
+            {selectedPaymentMethod && (
+              <Box sx={{ mb: 6 }}>
+                {selectedPaymentMethod === 'ach' && <ACH />}
+                {selectedPaymentMethod === 'evoucher' && <EVoucherList />}
+                {selectedPaymentMethod === 'wire' && <Wire />}
+                {selectedPaymentMethod === 'qrcode' && <QrCode />}
+              </Box>
+            )}
+
             {/* Continue Button */}
-            <motion.div
-              whileTap={{ scale: 0.98 }}
-              transition={{ duration: 0.1 }}
-            >
+            <motion.div whileTap={{ scale: 0.98 }} transition={{ duration: 0.1 }}>
               <Button
-                variant="contained"
-                size="large"
+                variant='contained'
+                size='large'
                 fullWidth
                 disabled={!isFormValid}
                 onClick={handleContinue}

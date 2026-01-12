@@ -18,18 +18,14 @@ interface PaymentMethodGridProps {
   onMethodSelect: (methodId: string) => void
 }
 
-const PaymentMethodGrid = ({
-  paymentMethods,
-  selectedMethod,
-  onMethodSelect
-}: PaymentMethodGridProps) => {
+const PaymentMethodGrid = ({ paymentMethods, selectedMethod, onMethodSelect }: PaymentMethodGridProps) => {
   const theme = useTheme()
 
   return (
     <Grid container spacing={3}>
-      {paymentMethods.map((method) => {
+      {paymentMethods.map(method => {
         const isSelected = selectedMethod === method.id
-        
+        console.log(method)
         return (
           <Grid item xs={12} sm={6} md={4} key={method.id}>
             <motion.div
@@ -42,19 +38,11 @@ const PaymentMethodGrid = ({
                 sx={{
                   cursor: 'pointer',
                   height: '100%',
-                  border: `2px solid ${
-                    isSelected 
-                      ? theme.palette.primary.main 
-                      : 'transparent'
-                  }`,
-                  backgroundColor: isSelected 
-                    ? `${theme.palette.primary.main}08` 
-                    : 'background.paper',
+                  border: `2px solid ${isSelected ? theme.palette.primary.main : 'transparent'}`,
+                  backgroundColor: isSelected ? `${theme.palette.primary.main}08` : 'background.paper',
                   transition: 'all 0.2s ease',
                   '&:hover': {
-                    borderColor: isSelected 
-                      ? theme.palette.primary.main 
-                      : theme.palette.primary.light,
+                    borderColor: isSelected ? theme.palette.primary.main : theme.palette.primary.light,
                     boxShadow: theme.shadows[4]
                   },
                   ...(isSelected && {
@@ -64,15 +52,12 @@ const PaymentMethodGrid = ({
                 }}
               >
                 <CardContent sx={{ p: 3, textAlign: 'center', height: '100%' }}>
-                  {/* Payment method icon placeholder */}
                   <Box
                     sx={{
                       width: 48,
                       height: 48,
                       borderRadius: 2,
-                      backgroundColor: isSelected 
-                        ? theme.palette.primary.main 
-                        : theme.palette.grey[100],
+                      backgroundColor: isSelected ? theme.palette.primary.main : theme.palette.grey[100],
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
@@ -82,11 +67,9 @@ const PaymentMethodGrid = ({
                     }}
                   >
                     <Typography
-                      variant="h6"
+                      variant='h6'
                       sx={{
-                        color: isSelected 
-                          ? 'white' 
-                          : 'text.secondary',
+                        color: isSelected ? 'white' : 'text.secondary',
                         fontWeight: 600,
                         fontSize: '0.875rem'
                       }}
@@ -94,23 +77,21 @@ const PaymentMethodGrid = ({
                       {method.name.charAt(0)}
                     </Typography>
                   </Box>
-                  
+
                   <Typography
-                    variant="subtitle1"
+                    variant='subtitle1'
                     sx={{
                       fontWeight: 600,
                       mb: 0.5,
-                      color: isSelected 
-                        ? 'primary.main' 
-                        : 'text.primary'
+                      color: isSelected ? 'primary.main' : 'text.primary'
                     }}
                   >
                     {method.name}
                   </Typography>
-                  
+
                   {method.description && (
                     <Typography
-                      variant="body2"
+                      variant='body2'
                       sx={{
                         color: 'text.secondary',
                         fontSize: '0.75rem'
@@ -130,3 +111,8 @@ const PaymentMethodGrid = ({
 }
 
 export default PaymentMethodGrid
+
+/*
+ 
+
+*/

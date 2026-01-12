@@ -84,7 +84,6 @@ const AddMoney = () => {
   }
 
   const openMethodForm = (action: string) => {
-    debugger
     switch (action) {
       case 'openACHForm':
         setMethod('ACH')

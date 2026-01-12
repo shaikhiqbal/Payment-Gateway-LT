@@ -9,18 +9,52 @@ import { useTheme } from '@mui/material/styles'
 // ** Custom Component Imports
 import AddMoney from 'src/views/pages/add-money/AddMoney'
 
+// ** Components for Payment Methods
+import ACH from '../../views/pages/add-money/old/ACH'
+import EVoucherList from '../../views/pages/add-money/old/QrCode'
+import Wire from '../../views/pages/add-money/old/Wire'
+import QrCode from '../../views/pages/add-money/old/QrCode'
+
+interface PaymentMethod {
+  id: string
+  name: string
+  icon?: string
+  description?: string
+}
+
+const PAYMENT_METHODS: PaymentMethod[] = [
+  { id: 'ach', name: 'ACH', description: '3-4 Businesss Days', icon: 'tabler:building-bank' },
+  {
+    id: 'evoucher',
+    name: 'E-Vouchers',
+    description: 'Digital wallet',
+    icon: 'mdi:voucher-outline'
+  },
+  { id: 'wire', name: 'Wire', description: 'Instant', icon: 'tabler:direction-sign' },
+  { id: 'qrcode', name: 'QR Code', description: 'Generate', icon: 'tabler:barcode' }
+]
+
 const AddMoneyPage = () => {
   const theme = useTheme()
 
   return (
     <Grid container spacing={6}>
       <Grid item xs={12} md={8}>
-        <AddMoney />
+        <AddMoney PAYMENT_METHODS={PAYMENT_METHODS} title='Add Funds' />
       </Grid>
       <Grid item xs={12} md={4}>
         {/* Right-side illustration/info panel placeholder */}
         <Card sx={{ height: '100%', minHeight: 400 }}>
-          <CardContent sx={{ p: 6, height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
+          <CardContent
+            sx={{
+              p: 6,
+              height: '100%',
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'center',
+              alignItems: 'center'
+            }}
+          >
             {/* Illustration placeholder */}
             <Box
               sx={{
@@ -35,43 +69,40 @@ const AddMoneyPage = () => {
                 border: `2px dashed ${theme.palette.grey[300]}`
               }}
             >
-              <Typography variant="body2" color="text.secondary">
+              <Typography variant='body2' color='text.secondary'>
                 Illustration Placeholder
               </Typography>
             </Box>
-            
+
             {/* Info content placeholder */}
             <Box sx={{ textAlign: 'center' }}>
-              <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
+              <Typography variant='h6' sx={{ mb: 2, fontWeight: 600 }}>
                 Quick & Secure
               </Typography>
-              <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
+              <Typography variant='body2' color='text.secondary' sx={{ mb: 3 }}>
                 Add funds to your account safely with our trusted payment partners.
               </Typography>
-              
+
               {/* Feature list placeholder */}
               <Box sx={{ textAlign: 'left' }}>
-                {[
-                  'Instant processing',
-                  'Bank-level security',
-                  'Multiple payment options',
-                  '24/7 support'
-                ].map((feature, index) => (
-                  <Box key={index} sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
-                    <Box
-                      sx={{
-                        width: 6,
-                        height: 6,
-                        borderRadius: '50%',
-                        backgroundColor: theme.palette.primary.main,
-                        mr: 2
-                      }}
-                    />
-                    <Typography variant="body2" color="text.secondary">
-                      {feature}
-                    </Typography>
-                  </Box>
-                ))}
+                {['Instant processing', 'Bank-level security', 'Multiple payment options', '24/7 support'].map(
+                  (feature, index) => (
+                    <Box key={index} sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
+                      <Box
+                        sx={{
+                          width: 6,
+                          height: 6,
+                          borderRadius: '50%',
+                          backgroundColor: theme.palette.primary.main,
+                          mr: 2
+                        }}
+                      />
+                      <Typography variant='body2' color='text.secondary'>
+                        {feature}
+                      </Typography>
+                    </Box>
+                  )
+                )}
               </Box>
             </Box>
           </CardContent>

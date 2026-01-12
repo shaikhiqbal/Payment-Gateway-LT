@@ -1,188 +1,152 @@
-import React, { useEffect, useState } from 'react'
-
 // ** MUI Imports
 import Grid from '@mui/material/Grid'
+import Box from '@mui/material/Box'
+import Card from '@mui/material/Card'
+import CardContent from '@mui/material/CardContent'
+import Typography from '@mui/material/Typography'
+import { useTheme } from '@mui/material/styles'
 
-// ** Components
-import MoneyFeatureCard from 'src/views/pages/add-money/old/MoneyFeatureCard'
-import MoneyFeatureCardSkeleton from 'src/views/pages/add-money/skeleton-loader/MoneyFeatureCardSkeleton'
+// ** Custom Component Imports
+import AddMoney from 'src/views/pages/add-money/AddMoney'
 
-// ** Modal
-import ModalHelper from 'src/views/pages/add-money/old/ModalHelper'
-
-// ** FakeDb
-const addVariantsList = {
-  title: 'Send Money',
-  methods: [
-    {
-      id: 'wallet_transfer',
-      labelTop: 'Wallet to',
-      labelMain: 'Wallet Transfer',
-      processing: '',
-      colors: {
-        from: '#1DA1FF',
-        to: '#0D8BFF'
-      },
-      action: 'openWalletTransfer',
-      icon: 'tabler:wallet',
-      info: 'Send money between wallets'
-    },
-    {
-      id: 'ach_transfer',
-      labelTop: 'Send via',
-      labelMain: 'ACH Transfer',
-      processing: '',
-      colors: {
-        from: '#FF9F7F',
-        to: '#FF784E'
-      },
-      action: 'openACHTransfer',
-      icon: 'tabler:building-bank',
-      info: 'Send money via ACH transfer'
-    },
-    {
-      id: 'email_phone',
-      labelTop: 'Send via',
-      labelMain: 'Email / Phone',
-      processing: '',
-      colors: {
-        from: '#00C48C',
-        to: '#00A76F'
-      },
-      action: 'openEmailPhoneTransfer',
-      icon: 'tabler:mail',
-      info: 'Send via email or phone'
-    },
-    {
-      id: 'escrow_setup',
-      labelTop: 'Wallet',
-      labelMain: 'Escrow Setup',
-      processing: '',
-      colors: {
-        from: '#7B61FF',
-        to: '#5A3FFF'
-      },
-      action: 'openEscrowSetup',
-      icon: 'tabler:lock',
-      info: 'Setup escrow wallet'
-    },
-    {
-      id: 'canada',
-      labelTop: '',
-      labelMain: 'Canada',
-      processing: '',
-      colors: {
-        from: '#2ED8B6',
-        to: '#1BBFA0'
-      },
-      action: 'openCanadaTransfer',
-      icon: 'tabler:map-pin',
-      info: 'Send money to Canada'
-    },
-    {
-      id: 'check',
-      labelTop: 'Create',
-      labelMain: 'Check',
-      processing: '',
-      colors: {
-        from: '#FF6F91',
-        to: '#FF4D6D'
-      },
-      action: 'openCheckCreate',
-      icon: 'tabler:file-invoice',
-      info: 'Create and send check'
-    },
-    {
-      id: 'other_wallet',
-      labelTop: 'Send to',
-      labelMain: 'Other wallet',
-      processing: '',
-      colors: {
-        from: '#22C55E',
-        to: '#16A34A'
-      },
-      action: 'openOtherWalletTransfer',
-      icon: 'arcticons:wallet',
-      info: 'Send money to another wallet'
-    },
-    {
-      id: 'card',
-      labelTop: 'Send to',
-      labelMain: 'Card',
-      processing: '',
-      colors: {
-        from: '#F59E0B',
-        to: '#D97706'
-      },
-      action: 'openCardTransfer',
-      icon: 'tabler:credit-card',
-      info: 'Send money to card'
-    }
-  ]
+interface PaymentMethod {
+  id: string
+  name: string
+  icon?: string
+  description?: string
 }
 
-const SendMoney = () => {
-  // ** State
-  const [loading, setLoading] = useState<boolean>(true)
-  const [method, setMethod] = useState<'ACH' | 'EVoucherList' | 'Wire' | 'QrCode'>('ACH')
-  const [isOpen, setIsOpen] = useState<boolean>(false)
-
-  // ** Toggle Modal
-  const toggle = () => {
-    setIsOpen(!isOpen)
+const PAYMENT_METHODS: PaymentMethod[] = [
+  {
+    id: 'wallet-transfer',
+    name: 'Wallet Transfer',
+    description: 'Wallet to wallet',
+    icon: 'tabler:wallet'
+  },
+  {
+    id: 'ach-transfer',
+    name: 'ACH Transfer',
+    description: 'Send via bank',
+    icon: 'tabler:building-bank'
+  },
+  {
+    id: 'email-phone',
+    name: 'Email / Phone',
+    description: 'Send via contact',
+    icon: 'tabler:mail'
+  },
+  {
+    id: 'escrow',
+    name: 'Escrow Setup',
+    description: 'Wallet escrow',
+    icon: 'tabler:lock'
+  },
+  {
+    id: 'canada',
+    name: 'Canada',
+    description: 'International transfer',
+    icon: 'tabler:flag'
+  },
+  {
+    id: 'check',
+    name: 'Check',
+    description: 'Create & send check',
+    icon: 'tabler:check'
+  },
+  {
+    id: 'other-wallet',
+    name: 'Other Wallet',
+    description: 'Send to external wallet',
+    icon: 'tabler:wallet'
+  },
+  {
+    id: 'card',
+    name: 'Card',
+    description: 'Send to card',
+    icon: 'tabler:credit-card'
   }
+]
 
-  const openMethodForm = (action: string) => {
-    debugger
-    switch (action) {
-      case 'openACHForm':
-        setMethod('ACH')
-        break
-      case 'openEvoucherForm':
-        setMethod('EVoucherList')
-        break
-      case 'openWireForm':
-        setMethod('Wire')
-        break
-      case 'openQRGenerator':
-        setMethod('QrCode')
-        break
-      default:
-        setMethod('ACH')
-    }
-    toggle()
-  }
+const AddMoneyPage = () => {
+  const theme = useTheme()
 
-  // ** Render
-  const renderAddWalletCard = loading
-    ? new Array(8).fill(0).map((_, i) => (
-        <Grid item xs={12} md={6} lg={3} key={i}>
-          <MoneyFeatureCardSkeleton />
-        </Grid>
-      ))
-    : addVariantsList.methods.map((c, i) => (
-        <Grid item xs={12} md={6} lg={3} key={i}>
-          <MoneyFeatureCard {...c} openMethodForm={openMethodForm} />
-        </Grid>
-      ))
-
-  useEffect(() => {
-    setTimeout(() => {
-      setLoading(false)
-    }, 3000)
-  }, [])
   return (
-    <>
-      <Grid container spacing={4}>
-        {renderAddWalletCard}
+    <Grid container spacing={6}>
+      <Grid item xs={12} md={8}>
+        <AddMoney PAYMENT_METHODS={PAYMENT_METHODS} title='Send Funds' />
       </Grid>
-      <ModalHelper method={method} isOpen={isOpen} toggle={toggle} />
-    </>
+      <Grid item xs={12} md={4}>
+        {/* Right-side illustration/info panel placeholder */}
+        <Card sx={{ height: '100%', minHeight: 400 }}>
+          <CardContent
+            sx={{
+              p: 6,
+              height: '100%',
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'center',
+              alignItems: 'center'
+            }}
+          >
+            {/* Illustration placeholder */}
+            <Box
+              sx={{
+                width: '100%',
+                height: 200,
+                borderRadius: 3,
+                backgroundColor: theme.palette.grey[100],
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                mb: 4,
+                border: `2px dashed ${theme.palette.grey[300]}`
+              }}
+            >
+              <Typography variant='body2' color='text.secondary'>
+                Illustration Placeholder
+              </Typography>
+            </Box>
+
+            {/* Info content placeholder */}
+            <Box sx={{ textAlign: 'center' }}>
+              <Typography variant='h6' sx={{ mb: 2, fontWeight: 600 }}>
+                Quick & Secure
+              </Typography>
+              <Typography variant='body2' color='text.secondary' sx={{ mb: 3 }}>
+                Add funds to your account safely with our trusted payment partners.
+              </Typography>
+
+              {/* Feature list placeholder */}
+              <Box sx={{ textAlign: 'left' }}>
+                {['Instant processing', 'Bank-level security', 'Multiple payment options', '24/7 support'].map(
+                  (feature, index) => (
+                    <Box key={index} sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
+                      <Box
+                        sx={{
+                          width: 6,
+                          height: 6,
+                          borderRadius: '50%',
+                          backgroundColor: theme.palette.primary.main,
+                          mr: 2
+                        }}
+                      />
+                      <Typography variant='body2' color='text.secondary'>
+                        {feature}
+                      </Typography>
+                    </Box>
+                  )
+                )}
+              </Box>
+            </Box>
+          </CardContent>
+        </Card>
+      </Grid>
+    </Grid>
   )
 }
 
-SendMoney.acl = {
+AddMoneyPage.acl = {
   action: 'read',
   subject: 'permission'
 }
-export default SendMoney
+export default AddMoneyPage
