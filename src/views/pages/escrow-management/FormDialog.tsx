@@ -24,7 +24,7 @@ const FormDialog = () => {
   return (
     <Fragment>
       <Button variant='outlined' onClick={() => setOpen(true)}>
-        Open Escrow Form
+        Add Escrow
       </Button>
 
       <Dialog
@@ -37,7 +37,7 @@ const FormDialog = () => {
       >
         <DialogTitle id='escrow-dialog-title'>Add Escrow</DialogTitle>
         <DialogContent>
-          <AddEcrowForm />
+          <AddEcrowForm closeDialog={() => setOpen(false)} />
         </DialogContent>
       </Dialog>
     </Fragment>

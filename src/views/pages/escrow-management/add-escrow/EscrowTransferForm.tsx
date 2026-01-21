@@ -214,7 +214,6 @@ const EscrowTransferForm = ({ onNext }: EscrowTransferFormProps) => {
             </Grid>
           )}
 
-          {/* Validity Date */}
           {validityType === 'date' && (
             <Grid item xs={12}>
               <Controller
@@ -223,14 +222,14 @@ const EscrowTransferForm = ({ onNext }: EscrowTransferFormProps) => {
                 rules={{ required: 'Date required' }}
                 render={({ field }) => (
                   <Box>
-                    <Typography sx={{ mb: 1 }}>Validity Date *</Typography>
+                    <Typography sx={{ mb: 1 }}>Validity Date</Typography>
                     <DatePicker
                       selected={field.value}
                       onChange={field.onChange}
                       minDate={new Date(Date.now() + 86400000)}
                       dateFormat='dd/MM/yyyy'
                       placeholderText='Select future date'
-                      customInput={<PickersComponent label='Basic' />}
+                      customInput={<PickersComponent label='Date' />}
                     />
                     {errors.validityDate && (
                       <Typography color='error' variant='body2' sx={{ mt: 1 }}>

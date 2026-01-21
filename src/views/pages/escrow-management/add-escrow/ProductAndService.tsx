@@ -1,24 +1,18 @@
 import { Box, Button, Grid, MenuItem, TextField, Typography } from '@mui/material'
 import { Controller, useForm } from 'react-hook-form'
-
-// ** Styled Component Import
-import { EscrowDropzoneWrapper } from 'src/@core/styles/libs/react-dropzone'
-
-import FileUploader from './FileUploader'
-
-// EscrowDropzoneWrapper
-
-interface ProductAndServiceProps {
-  onBack: () => void
-}
+import FileUploader, { MediaItem } from './FileUploader'
 
 type FormValues = {
   type: 'product' | 'service' | ''
-  file?: FileList
-  video?: FileList
+  media: MediaItem[]
 }
 
-const ProductAndService = ({ onBack }: ProductAndServiceProps) => {
+interface Props {
+  onBack: () => void
+  closeDialog: () => void
+}
+
+const ProductAndService = ({ onBack, closeDialog }: Props) => {
   const {
     control,
     watch,
@@ -26,63 +20,82 @@ const ProductAndService = ({ onBack }: ProductAndServiceProps) => {
     formState: { errors }
   } = useForm<FormValues>({
     defaultValues: {
-      type: ''
+      type: '',
+      media: []
     }
   })
 
   const selectedType = watch('type')
 
   const onSubmit = (data: FormValues) => {
-    console.log('Form Data:', {
-      type: data.type,
-      file: data.file?.[0],
-      video: data.video?.[0]
-    })
+    console.log('SUBMITTED DATA:', data)
+    closeDialog()
   }
 
   return (
-    <EscrowDropzoneWrapper>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <Grid container spacing={5}>
-          {/* Select Product or Service */}
-          <Grid item xs={12}>
-            <Controller
-              name='type'
-              control={control}
-              rules={{ required: 'Please select product or service' }}
-              render={({ field }) => (
-                <TextField
-                  {...field}
-                  select
-                  fullWidth
-                  label='Choose Type *'
-                  error={!!errors.type}
-                  helperText={errors.type?.message}
-                >
-                  <MenuItem value='product'>Product</MenuItem>
-                  <MenuItem value='service'>Service</MenuItem>
-                </TextField>
-              )}
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <FileUploader />
-          </Grid>
-
-          <Grid item xs={12}>
-            <Box display='flex' gap={3}>
-              <Button variant='outlined' onClick={onBack}>
-                Back
-              </Button>
-
-              <Button type='submit' variant='contained'>
-                Continue
-              </Button>
-            </Box>
-          </Grid>
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <Grid container spacing={4}>
+        {/* Select type */}
+        <Grid item xs={12}>
+          <Controller
+            name='type'
+            control={control}
+            rules={{ required: 'Please select type' }}
+            render={({ field }) => (
+              <TextField
+                {...field}
+                select
+                fullWidth
+                label='Choose Type'
+                error={!!errors.type}
+                helperText={errors.type?.message}
+              >
+                <MenuItem value='product'>Product</MenuItem>
+                <MenuItem value='service'>Service</MenuItem>
+              </TextField>
+            )}
+          />
         </Grid>
-      </form>
-    </EscrowDropzoneWrapper>
+
+        {/* Media uploader */}
+        <Grid item xs={12}>
+          <Controller
+            name='media'
+            control={control}
+            rules={{
+              validate: value => {
+                if (!selectedType) return 'Select type first'
+                if (value.length === 0)
+                  return selectedType === 'product' ? 'Product image or video required' : 'Service video required'
+                return true
+              }
+            }}
+            render={({ field }) => (
+              <>
+                <FileUploader value={field.value} onChange={field.onChange} allowImage={selectedType === 'product'} />
+                {errors.media && (
+                  <Typography color='error' mt={1}>
+                    {errors.media.message}
+                  </Typography>
+                )}
+              </>
+            )}
+          />
+        </Grid>
+
+        {/* Actions */}
+        <Grid item xs={12}>
+          <Box display='flex' gap={2}>
+            <Button variant='outlined' onClick={onBack}>
+              Back
+            </Button>
+            <Button variant='contained' type='submit'>
+              Continue
+            </Button>
+          </Box>
+        </Grid>
+      </Grid>
+    </form>
   )
 }
 

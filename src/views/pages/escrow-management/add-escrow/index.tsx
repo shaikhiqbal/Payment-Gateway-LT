@@ -19,7 +19,11 @@ const variants = {
   })
 }
 
-const AddEcrowForm = () => {
+interface AddEcrowFormProps {
+  closeDialog: () => void
+}
+
+const AddEcrowForm = ({ closeDialog }: AddEcrowFormProps) => {
   const [step, setStep] = useState(1)
   const [direction, setDirection] = useState(1)
 
@@ -47,7 +51,7 @@ const AddEcrowForm = () => {
         >
           {step === 1 && <EscrowTransferForm onNext={next} />}
           {step === 2 && <EscrowDiscriptionForm onNext={next} onBack={back} />}
-          {step === 3 && <ProductAndService onBack={back} />}
+          {step === 3 && <ProductAndService onBack={back} closeDialog={closeDialog} />}
         </motion.div>
       </AnimatePresence>
     </Fragment>

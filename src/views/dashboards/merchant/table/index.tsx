@@ -2,6 +2,7 @@
 import { SyntheticEvent, useState } from 'react'
 
 // ** MUI Imports
+import Box from '@mui/material/Box'
 import Tab from '@mui/material/Tab'
 import TabList from '@mui/lab/TabList'
 import TabPanel from '@mui/lab/TabPanel'
@@ -10,7 +11,6 @@ import TabContext from '@mui/lab/TabContext'
 // ** Components
 import PreAuth from './PreAuth'
 import OnHold from './OnHold'
-import { Box } from '@mui/material'
 
 const Index = () => {
   // ** State

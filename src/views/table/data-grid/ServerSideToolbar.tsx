@@ -9,6 +9,7 @@ import { GridToolbarExport } from '@mui/x-data-grid'
 
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
+import { Typography } from '@mui/material'
 
 interface Props {
   value: string
@@ -28,7 +29,8 @@ const ServerSideToolbar = (props: Props) => {
         p: theme => theme.spacing(2, 5, 4, 5)
       }}
     >
-      <GridToolbarExport printOptions={{ disableToolbarButton: true }} />
+      <Typography variant='h6'>Record</Typography>
+      {/* <GridToolbarExport printOptions={{ disableToolbarButton: true }} /> */}
       <TextField
         size='small'
         value={props.value}
