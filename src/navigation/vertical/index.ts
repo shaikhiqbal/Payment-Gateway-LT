@@ -50,6 +50,18 @@ const navigation = (): VerticalNavItemsType => {
       subject: 'user-management'
     },
     {
+      sectionTitle: 'Escrow',
+      action: 'read',
+      subject: 'permission'
+    },
+    {
+      title: 'Escrow Management',
+      icon: 'hugeicons:money-send-02',
+      path: '/escrow-management',
+      action: 'read',
+      subject: 'user-management'
+    },
+    {
       sectionTitle: 'Inventory',
       action: 'read',
       subject: 'permission'

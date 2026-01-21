@@ -25,15 +25,39 @@ import { PaymentMethod, AddFundsFormData } from './types'
 
 // ** Payments Components
 // ** Add Money
-import ACH from 'src/views/pages/add-money/old/ACH'
-import EVoucherList from 'src/views/pages/add-money/old/QrCode'
-import Wire from 'src/views/pages/add-money/old/Wire'
-import QrCode from 'src/views/pages/add-money/old/QrCode'
+import { ACH, QrCode, Wire } from './add-money'
+
+// ** Send Money
+import {
+  ACHTransfer,
+  EmailPhoneTransfer,
+  EscrowSetup,
+  Canneda,
+  Check,
+  OtherWallet,
+  SendToCard,
+  WalletTransfer
+} from './send-money'
 
 // ** Send Mopney
 
 const PRESET_AMOUNTS = [50, 100, 200]
 const CURRENCIES = ['EUR', 'USD', 'GBP']
+
+const PAYMENT_COMPONENT_MAP: Record<string, JSX.Element> = {
+  ach: <ACH />,
+  evoucher: <Wire />,
+  wire: <Wire />,
+  qrcode: <QrCode />,
+  'wallet-transfer': <WalletTransfer />,
+  'ach-transfer': <ACHTransfer />,
+  'email-phone': <EmailPhoneTransfer />,
+  escrow: <EscrowSetup />,
+  canada: <Canneda />,
+  check: <Check />,
+  'other-wallet': <OtherWallet />,
+  card: <SendToCard />
+}
 
 const AddMoney = ({ PAYMENT_METHODS, title }: { PAYMENT_METHODS: PaymentMethod[]; title: string }) => {
   const [selectedAmount, setSelectedAmount] = useState<number | null>(null)
@@ -160,15 +184,7 @@ const AddMoney = ({ PAYMENT_METHODS, title }: { PAYMENT_METHODS: PaymentMethod[]
               />
             </Box>
 
-            {/* Components */}
-            {selectedPaymentMethod && (
-              <Box sx={{ mb: 6 }}>
-                {selectedPaymentMethod === 'ach' && <ACH />}
-                {selectedPaymentMethod === 'evoucher' && <EVoucherList />}
-                {selectedPaymentMethod === 'wire' && <Wire />}
-                {selectedPaymentMethod === 'qrcode' && <QrCode />}
-              </Box>
-            )}
+            {selectedPaymentMethod && <Box sx={{ mb: 6 }}>{PAYMENT_COMPONENT_MAP[selectedPaymentMethod]}</Box>}
 
             {/* Continue Button */}
             <motion.div whileTap={{ scale: 0.98 }} transition={{ duration: 0.1 }}>

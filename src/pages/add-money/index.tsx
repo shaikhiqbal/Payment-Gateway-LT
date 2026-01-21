@@ -7,13 +7,7 @@ import Typography from '@mui/material/Typography'
 import { useTheme } from '@mui/material/styles'
 
 // ** Custom Component Imports
-import AddMoney from 'src/views/pages/add-money/AddMoney'
-
-// ** Components for Payment Methods
-import ACH from '../../views/pages/add-money/old/ACH'
-import EVoucherList from '../../views/pages/add-money/old/QrCode'
-import Wire from '../../views/pages/add-money/old/Wire'
-import QrCode from '../../views/pages/add-money/old/QrCode'
+import AddMoney from 'src/views/pages/add-send-money'
 
 interface PaymentMethod {
   id: string

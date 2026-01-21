@@ -280,5 +280,27 @@ const ProductUploadedImageWrapper = styled(Box)<BoxProps>(({ theme }) => ({
   }
 }))
 
-export { ProductDropzoneWrapper, ProductUploadedImageWrapper }
+const EscrowDropzoneWrapper = styled(Box)<BoxProps>(({ theme }) => ({
+  '&.dropzone, & .dropzone': {
+    maxHeight: 150,
+    maxWidth: 150,
+    display: 'flex',
+    flexWrap: 'wrap',
+    cursor: 'pointer',
+    position: 'relative',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: theme.spacing(4),
+    borderRadius: theme.shape.borderRadius,
+    border: `2px dashed ${theme.palette.divider}`,
+    [theme.breakpoints.down('xs')]: {
+      textAlign: 'center'
+    },
+    '&:focus': {
+      outline: 'none'
+    }
+  }
+}))
+
+export { ProductDropzoneWrapper, ProductUploadedImageWrapper, EscrowDropzoneWrapper }
 export default DropzoneWrapper
