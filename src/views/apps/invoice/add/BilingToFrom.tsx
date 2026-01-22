@@ -1,4 +1,4 @@
-import React, { use } from 'react'
+import React from 'react'
 
 // ** MUI Imports
 import {
@@ -85,7 +85,7 @@ const BilingToFrom = ({ title, name }: BilingToFromProps) => {
             control={control}
             render={({ field }) => (
               <Select {...field} labelId={`invoice-${name}-label`} label='Status'>
-                <CustomSelectItem value='' onClick={() => {}}>
+                <CustomSelectItem>
                   <Box
                     sx={{
                       display: 'flex',

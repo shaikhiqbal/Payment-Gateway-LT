@@ -1,14 +1,9 @@
 // ** MUI Imports
 import Box from '@mui/material/Box'
-import Paper from '@mui/material/Paper'
 import Typography from '@mui/material/Typography'
 import TextField from '@mui/material/TextField'
 import Divider from '@mui/material/Divider'
-import IconButton from '@mui/material/IconButton'
 import Grid from '@mui/material/Grid'
-
-// ** Icon Imports
-import Icon from 'src/@core/components/icon'
 
 const Wire = () => {
   return (

@@ -1,14 +1,11 @@
 // ** React Imports
-import React, { Fragment, SyntheticEvent, useState } from 'react'
+import React, { Fragment, SyntheticEvent } from 'react'
 
 // ** MUI Imports
 import Tab from '@mui/material/Tab'
 import TabList from '@mui/lab/TabList'
-import TabPanel from '@mui/lab/TabPanel'
 import TabContext from '@mui/lab/TabContext'
-import Typography from '@mui/material/Typography'
 import Card from '@mui/material/Card'
-import CardContent from '@mui/material/CardContent'
 
 // ** Props Types
 interface TableFilterProps {

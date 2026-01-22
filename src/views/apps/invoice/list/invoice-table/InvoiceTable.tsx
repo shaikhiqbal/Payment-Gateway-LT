@@ -2,7 +2,6 @@ import { useState, ChangeEvent, useEffect } from 'react'
 
 // MUI
 import Card from '@mui/material/Card'
-import CardHeader from '@mui/material/CardHeader'
 import Typography from '@mui/material/Typography'
 import Box from '@mui/material/Box'
 import { DataGrid, GridColumns, GridRenderCellParams } from '@mui/x-data-grid'
@@ -479,7 +478,8 @@ const InvoiceTableGrid = ({ invoiceTabsList, activeTab }: InvoiceTableProps) => 
       setFilteredData([])
     }
     setFilteredData(data.filter(invoice => invoice.status == invoiceTabsKeysValue[activeTab]))
-  }, [activeTab])
+  }, [activeTab, data, invoiceTabsKeysValue])
+
   return (
     <Card>
       <DataGrid

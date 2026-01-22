@@ -12,6 +12,7 @@ interface AuthGuardProps {
   fallback: ReactElement | null
 }
 
+/*
 const fakeUser = {
   accessToken:
     'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJrYXJkaWxlb21rYXI3MjYyQGdtYWlsLmNvbSIsImlhdCI6MTc2MDU0MTgyMSwiZXhwIjoxNzYwNTQ3ODIxfQ.4KZFqOl7ZApkwcMj281T3BaMdmL9dCs7NvnHSUkz8aI',
@@ -115,6 +116,7 @@ const fakeUser = {
     emailId: 'kardileomkar7262@gmail.com'
   }
 }
+*/
 
 const AuthGuard = (props: AuthGuardProps) => {
   const { children, fallback } = props

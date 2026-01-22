@@ -18,7 +18,7 @@ import Select, { SelectChangeEvent } from '@mui/material/Select'
 import { motion } from 'motion/react'
 
 // ** Custom Components
-import { AmountSelector, PaymentMethodGrid, StepIndicator } from './components'
+import { AmountSelector, StepIndicator } from './components'
 
 // ** Types
 import { PaymentMethod, AddFundsFormData } from './types'
@@ -80,9 +80,9 @@ const AddMoney = ({ PAYMENT_METHODS, title }: { PAYMENT_METHODS: PaymentMethod[]
     }
   }
 
-  const handlePaymentMethodSelect = (methodId: string) => {
-    setSelectedPaymentMethod(methodId)
-  }
+  // const handlePaymentMethodSelect = (methodId: string) => {
+  //   setSelectedPaymentMethod(methodId)
+  // }
 
   const handleContinue = () => {
     const formData: AddFundsFormData = {
@@ -106,7 +106,7 @@ const AddMoney = ({ PAYMENT_METHODS, title }: { PAYMENT_METHODS: PaymentMethod[]
     >
       <Card>
         <CardContent sx={{ p: 6 }}>
-          <StepIndicator currentStep={2} totalSteps={4} title={title} />
+          <StepIndicator title={title} />
 
           <Box sx={{ mt: 6 }}>
             {/* Currency Selector */}

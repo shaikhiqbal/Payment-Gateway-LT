@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react'
 
 // ** MUI Imports (separate for performance)
 import Box from '@mui/material/Box'
-import Paper from '@mui/material/Paper'
 import Typography from '@mui/material/Typography'
 import Skeleton from '@mui/material/Skeleton'
 import Button from '@mui/material/Button'

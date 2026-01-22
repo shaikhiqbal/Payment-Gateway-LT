@@ -4,12 +4,10 @@ import Typography from '@mui/material/Typography'
 import { useTheme } from '@mui/material/styles'
 
 interface StepIndicatorProps {
-  currentStep: number
-  totalSteps: number
   title: string
 }
 
-const StepIndicator = ({ currentStep, totalSteps, title }: StepIndicatorProps) => {
+const StepIndicator = ({ title }: StepIndicatorProps) => {
   const theme = useTheme()
 
   return (
@@ -24,6 +22,7 @@ const StepIndicator = ({ currentStep, totalSteps, title }: StepIndicatorProps) =
       >
         {title}
       </Typography>
+
       {/* <Typography
         variant='body2'
         sx={{

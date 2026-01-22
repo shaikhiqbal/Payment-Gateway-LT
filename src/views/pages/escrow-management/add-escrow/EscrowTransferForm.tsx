@@ -6,7 +6,6 @@ import 'react-datepicker/dist/react-datepicker.css'
 import PickersComponent from 'src/views/forms/form-elements/pickers/PickersCustomInput'
 
 // ** Styled Component Import
-import ApexChartWrapper from 'src/@core/styles/libs/react-apexcharts'
 import DatePickerWrapper from 'src/@core/styles/libs/react-datepicker'
 
 /* ---------------- TYPES ---------------- */

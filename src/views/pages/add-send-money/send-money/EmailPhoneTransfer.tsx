@@ -2,20 +2,17 @@ import { useEffect } from 'react'
 import { useForm, Controller } from 'react-hook-form'
 import {
   Box,
-  Button,
   Grid,
   TextField,
-  Typography,
   InputAdornment,
   Paper,
-  Stack,
   MenuItem,
   FormControl,
   InputLabel,
   FormHelperText
 } from '@mui/material'
 
-import Select, { SelectChangeEvent } from '@mui/material/Select'
+import Select from '@mui/material/Select'
 
 import CountryField from 'src/pages/components/form-element/location/CountryField'
 
@@ -41,7 +38,6 @@ const EmailPhoneTransfer = () => {
     watch,
     setValue,
     handleSubmit,
-    reset,
     formState: { errors }
   } = useForm<FormValues>({
     defaultValues: {

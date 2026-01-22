@@ -3,14 +3,13 @@ import { useState } from 'react'
 
 // ** MUI Imports
 import Box from '@mui/material/Box'
-import Card from '@mui/material/Card'
 import Typography from '@mui/material/Typography'
 import CardHeader from '@mui/material/CardHeader'
 import Button from '@mui/material/Button'
 import { DataGrid, GridColDef } from '@mui/x-data-grid'
 
 // ** Types Imports
-import { BankAccount, bankAccounts } from 'src/@fake-db/pages/add-money'
+import { bankAccounts } from 'src/@fake-db/pages/add-money'
 
 const BankTable = () => {
   const [pageSize, setPageSize] = useState<number>(5)

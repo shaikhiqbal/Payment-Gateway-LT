@@ -13,7 +13,7 @@ import Buyer from './Buyer'
 import Seller from './Seller'
 import Trader from './Trader'
 
-const index = () => {
+const Index = () => {
   // ** State
   const [value, setValue] = useState<string>('1')
 
@@ -45,4 +45,4 @@ const index = () => {
   )
 }
 
-export default index
+export default Index

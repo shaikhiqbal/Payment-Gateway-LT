@@ -1,10 +1,5 @@
 // ** MUI Imports
 import Grid from '@mui/material/Grid'
-import Box from '@mui/material/Box'
-import Card from '@mui/material/Card'
-import CardContent from '@mui/material/CardContent'
-import Typography from '@mui/material/Typography'
-import { useTheme } from '@mui/material/styles'
 
 // ** Custom Component Imports
 import SendMoney from 'src/views/pages/add-send-money'
@@ -42,6 +37,7 @@ const PAYMENT_METHODS: PaymentMethod[] = [
   //   description: 'Wallet escrow',
   //   icon: 'tabler:lock'
   // },
+
   {
     id: 'canada',
     name: 'Canada',
@@ -69,8 +65,6 @@ const PAYMENT_METHODS: PaymentMethod[] = [
 ]
 
 const AddMoneyPage = () => {
-  const theme = useTheme()
-
   return (
     <Grid container spacing={6}>
       <Grid item xs={12} md={12}>

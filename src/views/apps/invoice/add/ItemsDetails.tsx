@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useCallback, useEffect } from 'react'
 
 // ** MUI Imports
 import {
@@ -74,7 +74,7 @@ const ItemsDetails = () => {
     name: 'items'
   })
 
-  const handleAddRow = () => {
+  const handleAddRow = useCallback(() => {
     append({
       productServices: '',
       quantity: '',
@@ -84,13 +84,13 @@ const ItemsDetails = () => {
       tax: '',
       amount: ''
     })
-  }
+  }, [append])
 
   useEffect(() => {
     if (fields.length === 0) {
       handleAddRow()
     }
-  }, [])
+  }, [fields, handleAddRow])
 
   // ------- Shared Compact Error UI -------
   const CompactError = ({ message }: { message?: string }) =>

@@ -21,7 +21,7 @@ import {
 } from '@mui/material'
 import Icon from 'src/@core/components/icon'
 
-// ==================== TYPES ====================
+// ** Types
 export interface InvoiceItem {
   productServices: string
   quantity: number | string
@@ -33,28 +33,23 @@ export interface InvoiceItem {
 }
 
 export interface InvoiceFormType {
-  // Header Section
   status: string
   currency: string
   invoiceNumber: string
   referenceNumber: string
   date: Date | null
 
-  // Billing To/From
   billedBy: string
   customerName: string
 
-  // Item Section
   itemType: 'Product' | 'Service'
   productServices: string
   items: InvoiceItem[]
 
-  // Extra Information
   notes: string
   termsCondition: string
   bankDetails: string
 
-  // Billing Details
   discount: string
   roundOff: boolean
   person: string
@@ -62,7 +57,6 @@ export interface InvoiceFormType {
   signatureFile: File | null
 }
 
-// ==================== HELPER: NUMBER TO WORDS ====================
 const numberToWords = (num: number): string => {
   const ones = ['', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine']
   const tens = ['', '', 'Twenty', 'Thirty', 'Forty', 'Fifty', 'Sixty', 'Seventy', 'Eighty', 'Ninety']
@@ -144,11 +138,9 @@ const fakeInvoiceData: InvoiceFormType = {
   signatureFile: null
 }
 
-// ==================== MAIN COMPONENT ====================
 const InvoicePreview = () => {
   const theme = useTheme()
 
-  // ==================== CALCULATIONS ====================
   const calculateSubtotal = () => {
     return fakeInvoiceData.items.reduce((sum, item) => {
       const rate = Number(item.rate) || 0
@@ -178,20 +170,18 @@ const InvoicePreview = () => {
   const finalTotal = fakeInvoiceData.roundOff ? Math.round(totalBeforeRound) : totalBeforeRound
   const roundOffAmount = finalTotal - totalBeforeRound
 
-  // ==================== HANDLERS ====================
   const handlePrint = () => {
     window.print()
   }
 
   const handleEdit = () => {
-    // onEdit?.()
+    console.log('Edit invoice')
   }
 
   const handleDownload = () => {
-    // onDownload?.()
+    console.log('Download invoice')
   }
 
-  // ==================== STATUS COLOR ====================
   const getStatusColor = (status: string): 'success' | 'warning' | 'error' | 'default' | 'info' => {
     switch (status.toLowerCase()) {
       case 'paid':
@@ -207,10 +197,8 @@ const InvoicePreview = () => {
     }
   }
 
-  // ==================== RENDER ====================
   return (
     <Box>
-      {/* ==================== ACTION BUTTONS ==================== */}
       <Box
         sx={{
           maxWidth: 1200,
@@ -253,7 +241,6 @@ const InvoicePreview = () => {
         </Stack>
       </Box>
 
-      {/* ==================== INVOICE CARD ==================== */}
       <Card
         sx={{
           maxWidth: 1200,
@@ -266,21 +253,20 @@ const InvoicePreview = () => {
         }}
       >
         <CardContent sx={{ p: 5, '@media print': { p: 3 } }}>
-          {/* ==================== HEADER SECTION ==================== */}
           <Grid container spacing={4} sx={{ mb: 4 }}>
             <Grid item xs={12} md={6}>
               <Box sx={{ mb: 2, display: 'flex', alignItems: 'center' }}>
-                {/* LOGO IMPLEMENTATION */}
                 <img
                   src='/images/website-logo/locktrust-logo.png'
                   alt='LockTrust Logo'
                   style={{
-                    height: '60px', // Fixed height ensures layout stability
+                    height: '60px',
                     maxWidth: '200px',
                     objectFit: 'contain'
                   }}
                 />
               </Box>
+
               {/* <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
                 <Box
                   sx={{
@@ -335,7 +321,6 @@ const InvoicePreview = () => {
 
           <Divider sx={{ my: 4 }} />
 
-          {/* ==================== BILLING INFORMATION ==================== */}
           <Grid container spacing={4} sx={{ mb: 4 }}>
             <Grid item xs={12} md={6}>
               <Box
@@ -381,7 +366,6 @@ const InvoicePreview = () => {
             </Grid>
           </Grid>
 
-          {/* ==================== ITEMS TABLE ==================== */}
           <Box sx={{ mb: 4 }}>
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2 }}>
               <Icon icon='tabler:list-details' fontSize={20} />
@@ -465,9 +449,7 @@ const InvoicePreview = () => {
             </TableContainer>
           </Box>
 
-          {/* ==================== SUMMARY & EXTRA INFO ==================== */}
           <Grid container spacing={4}>
-            {/* LEFT SIDE: NOTES, TERMS, BANK DETAILS */}
             <Grid item xs={12} md={7}>
               {fakeInvoiceData.notes && (
                 <Box sx={{ mb: 3 }}>
@@ -512,7 +494,6 @@ const InvoicePreview = () => {
               )}
             </Grid>
 
-            {/* RIGHT SIDE: TOTALS SUMMARY */}
             <Grid item xs={12} md={5}>
               <Box
                 sx={{
@@ -602,7 +583,6 @@ const InvoicePreview = () => {
             </Grid>
           </Grid>
 
-          {/* ==================== SIGNATURE SECTION ==================== */}
           {fakeInvoiceData.signatureName && (
             <Box sx={{ mt: 6, pt: 4, borderTop: `1px dashed ${theme.palette.divider}` }}>
               <Grid container>
@@ -657,7 +637,6 @@ const InvoicePreview = () => {
             </Box>
           )}
 
-          {/* ==================== FOOTER ==================== */}
           <Box
             sx={{
               mt: 6,
@@ -678,7 +657,6 @@ const InvoicePreview = () => {
         </CardContent>
       </Card>
 
-      {/* ==================== PRINT STYLES ==================== */}
       <style>{`
         @media print {
           body {

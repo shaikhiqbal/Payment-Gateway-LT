@@ -1,5 +1,5 @@
 // ** MUI Imports
-import { Box, BoxProps, Button, Card, CardContent, Divider, Grid, styled, Typography } from '@mui/material'
+import { Box, Button, Card, CardContent, Divider, Grid, Typography } from '@mui/material'
 import Link from 'next/link'
 
 // ** React Hook Form Imports
@@ -25,50 +25,37 @@ export interface InvoiceItem {
 }
 
 export interface InvoiceFormType {
-  // Header Section
   status: string
   currency: string
   invoiceNumber: string
   referenceNumber: string
   date: Date | null
-
-  // Billing To/From
   billedBy: string
   customerName: string
-
-  // Item Section
   itemType: 'Product' | 'Service'
   productServices: string
   items: InvoiceItem[]
-
-  // Extra Information
   notes: string
   termsCondition: string
   bankDetails: string
-
-  // Billing Details
   discount: string
   roundOff: boolean
   person: string
   signatureName: string
-  signatureFile: File | null // upload signature
+  signatureFile: File | null
 }
 
 const InvoiceAdd = () => {
   const method = useForm<InvoiceFormType>({
     defaultValues: {
-      // Header
       status: 'Draft',
       currency: 'USD',
       invoiceNumber: '',
       referenceNumber: '',
       date: new Date(),
 
-      // Billing To/From
       billedBy: '',
       customerName: '',
-
-      // Items Section
       itemType: 'Product',
       productServices: '',
       items: [
@@ -83,12 +70,9 @@ const InvoiceAdd = () => {
         }
       ],
 
-      // Extra Information
       notes: '',
       termsCondition: '',
       bankDetails: '',
-
-      // Billing Details
       discount: '',
       roundOff: false,
       person: '',

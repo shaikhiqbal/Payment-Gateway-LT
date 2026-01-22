@@ -3,7 +3,6 @@ import { Controller, useForm } from 'react-hook-form'
 import Cleave from 'cleave.js/react'
 import { styled } from '@mui/material/styles'
 import { useEffect, useState } from 'react'
-import { setOptions } from 'react-chartjs-2/dist/utils'
 
 /* ---------------- OTP INPUT STYLE ---------------- */
 
@@ -35,7 +34,7 @@ interface EscrowDiscriptionFormProps {
   onBack: () => void
 }
 
-export default function EscrowDiscriptionForm({ onNext, onBack }: EscrowDiscriptionFormProps) {
+export default function EscrowDiscriptionForm({ onNext }: EscrowDiscriptionFormProps) {
   // ** States
   const [seconds, setSeconds] = useState<number>(OTP_TIME)
   const [canResend, setCanResend] = useState<boolean>(false)
@@ -49,6 +48,7 @@ export default function EscrowDiscriptionForm({ onNext, onBack }: EscrowDiscript
   const onSubmit = (data: any) => {
     const otp = Object.values(data).join('')
     console.log('OTP:', otp)
+    console.log(canResend)
     onNext()
   }
 

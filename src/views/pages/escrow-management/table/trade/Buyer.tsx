@@ -1,43 +1,22 @@
 // ** React Imports
-import { useEffect, useState, useCallback, ChangeEvent } from 'react'
+import { useState, useCallback, ChangeEvent } from 'react'
 
 // ** MUI Imports
 import Box from '@mui/material/Box'
 import Card from '@mui/material/Card'
 import Typography from '@mui/material/Typography'
-import CardHeader from '@mui/material/CardHeader'
 import Button from '@mui/material/Button'
-import { DataGrid, GridColumns, GridRenderCellParams, GridSortModel } from '@mui/x-data-grid'
+import { DataGrid, GridColumns, GridSortModel } from '@mui/x-data-grid'
 
 // ** ThirdParty Components
 import axios from 'axios'
 
 // ** Custom Components
-import CustomChip from 'src/@core/components/mui/chip'
-import CustomAvatar from 'src/@core/components/mui/avatar'
 import ServerSideToolbar from 'src/views/table/data-grid/ServerSideToolbar'
-
-// ** Types Imports
-import { ThemeColor } from 'src/@core/layouts/types'
 
 // import { DataGridRowType } from 'src/@fake-db/types'
 
-// ** Utils Import
-import { getInitials } from 'src/@core/utils/get-initials'
-
-interface StatusObj {
-  [key: number]: {
-    title: string
-    color: ThemeColor
-  }
-}
-
 type SortType = 'asc' | 'desc' | undefined | null
-
-const statusObj: StatusObj = {
-  1: { title: 'Sender', color: 'primary' },
-  2: { title: 'Receiver', color: 'success' }
-}
 
 interface DataGridRowType {
   id: number
@@ -136,13 +115,8 @@ const Buyer = () => {
   const [total, setTotal] = useState<number>(0)
   const [sort, setSort] = useState<SortType>('asc')
   const [pageSize, setPageSize] = useState<number>(7)
-  const [rows, setRows] = useState<DataGridRowType[]>([])
   const [searchValue, setSearchValue] = useState<string>('')
   const [sortColumn, setSortColumn] = useState<string>('full_name')
-
-  function loadServerRows(currentPage: number, data: DataGridRowType[]) {
-    return data.slice(currentPage * pageSize, (currentPage + 1) * pageSize)
-  }
 
   const fetchTableData = useCallback(
     async (sort: SortType, q: string, column: string) => {
@@ -156,7 +130,6 @@ const Buyer = () => {
         })
         .then(res => {
           setTotal(res.data.total)
-          setRows(loadServerRows(page, res.data.data))
         })
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -192,7 +165,6 @@ const Buyer = () => {
           rows={escrowRows}
           rowCount={total}
           columns={columns}
-          // checkboxSelection
           pageSize={pageSize}
           sortingMode='server'
           paginationMode='server'

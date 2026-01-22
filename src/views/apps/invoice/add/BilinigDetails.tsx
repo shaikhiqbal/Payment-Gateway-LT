@@ -1,18 +1,6 @@
 import React from 'react'
-import { useForm, Controller, useFormContext } from 'react-hook-form'
-import {
-  Box,
-  Grid,
-  Typography,
-  TextField,
-  Switch,
-  FormControlLabel,
-  Select,
-  MenuItem,
-  Paper,
-  Button,
-  Divider
-} from '@mui/material'
+import { Controller, useFormContext } from 'react-hook-form'
+import { Grid, Typography, TextField, Switch, FormControlLabel, Select, MenuItem, Button, Divider } from '@mui/material'
 
 const BillingDetails = () => {
   const { control } = useFormContext()
