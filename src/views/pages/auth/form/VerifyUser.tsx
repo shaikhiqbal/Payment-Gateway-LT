@@ -1,5 +1,5 @@
 // ** React Imports
-import { ChangeEvent, useState, KeyboardEvent, useEffect } from 'react'
+import { ChangeEvent, useState, KeyboardEvent } from 'react'
 
 // ** Next Import
 import Link from 'next/link'
@@ -26,7 +26,8 @@ import 'cleave.js/dist/addons/cleave-phone.us'
 
 // ** Auth
 import { useAuth } from 'src/hooks/useAuth'
-import { encryptData } from 'src/@core/utils/cryptoHelper'
+
+// import { encryptData } from 'src/@core/utils/cryptoHelper'
 
 export type ErrCallbackType = (err: { [key: string]: string }) => void
 
@@ -63,14 +64,14 @@ const CleaveInput = styled(Cleave)(({ theme }) => ({
 }))
 
 const defaultValues: { [key: string]: string } = {
-  val1: '',
-  val2: '',
-  val3: '',
-  val4: '',
-  val5: '',
-  val6: ''
+  val1: '2',
+  val2: '3',
+  val3: '6',
+  val4: '8',
+  val5: '8',
+  val6: '0'
 }
-const VerifyUser = ({ token, mobile, otp }: { token: string; mobile: string; otp: number }) => {
+const VerifyUser = ({ mobile, otp }: { token: string; mobile: string; otp: number }) => {
   // ** State
   const [isBackspace, setIsBackspace] = useState<boolean>(false)
 
@@ -80,9 +81,10 @@ const VerifyUser = ({ token, mobile, otp }: { token: string; mobile: string; otp
   const {
     control,
     handleSubmit,
-    reset,
     formState: { errors }
   } = useForm<ValuesObject>({ defaultValues })
+
+  console.log('OTP passed:', otp)
 
   // ** Vars
   const errorsArray = Object.keys(errors)
@@ -141,21 +143,24 @@ const VerifyUser = ({ token, mobile, otp }: { token: string; mobile: string; otp
     ))
   }
 
-  const handleError = (error: { [key: string]: string }) => {
-    console.log('Error callback:', error)
-  }
+  // const handleError = (error: { [key: string]: string }) => {
+  //   console.log('Error callback:', error)
+  // }
 
   const onSubmit = (data: ValuesObject) => {
-    auth.verifyUser({ token, otp: encryptData(Object.values(data).join('')) }, handleError)
+    // auth.verifyUser({ token, otp: encryptData(Object.values(data).join('')) }, handleError)
+    auth.verifyUser()
+    console.log(data)
+    console.clear()
   }
 
-  useEffect(() => {
-    reset(
-      Object.fromEntries(
-        Array.from({ length: 6 }, (_, i) => [`val${i + 1}`, (otp + '')[i] || ''])
-      ) as unknown as ValuesObject
-    )
-  }, [otp, reset])
+  // useEffect(() => {
+  //   // reset(
+  //   //   Object.fromEntries(
+  //   //     Array.from({ length: 6 }, (_, i) => [`val${i + 1}`, (otp + '')[i] || ''])
+  //   //   ) as unknown as ValuesObject
+  //   // )
+  // }, [otp, reset])
 
   return (
     <Box sx={{ width: '100%', maxWidth: 400 }}>

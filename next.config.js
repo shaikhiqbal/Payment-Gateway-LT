@@ -6,9 +6,6 @@ const path = require('path')
 // Remove this if you're not using Fullcalendar features
 
 module.exports = {
-  output: 'export',
-  basePath: '/wallet',
-  assetPrefix: '/wallet/',
   trailingSlash: true,
   reactStrictMode: false,
   transpilePackages: [

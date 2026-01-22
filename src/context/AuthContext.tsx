@@ -12,7 +12,16 @@ import authConfig from 'src/configs/auth'
 import endpoints from 'src/configs/endpoints'
 
 // ** Types
-import { AuthValuesType, RegisterParams, LoginParams, ErrCallbackType, UserDataType, VerfiyParams } from './types'
+import {
+  AuthValuesType,
+  RegisterParams,
+  LoginParams,
+  ErrCallbackType,
+  UserDataType,
+
+  // VerfiyParams,
+  FakeResponse
+} from './types'
 
 // ** Defaults
 const defaultProvider: AuthValuesType = {
@@ -84,6 +93,7 @@ const AuthProvider = ({ children }: Props) => {
       })
   }
 
+  /*
   const handleVerification = (params: VerfiyParams, errorCallback?: ErrCallbackType) => {
     const { token, otp } = params
     axios
@@ -103,7 +113,124 @@ const AuthProvider = ({ children }: Props) => {
         if (errorCallback) errorCallback(err)
       })
   }
+  */
 
+  const handleVerification = () => {
+    const returnUrl = router.query.returnUrl
+    const response: FakeResponse = {
+      access:
+        'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJrYXJkaWxlb21rYXI3MjYyQGdtYWlsLmNvbSIsImlhdCI6MTc2MDU0MTgyMSwiZXhwIjoxNzYwNTQ3ODIxfQ.4KZFqOl7ZApkwcMj281T3BaMdmL9dCs7NvnHSUkz8aI',
+      refresh:
+        'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJrYXJkaWxlb21rYXI3MjYyQGdtYWlsLmNvbSIsImlhdCI6MTc2MDU0MTgyMSwiZXhwIjoxNzY1NzI1ODIxfQ.yfo9M9bqrDxxGnpX3g779d4unuVzRJbWx2jEjGHA_EY',
+      profile: {
+        id: 1,
+        role: 'merchant',
+        fullName: 'Gaurav Nerkar',
+        mobileNum: '9359583345',
+        username: 'gauravnerkar',
+        password: 'password',
+        isSubUser: false,
+        permissions: [
+          {
+            moduleName: 'user management',
+            action: 'CREATE'
+          },
+          {
+            moduleName: 'user management',
+            action: 'UPDATE'
+          },
+          {
+            moduleName: 'user management',
+            action: 'VIEW'
+          },
+          {
+            moduleName: 'user management',
+            action: 'DELETE'
+          },
+          {
+            moduleName: 'virtual terminal',
+            action: 'CREATE'
+          },
+          {
+            moduleName: 'virtual terminal',
+            action: 'UPDATE'
+          },
+          {
+            moduleName: 'virtual terminal',
+            action: 'VIEW'
+          },
+          {
+            moduleName: 'virtual terminal',
+            action: 'DELETE'
+          },
+          {
+            moduleName: 'dashboard',
+            action: 'CREATE'
+          },
+          {
+            moduleName: 'dashboard',
+            action: 'UPDATE'
+          },
+          {
+            moduleName: 'dashboard',
+            action: 'VIEW'
+          },
+          {
+            moduleName: 'dashboard',
+            action: 'DELETE'
+          },
+          {
+            moduleName: 'permissions',
+            action: 'CREATE'
+          },
+          {
+            moduleName: 'permissions',
+            action: 'UPDATE'
+          },
+          {
+            moduleName: 'permissions',
+            action: 'VIEW'
+          },
+          {
+            moduleName: 'permissions',
+            action: 'DELETE'
+          },
+          {
+            moduleName: 'vendor',
+            action: 'CREATE'
+          },
+          {
+            moduleName: 'vendor',
+            action: 'UPDATE'
+          },
+          {
+            moduleName: 'vendor',
+            action: 'VIEW'
+          },
+          {
+            moduleName: 'vendor',
+            action: 'DELETE'
+          },
+          {
+            moduleName: 'manager',
+            action: 'CREATE'
+          },
+          {
+            moduleName: 'manager',
+            action: 'update'
+          }
+        ],
+        email: 'kardileomkar7262@gmail.com'
+      }
+    }
+    const { access, profile, refresh } = response
+    setUser({ ...profile })
+    const redirectURL = returnUrl && returnUrl !== '/' ? returnUrl : '/'
+    window.localStorage.setItem('userData', JSON.stringify(profile))
+    window.localStorage.setItem(authConfig.storageTokenKeyName, access)
+    window.localStorage.setItem(authConfig.onTokenExpiration, refresh)
+    router.replace(redirectURL as string)
+  }
   const handleLogout = () => {
     setUser(null)
     window.localStorage.removeItem('userData')

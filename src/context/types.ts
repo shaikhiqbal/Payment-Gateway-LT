@@ -29,6 +29,7 @@ export type UserDataType = {
   isSubUser: boolean
   avatar?: string | null
   permissions: Permission[]
+  mobileNum?: string
 }
 
 export type AuthValuesType = {
@@ -39,5 +40,13 @@ export type AuthValuesType = {
   setUser: (value: UserDataType | null) => void
   login: (params: LoginParams, errorCallback?: ErrCallbackType) => void
   register: (params: RegisterParams, errorCallback?: ErrCallbackType) => void
-  verifyUser: (params: VerfiyParams, errorCallback?: ErrCallbackType) => void
+
+  // verifyUser: (params: VerfiyParams, errorCallback?: ErrCallbackType) => void
+  verifyUser: () => void
+}
+
+export interface FakeResponse {
+  access: string
+  refresh: string
+  profile: UserDataType
 }

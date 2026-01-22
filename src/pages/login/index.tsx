@@ -80,8 +80,8 @@ const slideVariants = {
 const LoginPage = () => {
   const [isVerify, setIsVerify] = useState<boolean>(false)
   const [userDetails, setUserDetails] = useState<UserDetails>({
-    token: '',
-    mobileNum: ''
+    token: '12391728937198237891',
+    mobileNum: '88888888888'
   })
 
   // ** Hooks

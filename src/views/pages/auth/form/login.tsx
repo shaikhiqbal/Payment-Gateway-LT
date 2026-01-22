@@ -21,8 +21,8 @@ import * as yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
 
 // ** Next & Axios
-import axios from 'src/configs/axios'
-import endpoints from 'src/configs/endpoints'
+// import axios from 'src/configs/axios'
+// import endpoints from 'src/configs/endpoints'
 
 // ** Third party Loader
 import { BeatLoader } from 'react-spinners'
@@ -78,11 +78,13 @@ const LoginForm: React.FC<LoginFormProps> = ({ onVerify }) => {
 
   const onSubmit = async (userDetail: FormData) => {
     try {
-      setIsSubmiting(true)
-      const response = await axios.post(endpoints.auth.login, userDetail)
-      const { content } = response.data
+      // setIsSubmiting(true)
+      // const response = await axios.post(endpoints.auth.login, userDetail)
+      // const { content } = response.data
+      console.log('userDetail', userDetail)
 
-      onVerify(content)
+      // onVerify(content)
+      onVerify({ token: '12391728937198237891', mobileNum: '88888888888' })
     } catch (error) {
       setError('email', { type: 'manual', message: 'Login failed. Check your credentials.' })
     } finally {
