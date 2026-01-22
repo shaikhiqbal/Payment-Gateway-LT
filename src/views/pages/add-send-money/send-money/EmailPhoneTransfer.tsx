@@ -1,6 +1,26 @@
 import { useEffect } from 'react'
 import { useForm, Controller } from 'react-hook-form'
-import { Box, Button, Grid, TextField, Typography, InputAdornment, Paper, Stack } from '@mui/material'
+import {
+  Box,
+  Button,
+  Grid,
+  TextField,
+  Typography,
+  InputAdornment,
+  Paper,
+  Stack,
+  MenuItem,
+  FormControl,
+  InputLabel,
+  FormHelperText
+} from '@mui/material'
+
+import Select, { SelectChangeEvent } from '@mui/material/Select'
+
+import CountryField from 'src/pages/components/form-element/location/CountryField'
+
+// ** Data
+import { countries } from 'src/@fake-db/autocomplete'
 
 type FormValues = {
   amount: number
@@ -9,10 +29,21 @@ type FormValues = {
   transactionFees: number
   finalAmount: number
   remarks: string
+  recipientDetails: string
+  countryCode?: string | null
+  mobileNum?: string
+  emailId?: string
 }
 
 const EmailPhoneTransfer = () => {
-  const { control, watch, setValue, handleSubmit, reset } = useForm<FormValues>({
+  const {
+    control,
+    watch,
+    setValue,
+    handleSubmit,
+    reset,
+    formState: { errors }
+  } = useForm<FormValues>({
     defaultValues: {
       amount: 0,
       transactionPercentage: 1.75,
@@ -41,18 +72,112 @@ const EmailPhoneTransfer = () => {
 
   return (
     <Paper sx={{ p: 4 }}>
-      <Typography variant='h6' mb={3}>
-        Recipient Details
-      </Typography>
-
-      <Stack direction='row' spacing={2} mb={3}>
-        <Button variant='contained'>Send To Email</Button>
-        <Button variant='contained'>Send To Phone</Button>
-      </Stack>
-
       <Box component='form' onSubmit={handleSubmit(onSubmit)}>
         <Grid container spacing={3}>
-          {/* Amount */}
+          <Grid item xs={12}>
+            <Controller
+              name='recipientDetails'
+              control={control}
+              rules={{ required: true }}
+              render={({ field }) => (
+                <FormControl fullWidth>
+                  <InputLabel id='controlled-select-label'>Recipient details to *</InputLabel>
+                  <Select
+                    {...field}
+                    labelId='controlled-select-label'
+                    id='controlled-select'
+                    label='Recipient details to *'
+                  >
+                    <MenuItem value=''>
+                      <em>None</em>
+                    </MenuItem>
+                    <MenuItem value={'phone'}>Via Phone</MenuItem>
+                    <MenuItem value={'email'}>Via Email</MenuItem>
+                  </Select>
+                </FormControl>
+              )}
+            />
+          </Grid>
+
+          {watch('recipientDetails') === 'phone' && (
+            <Grid item xs={12}>
+              <Grid container spacing={2}>
+                <Grid item xs={4}>
+                  <FormControl fullWidth sx={{ mb: 4 }}>
+                    <Controller
+                      name='countryCode'
+                      control={control}
+                      rules={{ required: 'Contact Number is required' }}
+                      render={({ field }) => {
+                        const selectedCountry = countries.find(c => c.phone === field.value) || null
+
+                        return (
+                          <CountryField
+                            {...field}
+                            value={selectedCountry}
+                            onChange={(event, newValue) => {
+                              field.onChange(newValue?.phone || null)
+                            }}
+                            valueType='phone'
+                            label='Country Code *'
+                            error={!!errors.countryCode}
+                            helperText={errors.countryCode?.message}
+                            fullWidth
+                            ref={field.ref}
+                          />
+                        )
+                      }}
+                    />
+                    {/* {errors.countryCode && (
+              <FormHelperText sx={{ color: 'error.main' }}>{errors.countryCode.message}</FormHelperText>
+            )} */}
+                  </FormControl>
+                </Grid>
+                <Grid item xs={8}>
+                  <FormControl fullWidth sx={{ mb: 4 }}>
+                    <Controller
+                      name='mobileNum'
+                      control={control}
+                      render={({ field }) => (
+                        <TextField
+                          {...field}
+                          label='Phone'
+                          placeholder='1234567890'
+                          error={Boolean(errors.mobileNum)}
+                        />
+                      )}
+                    />
+                    {errors.mobileNum && (
+                      <FormHelperText sx={{ color: 'error.main' }}>{errors.mobileNum.message}</FormHelperText>
+                    )}
+                  </FormControl>
+                </Grid>
+              </Grid>
+            </Grid>
+          )}
+
+          {watch('recipientDetails') === 'email' && (
+            <Grid item xs={12}>
+              <FormControl fullWidth sx={{ mb: 4 }}>
+                <Controller
+                  name='emailId'
+                  control={control}
+                  render={({ field }) => (
+                    <TextField
+                      {...field}
+                      type='email'
+                      label='Email'
+                      placeholder='johndoe@email.com'
+                      error={Boolean(errors.emailId)}
+                    />
+                  )}
+                />
+                {errors.emailId && (
+                  <FormHelperText sx={{ color: 'error.main' }}>{errors.emailId.message}</FormHelperText>
+                )}
+              </FormControl>
+            </Grid>
+          )}
           <Grid item xs={12}>
             <Controller
               name='amount'
@@ -61,7 +186,6 @@ const EmailPhoneTransfer = () => {
               render={({ field }) => <TextField {...field} label='Amount *' type='number' fullWidth />}
             />
           </Grid>
-
           {/* Transaction Percentage */}
           <Grid item xs={12}>
             <Controller
@@ -79,7 +203,6 @@ const EmailPhoneTransfer = () => {
               )}
             />
           </Grid>
-
           {/* Calculated Percentage Value */}
           <Grid item xs={12}>
             <Controller
@@ -98,7 +221,6 @@ const EmailPhoneTransfer = () => {
               )}
             />
           </Grid>
-
           {/* Transaction Fees */}
           <Grid item xs={12}>
             <Controller
@@ -116,7 +238,6 @@ const EmailPhoneTransfer = () => {
               )}
             />
           </Grid>
-
           {/* Final Amount */}
           <Grid item xs={12}>
             <Controller
@@ -135,7 +256,6 @@ const EmailPhoneTransfer = () => {
               )}
             />
           </Grid>
-
           {/* Remarks */}
           <Grid item xs={12}>
             <Controller
@@ -147,9 +267,8 @@ const EmailPhoneTransfer = () => {
               )}
             />
           </Grid>
-
           {/* Actions */}
-          <Grid item xs={12}>
+          {/* <Grid item xs={12}>
             <Stack direction='row' spacing={2}>
               <Button type='submit' variant='contained' color='warning'>
                 Submit
@@ -158,7 +277,7 @@ const EmailPhoneTransfer = () => {
                 Reset
               </Button>
             </Stack>
-          </Grid>
+          </Grid> */}
         </Grid>
       </Box>
     </Paper>

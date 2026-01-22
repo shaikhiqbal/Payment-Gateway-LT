@@ -35,12 +35,12 @@ const PAYMENT_METHODS: PaymentMethod[] = [
     description: 'Send via contact',
     icon: 'tabler:mail'
   },
-  {
-    id: 'escrow',
-    name: 'Escrow Setup',
-    description: 'Wallet escrow',
-    icon: 'tabler:lock'
-  },
+  // {
+  //   id: 'escrow',
+  //   name: 'Escrow Setup',
+  //   description: 'Wallet escrow',
+  //   icon: 'tabler:lock'
+  // },
   {
     id: 'canada',
     name: 'Canada',
