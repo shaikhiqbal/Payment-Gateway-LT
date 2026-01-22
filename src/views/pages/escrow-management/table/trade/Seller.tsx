@@ -19,6 +19,7 @@ import ServerSideToolbar from 'src/views/table/data-grid/ServerSideToolbar'
 
 // ** Types Imports
 import { ThemeColor } from 'src/@core/layouts/types'
+
 // import { DataGridRowType } from 'src/@fake-db/types'
 
 // ** Utils Import

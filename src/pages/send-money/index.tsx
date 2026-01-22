@@ -35,6 +35,7 @@ const PAYMENT_METHODS: PaymentMethod[] = [
     description: 'Send via contact',
     icon: 'tabler:mail'
   },
+
   // {
   //   id: 'escrow',
   //   name: 'Escrow Setup',

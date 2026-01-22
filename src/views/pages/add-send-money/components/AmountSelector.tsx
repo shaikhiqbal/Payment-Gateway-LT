@@ -32,6 +32,7 @@ const AmountSelector = ({
 
   const handleCustomAmountChange = (event: ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value
+
     // Allow only numbers and decimal point
     if (value === '' || /^\d*\.?\d*$/.test(value)) {
       onCustomAmountChange(value)
@@ -46,7 +47,7 @@ const AmountSelector = ({
     <Box>
       {/* Preset Amount Buttons */}
       <Box sx={{ display: 'flex', gap: 2, mb: 3, flexWrap: 'wrap' }}>
-        {presetAmounts.map((amount) => (
+        {presetAmounts.map(amount => (
           <motion.div
             key={amount}
             whileHover={{ scale: 1.02 }}
@@ -70,27 +71,24 @@ const AmountSelector = ({
                 })
               }}
             >
-              {currency === 'EUR' ? '€' : currency === 'USD' ? '$' : '£'}{amount}
+              {currency === 'EUR' ? '€' : currency === 'USD' ? '$' : '£'}
+              {amount}
             </Button>
           </motion.div>
         ))}
       </Box>
 
       {/* Custom Amount Input */}
-      <motion.div
-        initial={{ opacity: 0.8 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.2 }}
-      >
+      <motion.div initial={{ opacity: 0.8 }} animate={{ opacity: 1 }} transition={{ duration: 0.2 }}>
         <TextField
           fullWidth
-          label="Custom Amount"
+          label='Custom Amount'
           value={customAmount}
           onChange={handleCustomAmountChange}
-          placeholder="Enter amount"
+          placeholder='Enter amount'
           InputProps={{
             startAdornment: (
-              <InputAdornment position="start">
+              <InputAdornment position='start'>
                 {currency === 'EUR' ? '€' : currency === 'USD' ? '$' : '£'}
               </InputAdornment>
             )
