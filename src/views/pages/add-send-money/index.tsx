@@ -39,6 +39,8 @@ import {
   WalletTransfer
 } from './send-money'
 
+import ReceiptEditor from '../cheque/ReceiptEditor'
+
 // ** Send Mopney
 
 const PRESET_AMOUNTS = [50, 100, 200]
@@ -54,7 +56,7 @@ const PAYMENT_COMPONENT_MAP: Record<string, JSX.Element> = {
   'email-phone': <EmailPhoneTransfer />,
   escrow: <EscrowSetup />,
   canada: <Canneda />,
-  check: <Check />,
+  check: <ReceiptEditor />,
   'other-wallet': <OtherWallet />,
   card: <SendToCard />
 }
