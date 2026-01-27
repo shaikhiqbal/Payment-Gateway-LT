@@ -177,14 +177,14 @@ const AddMoney = ({ PAYMENT_METHODS, title }: { PAYMENT_METHODS: PaymentMethod[]
             </Box>
 
             {/* Save as Default Toggle */}
-            <Box sx={{ mb: 6 }}>
+            {/* <Box sx={{ mb: 6 }}>
               <FormControlLabel
                 control={
                   <Switch checked={saveAsDefault} onChange={e => setSaveAsDefault(e.target.checked)} color='primary' />
                 }
                 label='Save as default payment method'
               />
-            </Box>
+            </Box> */}
 
             {selectedPaymentMethod && <Box sx={{ mb: 6 }}>{PAYMENT_COMPONENT_MAP[selectedPaymentMethod]}</Box>}
 

@@ -59,7 +59,7 @@ const data: DataType[] = [
   {
     cardCvc: '587',
     name: 'Tom McBride',
-    expiryDate: '12/24',
+    expiryDate: '12/30',
     imgAlt: 'Mastercard',
     cardNumber: '5577 0000 5577 9865',
     imgSrc: '/images/logos/mastercard.png'
@@ -67,7 +67,7 @@ const data: DataType[] = [
   {
     cardCvc: '681',
     imgAlt: 'Visa card',
-    expiryDate: '02/24',
+    expiryDate: '02/30',
     badgeColor: 'primary',
     cardStatus: 'Primary',
     name: 'Mildred Wagner',
@@ -76,7 +76,7 @@ const data: DataType[] = [
   },
   {
     cardCvc: '3845',
-    expiryDate: '08/20',
+    expiryDate: '08/34',
     name: 'Lester Jennings',
     imgAlt: 'American Express card',
     cardNumber: '3700 000000 00002',
@@ -94,6 +94,7 @@ const SendToCard = () => {
   const [cardNumber, setCardNumber] = useState<string>('')
   const [dialogTitle, setDialogTitle] = useState<string>('Add')
   const [openEditCard, setOpenEditCard] = useState<boolean>(false)
+  const [selectedCard, setSelectedCard] = useState<number | null>(null)
 
   // Handle Edit Card dialog and get card ID
   const handleEditCardClickOpen = (id: number) => {
@@ -125,6 +126,8 @@ const SendToCard = () => {
   }
 
   const handleBlur = () => setFocus(undefined)
+
+  const handleSelectThisCard = (index: number) => setSelectedCard(index)
 
   const handleInputChange = ({ target }: ChangeEvent<HTMLInputElement>) => {
     if (target.name === 'number') {
@@ -279,50 +282,77 @@ const SendToCard = () => {
       <CardHeader
         title='Payment Methods'
         action={
-          <Button variant='contained' onClick={handleAddCardClickOpen} sx={{ '& svg': { mr: 1 } }}>
+          <Button variant='contained' onClick={handleAddCardClickOpen} sx={{ '& svg': { mr: 1 } }} size='small'>
             <Icon icon='tabler:plus' fontSize='1rem' />
             Add Card
           </Button>
         }
       />
-      {data.map((item: DataType, index: number) => (
-        <Box
-          key={index}
-          sx={{
-            p: 4,
-            display: 'flex',
-            borderRadius: 1,
-            flexDirection: ['column', 'row'],
-            justifyContent: ['space-between'],
-            alignItems: ['flex-start', 'center'],
-            mb: index !== data.length - 1 ? 4 : undefined,
-            border: theme => `1px solid ${theme.palette.divider}`
-          }}
-        >
-          <div>
-            <img height='26' alt={item.imgAlt} src={item.imgSrc} />
-            <Box sx={{ mt: 3.5, mb: 2.5, display: 'flex', alignItems: 'center' }}>
-              <Typography sx={{ mr: 2, color: 'text.secondary' }}>{item.name}</Typography>
-              {item.cardStatus ? (
-                <CustomChip rounded skin='light' size='small' label={item.cardStatus} color={item.badgeColor} />
-              ) : null}
-            </Box>
-            <Typography sx={{ color: 'text.secondary' }}>
-              **** **** **** {item.cardNumber.substring(item.cardNumber.length - 4)}
-            </Typography>
-          </div>
 
-          <Box sx={{ mt: [3, 0], textAlign: ['start', 'end'] }}>
-            <Button variant='outlined' sx={{ mr: 2.5 }} onClick={() => handleEditCardClickOpen(index)}>
-              Edit
-            </Button>
-            <Button variant='outlined' color='secondary'>
-              Delete
-            </Button>
-            <Typography sx={{ mt: [6, 10], color: 'text.secondary' }}>Card expires at {item.expiryDate}</Typography>
-          </Box>
-        </Box>
-      ))}
+      <Grid container spacing={6} gap={2} sx={{ mx: 2 }}>
+        {data.map((item: DataType, index: number) => (
+          <Grid
+            key={index}
+            item
+            xs={12}
+            md={4}
+            sx={{
+              p: 4,
+              display: 'flex',
+              borderRadius: 1,
+              flexDirection: ['column', 'row'],
+              justifyContent: ['space-between'],
+              alignItems: ['flex-start', 'center'],
+              mb: index !== data.length - 1 ? 4 : undefined,
+              border: theme =>
+                `1px solid ${selectedCard == index ? theme.palette.primary.main : theme.palette.divider}`,
+              // border: theme => `1px solid ${theme.palette.divider}`,
+              height: '100%'
+            }}
+          >
+            <div>
+              <img height='26' alt={item.imgAlt} src={item.imgSrc} />
+              <Box sx={{ mt: 3.5, mb: 2.5, display: 'flex', alignItems: 'center' }}>
+                {/* <Typography sx={{ mr: 2, color: 'text.secondary' }}>{item.name}</Typography> */}
+                {/* {item.cardStatus ? (
+                  <CustomChip rounded skin='light' size='small' label={item.cardStatus} color={item.badgeColor} />
+                ) : null} */}
+              </Box>
+              <Typography sx={{ color: 'text.secondary' }}>
+                **** **** **** {item.cardNumber.substring(item.cardNumber.length - 4)}
+              </Typography>
+            </div>
+
+            <Box sx={{ mt: [3, 0], textAlign: ['start', 'end'] }}>
+              {selectedCard == index ? (
+                <Button
+                  variant='outlined'
+                  size='small'
+                  color='secondary'
+                  sx={{ mx: 2 }}
+                  onClick={() => setSelectedCard(null)}
+                >
+                  Cancele
+                </Button>
+              ) : (
+                <Button
+                  variant='contained'
+                  size='small'
+                  color='primary'
+                  sx={{ mx: 2 }}
+                  onClick={() => handleSelectThisCard(index)}
+                >
+                  Use this card
+                </Button>
+              )}
+              <Button variant='outlined' size='small' sx={{ mr: 2.5 }} onClick={() => handleEditCardClickOpen(index)}>
+                Edit
+              </Button>
+              <Typography sx={{ mt: [6, 10], color: 'text.secondary' }}>Card expires at {item.expiryDate}</Typography>
+            </Box>
+          </Grid>
+        ))}
+      </Grid>
     </Box>
   )
 }
