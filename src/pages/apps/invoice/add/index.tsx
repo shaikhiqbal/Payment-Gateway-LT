@@ -45,7 +45,7 @@ export interface InvoiceFormType {
   signatureFile: File | null
 }
 
-const InvoiceAdd = () => {
+const Index = () => {
   const method = useForm<InvoiceFormType>({
     defaultValues: {
       status: 'Draft',
@@ -157,9 +157,9 @@ const InvoiceAdd = () => {
   )
 }
 
-InvoiceAdd.acl = {
+Index.acl = {
   action: 'read',
   subject: 'user-management'
 }
 
-export default InvoiceAdd
+export default Index
