@@ -164,6 +164,12 @@ const navigation = (): VerticalNavItemsType => {
           subject: 'user-management'
         },
         {
+          title: 'Invoice View',
+          path: '/apps/invoice/preview/12345',
+          action: 'read',
+          subject: 'user-management'
+        },
+        {
           title: 'Invoice Templates',
           path: '/apps/invoice/template',
           action: 'read',

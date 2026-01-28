@@ -101,7 +101,7 @@ const columns: GridColumns = [
         <Button size='small' variant='contained'>
           Send Reminder
         </Button>
-        <Button size='small' variant='outlined' color='inherit'>
+        <Button size='small' variant='outlined' color='secondary'>
           View
         </Button>
       </Box>

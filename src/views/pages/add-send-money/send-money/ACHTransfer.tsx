@@ -91,6 +91,7 @@ const ACHTransfer = () => {
       bankName: ''
     }
   })
+
   const selectedBeneficiary = React.useMemo(
     () => rows.find(row => row.id === selectedBeneficiaryId) || null,
     [selectedBeneficiaryId]

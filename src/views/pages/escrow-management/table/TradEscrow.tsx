@@ -83,7 +83,7 @@ const columns: GridColDef[] = [
         <Button size='small' variant='contained'>
           View Escrow
         </Button>
-        <Button size='small' variant='outlined' color='inherit'>
+        <Button size='small' variant='outlined' color='secondary'>
           Cancel Escrow
         </Button>
       </Box>

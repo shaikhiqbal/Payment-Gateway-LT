@@ -267,7 +267,7 @@ const columns: GridColumns = [
         <Button size='small' variant='contained'>
           View
         </Button>
-        <Button size='small' variant='outlined' color='inherit'>
+        <Button size='small' variant='outlined' color='secondary'>
           Cancel
         </Button>
       </Box>

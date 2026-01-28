@@ -33,11 +33,11 @@ const AddMoneyPage = () => {
 
   return (
     <Grid container spacing={6}>
-      <Grid item xs={12} md={8}>
+      <Grid item xs={12} md={12}>
         <AddMoney PAYMENT_METHODS={PAYMENT_METHODS} title='Add Funds' />
       </Grid>
-      <Grid item xs={12} md={4}>
-        {/* Right-side illustration/info panel placeholder */}
+      {/* <Grid item xs={12} md={4}>
+
         <Card sx={{ height: '100%', minHeight: 400 }}>
           <CardContent
             sx={{
@@ -49,7 +49,7 @@ const AddMoneyPage = () => {
               alignItems: 'center'
             }}
           >
-            {/* Illustration placeholder */}
+
             <Box
               sx={{
                 width: '100%',
@@ -68,7 +68,7 @@ const AddMoneyPage = () => {
               </Typography>
             </Box>
 
-            {/* Info content placeholder */}
+
             <Box sx={{ textAlign: 'center' }}>
               <Typography variant='h6' sx={{ mb: 2, fontWeight: 600 }}>
                 Quick & Secure
@@ -77,7 +77,7 @@ const AddMoneyPage = () => {
                 Add funds to your account safely with our trusted payment partners.
               </Typography>
 
-              {/* Feature list placeholder */}
+
               <Box sx={{ textAlign: 'left' }}>
                 {['Instant processing', 'Bank-level security', 'Multiple payment options', '24/7 support'].map(
                   (feature, index) => (
@@ -101,7 +101,7 @@ const AddMoneyPage = () => {
             </Box>
           </CardContent>
         </Card>
-      </Grid>
+      </Grid> */}
     </Grid>
   )
 }
